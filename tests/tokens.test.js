@@ -32,7 +32,11 @@ describe('token styling', () => {
       ...globalWithI18n(),
     })
     const computed = getComputedStyle(wrapper.element)
-    expect(computed.getPropertyValue('--mwnf-header-background')).toBe('rgb(10, 20, 30)')
+    // jsdom's rgb() serialization differs across versions (with/without
+    // spaces after commas) - compare ignoring whitespace.
+    expect(
+      computed.getPropertyValue('--mwnf-header-background').replace(/\s/g, ''),
+    ).toBe('rgb(10,20,30)')
     expect(layoutCss).toMatch(/\.mwnf-header\s*{[^}]*background-color:\s*var\(--mwnf-header-background/)
   })
 
