@@ -1,0 +1,222 @@
+/*
+ * Structural styles for @metanull/viewer-layout.
+ *
+ * Every visual value is read from a --mwnf-* custom property so the website's
+ * theme/tokens.css fully controls the identity. Fallbacks are neutral.
+ * See tokens.reference.css for the complete token list.
+ */
+
+.mwnf-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--mwnf-font-body, system-ui, sans-serif);
+  line-height: var(--mwnf-line-height, 1.6);
+  color: var(--mwnf-color-text, #1c1c1c);
+  background-color: var(--mwnf-color-background, #ffffff);
+}
+
+/* Full-bleed section backgrounds with content centered on --mwnf-content-width. */
+.mwnf-header,
+.mwnf-banner,
+.mwnf-nav,
+.mwnf-content,
+.mwnf-hyperlinks,
+.mwnf-sponsors,
+.mwnf-footer {
+  padding-inline: max(
+    var(--mwnf-content-padding, 1rem),
+    calc((100% - var(--mwnf-content-width, 64rem)) / 2)
+  );
+}
+
+.mwnf-skip-link {
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: var(--mwnf-space, 0.75rem);
+  background-color: var(--mwnf-color-background, #ffffff);
+  color: var(--mwnf-color-accent, #1c1c1c);
+  transform: translateY(-150%);
+}
+
+.mwnf-skip-link:focus {
+  transform: none;
+  z-index: 10;
+}
+
+/* Header */
+
+.mwnf-header {
+  padding-block: var(--mwnf-header-padding, 1.25rem);
+  background-color: var(--mwnf-header-background, transparent);
+  color: var(--mwnf-header-text, inherit);
+}
+
+.mwnf-header__title {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-header-title-size, 1.75rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+}
+
+.mwnf-header__subtitle {
+  margin: 0;
+  font-size: var(--mwnf-header-subtitle-size, 1rem);
+  color: var(--mwnf-header-subtitle-color, var(--mwnf-color-muted, #555555));
+}
+
+/* Banner */
+
+.mwnf-banner {
+  padding-block: var(--mwnf-banner-padding, 0);
+  background-color: var(--mwnf-banner-background, transparent);
+  color: var(--mwnf-banner-text-color, inherit);
+}
+
+.mwnf-banner__image {
+  display: block;
+  width: 100%;
+  max-height: var(--mwnf-banner-max-height, 20rem);
+  object-fit: cover;
+}
+
+.mwnf-banner__text {
+  margin: 0;
+  padding-block: var(--mwnf-space, 0.75rem);
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-banner-text-size, 1.25rem);
+}
+
+/* Navigation */
+
+.mwnf-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--mwnf-space, 0.75rem);
+  flex-wrap: wrap;
+  padding-block: var(--mwnf-nav-padding, 0.5rem);
+  background-color: var(--mwnf-nav-background, transparent);
+  border-block: var(--mwnf-nav-border, 1px solid var(--mwnf-color-border, #dddddd));
+}
+
+.mwnf-nav__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mwnf-nav-gap, 1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-nav__link {
+  color: var(--mwnf-nav-link-color, var(--mwnf-color-accent, #1c1c1c));
+  text-decoration: none;
+  font-weight: var(--mwnf-nav-link-weight, 500);
+}
+
+.mwnf-nav__link:hover {
+  text-decoration: underline;
+}
+
+.mwnf-nav__link--active {
+  color: var(--mwnf-nav-link-active-color, inherit);
+  text-decoration: underline;
+}
+
+.mwnf-nav__language {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--mwnf-space, 0.75rem) / 2);
+  margin-inline-start: auto;
+}
+
+.mwnf-nav__language-select {
+  font: inherit;
+  padding: calc(var(--mwnf-space, 0.75rem) / 6) calc(var(--mwnf-space, 0.75rem) / 3);
+  border: 1px solid var(--mwnf-color-border, #dddddd);
+  border-radius: var(--mwnf-radius, 0.25rem);
+  background-color: var(--mwnf-color-background, #ffffff);
+  color: inherit;
+}
+
+/* Content */
+
+.mwnf-content {
+  flex: 1;
+  padding-block: var(--mwnf-content-padding-block, 1.5rem);
+  background-color: var(--mwnf-content-background, transparent);
+}
+
+/* Hyperlinks */
+
+.mwnf-hyperlinks {
+  padding-block: var(--mwnf-hyperlinks-padding, 1rem);
+  background-color: var(--mwnf-hyperlinks-background, transparent);
+  border-top: var(--mwnf-section-border, 1px solid var(--mwnf-color-border, #dddddd));
+}
+
+.mwnf-hyperlinks__title,
+.mwnf-sponsors__title {
+  margin: 0 0 calc(var(--mwnf-space, 0.75rem) / 2);
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-section-title-size, 1rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+}
+
+.mwnf-hyperlinks__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mwnf-space, 0.75rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-hyperlinks__link {
+  color: var(--mwnf-hyperlinks-link-color, var(--mwnf-color-accent, #1c1c1c));
+}
+
+/* Sponsors */
+
+.mwnf-sponsors {
+  padding-block: var(--mwnf-sponsors-padding, 1rem);
+  background-color: var(--mwnf-sponsors-background, transparent);
+  border-top: var(--mwnf-section-border, 1px solid var(--mwnf-color-border, #dddddd));
+}
+
+.mwnf-sponsors__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--mwnf-sponsors-gap, 1.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-sponsors__item {
+  color: var(--mwnf-color-muted, #555555);
+  text-decoration: none;
+}
+
+.mwnf-sponsors__logo {
+  display: block;
+  height: var(--mwnf-sponsors-logo-height, 2.5rem);
+  width: auto;
+}
+
+/* Footer */
+
+.mwnf-footer {
+  padding-block: var(--mwnf-footer-padding, 1.25rem);
+  background-color: var(--mwnf-footer-background, transparent);
+  color: var(--mwnf-footer-text-color, var(--mwnf-color-muted, #555555));
+  border-top: var(--mwnf-section-border, 1px solid var(--mwnf-color-border, #dddddd));
+  font-size: var(--mwnf-footer-text-size, 0.875rem);
+}
+
+.mwnf-footer__text {
+  margin: 0;
+}

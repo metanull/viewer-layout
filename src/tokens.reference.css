@@ -1,0 +1,72 @@
+/*
+ * @metanull/viewer-layout — token reference.
+ *
+ * Complete list of every CSS custom property the package consumes, with the
+ * neutral fallback the layout uses when a token is not set. Copy this file
+ * into your website as theme/tokens.css, uncomment, and set your values.
+ * All tokens are optional.
+ */
+
+:root {
+  /* ---------- Global ---------- */
+  /* --mwnf-font-body: system-ui, sans-serif;        Body font stack */
+  /* --mwnf-font-heading: inherit;                   Heading/title font stack */
+  /* --mwnf-line-height: 1.6;                        Base line height */
+  /* --mwnf-weight-heading: 700;                     Weight for titles */
+  /* --mwnf-color-text: #1c1c1c;                     Default text color */
+  /* --mwnf-color-background: #ffffff;               Page background */
+  /* --mwnf-color-accent: #1c1c1c;                   Links and accents */
+  /* --mwnf-color-muted: #555555;                    Secondary text */
+  /* --mwnf-color-border: #dddddd;                   Default border color */
+  /* --mwnf-content-width: 64rem;                    Max content width (all sections) */
+  /* --mwnf-content-padding: 1rem;                   Min horizontal padding (all sections) */
+  /* --mwnf-space: 0.75rem;                          Base spacing unit */
+  /* --mwnf-radius: 0.25rem;                         Corner radius (form controls) */
+  /* --mwnf-section-border: 1px solid #dddddd;       Divider above hyperlinks/sponsors/footer */
+  /* --mwnf-section-title-size: 1rem;                Hyperlinks/sponsors title size */
+
+  /* ---------- AppHeader ---------- */
+  /* --mwnf-header-padding: 1.25rem;                 Vertical padding */
+  /* --mwnf-header-background: transparent;          Background */
+  /* --mwnf-header-text: inherit;                    Text color */
+  /* --mwnf-header-title-size: 1.75rem;              Title size */
+  /* --mwnf-header-subtitle-size: 1rem;              Subtitle size */
+  /* --mwnf-header-subtitle-color: #555555;          Subtitle color */
+
+  /* ---------- AppBanner ---------- */
+  /* --mwnf-banner-padding: 0;                       Vertical padding */
+  /* --mwnf-banner-background: transparent;          Background */
+  /* --mwnf-banner-text-color: inherit;              Text color */
+  /* --mwnf-banner-text-size: 1.25rem;               Text size */
+  /* --mwnf-banner-max-height: 20rem;                Max image height */
+
+  /* ---------- AppNavigation ---------- */
+  /* --mwnf-nav-padding: 0.5rem;                     Vertical padding */
+  /* --mwnf-nav-background: transparent;             Background */
+  /* --mwnf-nav-border: 1px solid #dddddd;           Top+bottom border */
+  /* --mwnf-nav-gap: 1rem;                           Gap between links */
+  /* --mwnf-nav-link-color: #1c1c1c;                 Link color */
+  /* --mwnf-nav-link-active-color: inherit;          Active link color */
+  /* --mwnf-nav-link-weight: 500;                    Link weight */
+
+  /* ---------- AppContent ---------- */
+  /* --mwnf-content-padding-block: 1.5rem;           Vertical padding */
+  /* --mwnf-content-background: transparent;         Background */
+
+  /* ---------- AppHyperlinks ---------- */
+  /* --mwnf-hyperlinks-padding: 1rem;                Vertical padding */
+  /* --mwnf-hyperlinks-background: transparent;      Background */
+  /* --mwnf-hyperlinks-link-color: #1c1c1c;          Link color */
+
+  /* ---------- AppSponsors ---------- */
+  /* --mwnf-sponsors-padding: 1rem;                  Vertical padding */
+  /* --mwnf-sponsors-background: transparent;        Background */
+  /* --mwnf-sponsors-gap: 1.5rem;                    Gap between sponsors */
+  /* --mwnf-sponsors-logo-height: 2.5rem;            Logo height */
+
+  /* ---------- AppFooter ---------- */
+  /* --mwnf-footer-padding: 1.25rem;                 Vertical padding */
+  /* --mwnf-footer-background: transparent;          Background */
+  /* --mwnf-footer-text-color: #555555;              Text color */
+  /* --mwnf-footer-text-size: 0.875rem;              Text size */
+}
