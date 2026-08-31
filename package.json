@@ -1,6 +1,6 @@
 {
   "name": "@metanull/viewer-layout",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections.",
   "type": "module",
   "license": "UNLICENSED",
