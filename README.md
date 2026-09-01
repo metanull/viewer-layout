@@ -15,10 +15,13 @@ Page structure for MWNF websites: `<PageShell>` composing seven optional, token-
 npm install @metanull/viewer-layout
 ```
 
+`@metanull/viewer-core` is a peer dependency: the layout reads its five own
+texts from the application's catalogue through it.
+
 ## Use
 
 ```js
-import { PageShell, layoutMessages } from '@metanull/viewer-layout'
+import { PageShell } from '@metanull/viewer-layout'
 import '@metanull/viewer-layout/style.css'
 import './theme/tokens.css' // your copy of tokens.reference.css
 ```
@@ -36,7 +39,23 @@ import './theme/tokens.css' // your copy of tokens.reference.css
 </PageShell>
 ```
 
-Merge `layoutMessages` into your vue-i18n messages to translate/override the built-in strings (`layout.*` namespace). Without it, bundled English defaults are used.
+## Texts
+
+The layout carries no texts of its own. It renders five entries, which reach it
+from the catalogue the website passes to `createViewer`:
+
+| Entry | Rendered as |
+| --- | --- |
+| `layout.nav.skipToContent` | the skip link |
+| `layout.nav.label` | the navigation's `aria-label` |
+| `layout.language.label` | the label of the language chooser |
+| `layout.hyperlinks.label` | the related-links `aria-label`, unless a `title` is given |
+| `layout.sponsors.label` | the sponsors `aria-label`, unless a `title` is given |
+
+They are published in the `layout` namespace of
+[`@metanull/viewer-i18n`](https://github.com/metanull/viewer-i18n), which every
+website receives; a website overloads any of them in its own `locales/` file.
+A language that has not translated one falls back to English.
 
 ## PageShell
 

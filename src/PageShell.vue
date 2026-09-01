@@ -6,7 +6,7 @@ import AppContent from './sections/AppContent.vue'
 import AppHyperlinks from './sections/AppHyperlinks.vue'
 import AppSponsors from './sections/AppSponsors.vue'
 import AppFooter from './sections/AppFooter.vue'
-import { useLayoutText } from './i18n/useLayoutText.js'
+import { useI18n } from '@metanull/viewer-core/i18n'
 
 defineProps({
   headerTitle: { type: String, default: '' },
@@ -25,12 +25,12 @@ defineProps({
 })
 
 const emit = defineEmits(['update:language'])
-const lt = useLayoutText()
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="mwnf-page">
-    <a class="mwnf-skip-link" href="#mwnf-content">{{ lt('layout.skipToContent') }}</a>
+    <a class="mwnf-skip-link" href="#mwnf-content">{{ t('layout.nav.skipToContent') }}</a>
     <AppHeader :title="headerTitle" :subtitle="headerSubtitle">
       <template v-if="$slots.header" #default><slot name="header" /></template>
     </AppHeader>

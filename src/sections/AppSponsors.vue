@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { useLayoutText } from '../i18n/useLayoutText.js'
+import { useI18n } from '@metanull/viewer-core/i18n'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -9,12 +9,12 @@ const props = defineProps({
 })
 
 const slots = useSlots()
-const lt = useLayoutText()
+const { t } = useI18n()
 const visible = computed(() => Boolean(slots.default || props.sponsors.length))
 </script>
 
 <template>
-  <section v-if="visible" class="mwnf-sponsors" :aria-label="title || lt('layout.sponsorsLabel')">
+  <section v-if="visible" class="mwnf-sponsors" :aria-label="title || t('layout.sponsors.label')">
     <p v-if="title" class="mwnf-sponsors__title">{{ title }}</p>
     <slot>
       <ul class="mwnf-sponsors__list">

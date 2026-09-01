@@ -105,7 +105,7 @@ describe('AppNavigation language switcher', () => {
     expect(wrapper.find('select').exists()).toBe(false)
   })
 
-  it('renders the switcher with the bundled English label and emits update:language', async () => {
+  it('renders the switcher with the English label and emits update:language', async () => {
     const wrapper = mount(AppNavigation, {
       props: { languages: ['en', 'fr'], language: 'en' },
       ...globalWithI18n(),
@@ -115,15 +115,23 @@ describe('AppNavigation language switcher', () => {
     expect(wrapper.emitted('update:language')).toEqual([['fr']])
   })
 
-  it('uses the application message for the label when defined', () => {
+  it('uses the label of the active language when the application has one', () => {
     const wrapper = mount(AppNavigation, {
       props: { languages: ['en', 'fr'], language: 'fr' },
       ...globalWithI18n({
         locale: 'fr',
-        messages: { fr: { layout: { languageLabel: 'Langue' } } },
+        messages: { fr: { 'layout.language.label': 'Langue' } },
       }),
     })
     expect(wrapper.find('.mwnf-nav__language-label').text()).toBe('Langue')
+  })
+
+  it('falls back to English for a language that has not translated the label', () => {
+    const wrapper = mount(AppNavigation, {
+      props: { languages: ['en', 'fr'], language: 'fr' },
+      ...globalWithI18n({ locale: 'fr', messages: { fr: {} } }),
+    })
+    expect(wrapper.find('.mwnf-nav__language-label').text()).toBe('Language')
   })
 
   it('marks the active link with aria-current', () => {

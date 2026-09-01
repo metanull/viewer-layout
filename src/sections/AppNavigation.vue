@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { useLayoutText } from '../i18n/useLayoutText.js'
+import { useI18n } from '@metanull/viewer-core/i18n'
 
 const props = defineProps({
   // Plain links: { label, href, active? }. No router coupling — websites pass
@@ -14,7 +14,7 @@ const props = defineProps({
 const emit = defineEmits(['update:language'])
 
 const slots = useSlots()
-const lt = useLayoutText()
+const { t } = useI18n()
 
 const normalizedLanguages = computed(() =>
   props.languages.map((l) => (typeof l === 'string' ? { code: l, label: l } : l)),
@@ -26,7 +26,7 @@ const visible = computed(() =>
 </script>
 
 <template>
-  <nav v-if="visible" class="mwnf-nav" :aria-label="lt('layout.navigationLabel')">
+  <nav v-if="visible" class="mwnf-nav" :aria-label="t('layout.nav.label')">
     <slot>
       <ul v-if="links.length" class="mwnf-nav__links">
         <li v-for="link in links" :key="link.href ?? link.label">
@@ -40,7 +40,7 @@ const visible = computed(() =>
       </ul>
     </slot>
     <label v-if="normalizedLanguages.length > 1" class="mwnf-nav__language">
-      <span class="mwnf-nav__language-label">{{ lt('layout.languageLabel') }}</span>
+      <span class="mwnf-nav__language-label">{{ t('layout.language.label') }}</span>
       <select
         class="mwnf-nav__language-select"
         :value="language"
