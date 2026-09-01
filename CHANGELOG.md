@@ -2,10 +2,12 @@
 
 ## 2.0.0
 
-Breaking. A website adopting this must be on `@metanull/viewer-core` 1.2.0 or
+Breaking. A website adopting this must be on `@metanull/viewer-core` 1.2.1 or
 later — 1.1.0 does not declare the `/i18n` entry point this reads its texts
-through — and must supply the five `layout.*` entries, which it does by
-receiving the `layout` namespace of `@metanull/viewer-i18n`.
+through, and 1.2.0 keys them on a symbol that is not shared when that entry
+point is loaded as a second copy of the module — and must supply the five
+`layout.*` entries, which it does by receiving the `layout` namespace of
+`@metanull/viewer-i18n`.
 
 - `vue-i18n` is gone. The layout reads its texts through
   `@metanull/viewer-core/i18n`, now a peer dependency.
