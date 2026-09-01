@@ -1,6 +1,6 @@
 {
   "name": "@metanull/viewer-layout",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections.",
   "type": "module",
   "license": "UNLICENSED",
@@ -30,16 +30,16 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "vue": "^3.5.0",
-    "vue-i18n": "^11.0.0"
+    "@metanull/viewer-core": "^1.1.0",
+    "vue": "^3.5.0"
   },
   "devDependencies": {
+    "@metanull/viewer-core": "^1.1.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "jsdom": "^30.0.1",
     "vite": "^8.2.2",
     "vitest": "^4.1.11",
-    "vue": "^3.5.0",
-    "vue-i18n": "^11.0.0"
+    "vue": "^3.5.0"
   }
 }

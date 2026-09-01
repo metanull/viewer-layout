@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { useLayoutText } from '../i18n/useLayoutText.js'
+import { useI18n } from '@metanull/viewer-core/i18n'
 
 const props = defineProps({
   title: { type: String, default: '' },
@@ -9,12 +9,12 @@ const props = defineProps({
 })
 
 const slots = useSlots()
-const lt = useLayoutText()
+const { t } = useI18n()
 const visible = computed(() => Boolean(slots.default || props.links.length))
 </script>
 
 <template>
-  <section v-if="visible" class="mwnf-hyperlinks" :aria-label="title || lt('layout.hyperlinksLabel')">
+  <section v-if="visible" class="mwnf-hyperlinks" :aria-label="title || t('layout.hyperlinks.label')">
     <p v-if="title" class="mwnf-hyperlinks__title">{{ title }}</p>
     <slot>
       <ul class="mwnf-hyperlinks__list">
