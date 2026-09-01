@@ -30,11 +30,11 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@metanull/viewer-core": "^1.1.0",
+    "@metanull/viewer-core": "^1.2.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@metanull/viewer-core": "^1.1.0",
+    "@metanull/viewer-core": "^1.2.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "jsdom": "^30.0.1",
