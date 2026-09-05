@@ -31,7 +31,7 @@
   },
   "peerDependencies": {
     "@metanull/viewer-core": "^1.6.0",
-    "vue": "^3.5.0"
+    "vue": "^3.5.42"
   },
   "devDependencies": {
     "@metanull/viewer-core": "^1.6.0",
@@ -40,6 +40,6 @@
     "jsdom": "^30.0.1",
     "vite": "^8.2.2",
     "vitest": "^4.1.11",
-    "vue": "^3.5.0"
+    "vue": "^3.5.42"
   }
 }
