@@ -8,6 +8,7 @@ export const layoutTexts = {
   'layout.hyperlinks.label': 'Related links',
   'layout.language.label': 'Language',
   'layout.nav.label': 'Main navigation',
+  'layout.nav.menu': 'Menu',
   'layout.nav.skipToContent': 'Skip to content',
   'layout.sponsors.label': 'Sponsors',
 }
