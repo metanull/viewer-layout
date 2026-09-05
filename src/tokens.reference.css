@@ -29,16 +29,79 @@
   /* --mwnf-header-padding: 1.25rem;                 Vertical padding */
   /* --mwnf-header-background: transparent;          Background */
   /* --mwnf-header-text: inherit;                    Text color */
+  /* --mwnf-header-gap: 1rem;                        Gap between the mark, the title cell and the tools */
+  /* --mwnf-header-logos-title-size: 0.75rem;        Heading above the logo group */
+  /* --mwnf-header-logo-gap: 0.625rem;               Gap between logos */
+  /* --mwnf-header-logo-height: 2.875rem;            Logo height */
+  /* --mwnf-header-eyebrow-size: 0.875rem;           Line above the title */
+  /* --mwnf-header-eyebrow-color: inherit;           Its color */
   /* --mwnf-header-title-size: 1.75rem;              Title size */
+  /* --mwnf-header-title-line-height: 1.1;           Title line height */
   /* --mwnf-header-subtitle-size: 1rem;              Subtitle size */
   /* --mwnf-header-subtitle-color: #555555;          Subtitle color */
+  /* --mwnf-header-tools-gap: 0.5rem;                Gap between links, search and switcher */
+  /* --mwnf-header-tools-size: 0.875rem;             Their font size */
+  /* --mwnf-header-links-gap: 0.5rem;                Gap between header links */
+  /* --mwnf-header-links-separator: "|";             Separator between header links */
+  /* --mwnf-header-link-color: inherit;              Header link color */
+  /* --mwnf-header-search-gap: 0.3125rem;            Gap between the field and the button */
+  /* --mwnf-header-control-padding: 0.25rem 0.375rem; Padding of the field, the button and the select */
+  /* --mwnf-header-control-border: 2px solid currentColor; Border of the field and the select */
+  /* --mwnf-header-control-background: #ffffff;      Their background */
+  /* --mwnf-header-control-text: #1c1c1c;            Their text color */
+  /* --mwnf-header-button-border: 2px solid currentColor; Border of the search button and the language buttons */
+  /* --mwnf-header-button-background: transparent;   Their background */
+  /* --mwnf-header-button-text: inherit;             Their text color */
+  /* --mwnf-header-button-active-background: #1c1c1c; The active language button */
+  /* --mwnf-header-button-active-text: #ffffff;      Its text color */
+  /* --mwnf-header-language-gap: 0.25rem;            Gap between language buttons */
 
   /* ---------- AppBanner ---------- */
   /* --mwnf-banner-padding: 0;                       Vertical padding */
   /* --mwnf-banner-background: transparent;          Background */
   /* --mwnf-banner-text-color: inherit;              Text color */
-  /* --mwnf-banner-text-size: 1.25rem;               Text size */
-  /* --mwnf-banner-max-height: 20rem;                Max image height */
+  /* --mwnf-banner-text-size: 1.25rem;               Text size (plain banner) */
+  /* --mwnf-banner-max-height: 20rem;                Max image height (plain banner) */
+  /* --mwnf-banner-media-background: #555555;        Behind the image, and when there is none */
+  /* --mwnf-banner-fallback: none;                   A background-image for when the image fails */
+  /* --mwnf-banner-caption-margin: 1rem;             Caption box margin */
+  /* --mwnf-banner-caption-padding: 1rem;            Caption box padding */
+  /* --mwnf-banner-caption-width: 25%;               Caption box max width */
+  /* --mwnf-banner-caption-size: 0.9rem;             Caption text size */
+  /* --mwnf-banner-caption-text: #ffffff;            Caption text color */
+  /* --mwnf-banner-caption-background: rgba(0,0,0,0.6); Caption box background */
+  /* --mwnf-banner-headline-width: 30rem;            Headline max width (split) */
+  /* --mwnf-banner-headline-size: 0.9375rem;         Headline size */
+  /* --mwnf-banner-strapline-size: 0.875rem;         Strapline size */
+  /* --mwnf-banner-enter-size: 1.25rem;              Entry link size (split) */
+  /* --mwnf-banner-enter-gap: 0.625rem;              Space before the entry link (strip) */
+  /* --mwnf-banner-overlay-text: #ffffff;            Text over the image (strip, section) */
+  /* --mwnf-banner-overlay-shadow: 0 0 1.5rem #000000; Its shadow (strip) */
+  /* --mwnf-banner-overlay-background: rgba(0,0,0,0.6); The bar over the image (section) */
+  /* --mwnf-banner-strip-height: 45vh;               Strip height */
+  /* --mwnf-banner-strip-max-height: 28rem;          Strip max height */
+  /* --mwnf-banner-strip-padding: 0 3rem;            Padding of the text over the strip */
+  /* --mwnf-banner-strip-eyebrow-size: 1.875rem;     Eyebrow size (strip) */
+  /* --mwnf-banner-strip-title-size: 4.375rem;       Title size (strip) */
+  /* --mwnf-banner-strip-eyebrow-size-narrow: 1.125rem; … on a narrow screen */
+  /* --mwnf-banner-strip-title-size-narrow: 2rem;    … on a narrow screen */
+  /* --mwnf-banner-split-media-width: 60%;           Image column width (split) */
+  /* --mwnf-banner-split-body-width: 40%;            Text column width (split) */
+  /* --mwnf-banner-split-min-height: 43.75rem;       Image column min height (split) */
+  /* --mwnf-banner-split-min-height-narrow: 18.75rem; … on a narrow screen */
+  /* --mwnf-banner-split-padding: 3rem 1.25rem;      Text column padding (split) */
+  /* --mwnf-banner-split-gap: 1.5rem;                Gap between the text column's parts */
+  /* --mwnf-banner-split-title-size: calc(0.75rem + 1.2vw); Title size (split) */
+  /* --mwnf-banner-split-subtitle-size: 1rem;        Subtitle size (split) */
+  /* --mwnf-banner-body-background: transparent;     Text column background (split) */
+  /* --mwnf-banner-body-text: inherit;               Text column text color (split) */
+  /* --mwnf-banner-body-accent: inherit;             Title, subtitle and entry link color (split) */
+  /* --mwnf-banner-section-height: 20vh;             Section strip height */
+  /* --mwnf-banner-section-min-height: 3.125rem;     Section strip min height */
+  /* --mwnf-banner-section-max-height: 9.375rem;     Section strip max height */
+  /* --mwnf-banner-section-padding: 0.625rem 3.125rem; Padding of the bar over the section strip */
+  /* --mwnf-banner-section-title-size: clamp(1.25rem, 3vw, 2.375rem); Section title size */
+  /* --mwnf-banner-section-caption-width: 37.5rem;   Caption max width (section) */
 
   /* ---------- AppNavigation ---------- */
   /* --mwnf-nav-padding: 0.5rem;                     Vertical padding */
@@ -48,6 +111,15 @@
   /* --mwnf-nav-link-color: #1c1c1c;                 Link color */
   /* --mwnf-nav-link-active-color: inherit;          Active link color */
   /* --mwnf-nav-link-weight: 500;                    Link weight */
+  /* --mwnf-nav-toggle-padding: 0.375rem 0.75rem;    Hamburger button padding (narrow screens) */
+  /* --mwnf-nav-toggle-background: transparent;      Its background */
+  /* --mwnf-nav-toggle-color: #1c1c1c;               Its text color */
+  /* --mwnf-nav-toggle-gap: 0.5rem;                  Gap between its icon and its label */
+  /* --mwnf-nav-notice-margin: 0.5rem 0 0;           Notice bar margin */
+  /* --mwnf-nav-notice-padding: 0.3125rem 1rem;      Notice bar padding */
+  /* --mwnf-nav-notice-size: 0.9rem;                 Notice text size */
+  /* --mwnf-nav-notice-background: #dddddd;          Notice bar background */
+  /* --mwnf-nav-notice-color: inherit;               Notice text color */
 
   /* ---------- AppContent ---------- */
   /* --mwnf-content-padding-block: 1.5rem;           Vertical padding */
@@ -57,16 +129,29 @@
   /* --mwnf-hyperlinks-padding: 1rem;                Vertical padding */
   /* --mwnf-hyperlinks-background: transparent;      Background */
   /* --mwnf-hyperlinks-link-color: #1c1c1c;          Link color */
+  /* --mwnf-hyperlinks-tiles-padding: 3rem;          Vertical padding (tiles) */
+  /* --mwnf-hyperlinks-tiles-gap: 0.625rem;          Gap between the title block and the tiles */
+  /* --mwnf-hyperlinks-tiles-text: inherit;          Text color (tiles) */
+  /* --mwnf-hyperlinks-tiles-size: 1.125rem;         Text size (tiles) */
 
   /* ---------- AppSponsors ---------- */
   /* --mwnf-sponsors-padding: 1rem;                  Vertical padding */
   /* --mwnf-sponsors-background: transparent;        Background */
   /* --mwnf-sponsors-gap: 1.5rem;                    Gap between sponsors */
   /* --mwnf-sponsors-logo-height: 2.5rem;            Logo height */
+  /* --mwnf-sponsors-groups-justify: center;         How the groups are distributed */
+  /* --mwnf-sponsors-groups-gap: 2.5rem;             Gap between groups */
+  /* --mwnf-sponsors-group-gap: 0.5rem;              Gap between a group's heading and its logos */
+  /* --mwnf-sponsors-group-title-size: 0.75rem;      Group heading size */
+  /* --mwnf-sponsors-group-title-color: #555555;     Group heading color */
 
   /* ---------- AppFooter ---------- */
   /* --mwnf-footer-padding: 1.25rem;                 Vertical padding */
   /* --mwnf-footer-background: transparent;          Background */
   /* --mwnf-footer-text-color: #555555;              Text color */
   /* --mwnf-footer-text-size: 0.875rem;              Text size */
+  /* --mwnf-footer-justify: flex-start;              How links and text are distributed */
+  /* --mwnf-footer-gap: 0.5rem;                      Gap between footer links */
+  /* --mwnf-footer-links-separator: "|";             Separator between footer links */
+  /* --mwnf-footer-link-color: inherit;              Footer link color */
 }

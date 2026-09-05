@@ -79,4 +79,80 @@ describe('PageShell', () => {
     expect(skip.attributes('href')).toBe('#mwnf-content')
     expect(skip.text()).toBe('Skip to content')
   })
+
+  it('renders a gallery chrome from props alone', async () => {
+    const wrapper = mount(PageShell, {
+      props: {
+        headerHome: 'https://www.example.org/',
+        headerEyebrow: 'MWNF Galleries',
+        headerTitle: 'Carpets',
+        headerTitleHref: '#/',
+        headerLinks: [{ label: 'Home', href: '#/' }],
+        search: { placeholder: 'Search', submitLabel: 'Search' },
+        languages: [{ code: 'en', label: 'English' }, { code: 'ar', label: 'العربية' }],
+        language: 'en',
+        languagePlacement: 'header',
+        languageStyle: 'buttons',
+        bannerVariant: 'strip',
+        bannerImage: 'banner.jpg',
+        bannerEyebrow: 'Discover MWNF Galleries',
+        bannerTitle: 'Carpets',
+        bannerEnter: { label: '»', href: '#/collection' },
+        navLinks: [{ label: 'Collection', href: '#/collection' }],
+        notice: { title: 'Tip:', text: 'The database has been replaced.' },
+        footerLinks: [{ label: 'About MWNF', href: 'https://www.example.org/about', external: true }],
+        footerText: '© MWNF 2004–2026',
+      },
+      slots: { 'header-brand': '<span class="mark">MWNF</span>', default: '<p>Body</p>' },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('header .mwnf-header__home .mark').text()).toBe('MWNF')
+    expect(wrapper.find('header .mwnf-header__eyebrow').text()).toBe('MWNF Galleries')
+    // The switcher is in the header, as buttons, and not in the navigation.
+    expect(wrapper.findAll('header .mwnf-header__language')).toHaveLength(2)
+    expect(wrapper.find('nav select').exists()).toBe(false)
+    await wrapper.findAll('header .mwnf-header__language')[1].trigger('click')
+    expect(wrapper.emitted('update:language')).toEqual([['ar']])
+    await wrapper.find('header .mwnf-header__search-input').setValue('bowl')
+    await wrapper.find('header form').trigger('submit')
+    expect(wrapper.emitted('search')).toEqual([['bowl']])
+    expect(wrapper.find('.mwnf-banner--strip .mwnf-banner__title').text()).toContain('Carpets')
+    expect(wrapper.find('nav .mwnf-nav__notice').text()).toContain('The database has been replaced.')
+    expect(wrapper.find('footer .mwnf-footer__link').text()).toBe('About MWNF')
+  })
+
+  it('renders an exhibition chrome from props alone', () => {
+    const wrapper = mount(PageShell, {
+      props: {
+        headerHome: 'https://www.example.org/',
+        headerBrand: 'MWNF',
+        headerLogos: [{ image: 'unaoc.png', alt: 'UNAOC' }],
+        headerLogosTitle: 'Co-organisers',
+        headerTitle: 'Virtual exhibitions',
+        headerTitleHref: '#/about',
+        bannerVariant: 'split',
+        bannerImage: 'banner.jpg',
+        bannerTitle: 'Water in Islam',
+        bannerSubtitle: 'An exhibition',
+        bannerHeadline: 'A *thousand* years.',
+        bannerEnter: { label: 'Enter', href: '#/about' },
+        bannerStrapline: 'A MWNF virtual exhibition',
+        navLinks: [{ label: 'Themes', href: '#/themes' }],
+        hyperlinksVariant: 'tiles',
+        hyperlinksTitle: 'Water in Islam',
+        hyperlinksTitleHref: '#/',
+        hyperlinksSubtitle: 'An exhibition',
+        hyperlinks: [{ label: 'About', description: 'Introduction', href: '#/about' }],
+        sponsorGroups: [{ title: 'Under the patronage of', sponsors: [{ name: 'UNAOC', logo: 'unaoc.png' }] }],
+        footerLinks: [{ label: 'Credits', href: 'https://www.example.org/credits', external: true }],
+      },
+      slots: { default: '<p>Body</p>' },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('header .mwnf-header__logos-title').text()).toBe('Co-organisers')
+    expect(wrapper.find('.mwnf-banner--split .mwnf-banner__headline').html()).toContain('<em>thousand</em>')
+    expect(wrapper.find('.mwnf-hyperlinks--tiles .mwnf-hyperlinks__description').text()).toBe('Introduction')
+    expect(wrapper.find('.mwnf-sponsors__group-title').text()).toBe('Under the patronage of')
+    expect(wrapper.find('footer .mwnf-footer__link').attributes('target')).toBe('_blank')
+  })
 })
