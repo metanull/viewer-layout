@@ -332,4 +332,16 @@
   /* --mwnf-popover-close-size: 1rem;                Close control size */
   /* --mwnf-popover-padding: 0.625rem 0.75rem;       Body padding */
   /* --mwnf-popover-term-size: 1rem;                 The term's size */
+
+  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView ---------- */
+  /* Only the arrangement: the parts a view is made of carry the tokens above,
+     and a website themes a composed page by theming its parts. */
+  /* --mwnf-view-gap: 1rem;                          Between the parts of a page, and between the results and the aside */
+  /* --mwnf-view-title-size: 1.5rem;                 The page title */
+  /* --mwnf-view-title-color: inherit;               Its color */
+  /* --mwnf-view-intro-width: 42rem;                 The landing page's welcome text */
+  /* --mwnf-view-aside-width: 16rem;                 The column beside the results or the sheet */
+  /* --mwnf-view-back-size: 0.8125rem;               The record page's back link */
+  /* --mwnf-view-back-color: inherit;                Its color */
+  /* --mwnf-view-status-size: 0.75rem;               "Loading…" on the record page */
 }

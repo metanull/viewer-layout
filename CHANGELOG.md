@@ -1,5 +1,33 @@
 # Changelog
 
+## 2.3.0
+
+Wave E of the shared-pages epic (metanull/inventory-app#1691), the composed
+views (viewer-core#50 decided they live here: they are made of this
+package's components, and viewer-core does not depend on the layout).
+Additive; every export of 2.2.0 is unchanged.
+
+- A third entry point, `@metanull/viewer-layout/views` — and only there, not
+  from the package root: the views import `@metanull/viewer-core` itself,
+  whose entry point carries `.vue` files, and a website's test runner loads
+  this package natively while inlining viewer-core, so a root import would
+  fail on the first `.vue` in every website's tests (which is what the
+  downstream check of this release caught). A website that names the views
+  inlines this package too. `HomeView` (the welcome, the section cards and
+  the record on display, from `config.home`), `CatalogueResultsView` (the
+  filters in the URL, the options, the date rule, the order, the pages, the
+  rows and the summary, from a spec) and `RecordView` (the record's language
+  and loads, the sheet, the sections, the credits, the citation, the related
+  records and the glossary popover, from a spec). Each keeps slots for what
+  only one website has, and a website whose page is not this shape writes
+  its own on the same components.
+- `--mwnf-view-*` tokens for the arrangement of a composed page, in the
+  reference file.
+- Peer dependency `@metanull/viewer-core` ^1.8.0: the views read the
+  engine of wave B. The build externalizes `@metanull/viewer-core` as it
+  already did `@metanull/viewer-core/i18n`; the tests stand a fixture data
+  package behind `@inventory-data`, as a website stands its own.
+
 ## 2.2.0
 
 Wave C of the shared-pages epic (metanull/inventory-app#1691): the content

@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
@@ -5,29 +6,48 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      // Two entry points: the whole package, and the content components on
+      // Three entry points: the whole package; the content components on
       // their own, so a page that composes a list and a pagination does not
-      // carry the shell with them. What the two share is emitted once.
+      // carry the shell with them; and the composed views, which a website
+      // names in its configuration. What they share is emitted once.
       entry: {
         index: 'src/index.js',
         content: 'src/content/index.js',
+        views: 'src/views/index.js',
       },
       formats: ['es'],
       fileName: (format, name) => `${name}.js`,
     },
-    // One stylesheet for both entries: `style.css` stays the one file a
+    // One stylesheet for every entry: `style.css` stays the one file a
     // website imports, whichever entry point its code reaches.
     cssCodeSplit: false,
     rollupOptions: {
       // viewer-core is the application's, not ours: the layout reads the
-      // active language from the same instance the application installed.
-      external: ['vue', '@metanull/viewer-core/i18n'],
+      // active language, the records and the engine from the same instance
+      // the application installed.
+      external: ['vue', '@metanull/viewer-core', '@metanull/viewer-core/i18n'],
       output: {
         assetFileNames: 'viewer-layout.[ext]',
       },
     },
   },
+  resolve: {
+    alias: {
+      // The composed views read records through viewer-core, which reads the
+      // data package through this alias; the tests stand a fixture package
+      // behind it, as a website stands its own.
+      '@inventory-data': fileURLToPath(new URL('./tests/fixtures/data-package', import.meta.url)),
+    },
+  },
   test: {
     environment: 'jsdom',
+    server: {
+      deps: {
+        // viewer-core ships .vue source and reads the alias above through
+        // import.meta.glob; Node cannot do either unless Vitest processes
+        // the package instead of externalizing it.
+        inline: ['@metanull/viewer-core'],
+      },
+    },
   },
 })
