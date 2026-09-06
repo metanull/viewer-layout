@@ -1,7 +1,7 @@
 {
   "name": "@metanull/viewer-layout",
-  "version": "2.2.0",
-  "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, and the content components a page is made of.",
+  "version": "2.3.0",
+  "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, the content components a page is made of, and the composed views a website names instead of writing a page.",
   "type": "module",
   "license": "UNLICENSED",
   "repository": {
@@ -20,6 +20,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./content": "./dist/content.js",
+    "./views": "./dist/views.js",
     "./style.css": "./dist/viewer-layout.css",
     "./tokens.reference.css": "./src/tokens.reference.css"
   },
@@ -31,16 +32,17 @@
     "test": "vitest run"
   },
   "peerDependencies": {
-    "@metanull/viewer-core": "^1.6.0",
+    "@metanull/viewer-core": "^1.8.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@metanull/viewer-core": "^1.6.0",
+    "@metanull/viewer-core": "^1.8.0",
     "@vitejs/plugin-vue": "^6.0.8",
     "@vue/test-utils": "^2.4.11",
     "jsdom": "^30.0.1",
     "vite": "^8.2.2",
     "vitest": "^4.1.11",
-    "vue": "^3.5.0"
+    "vue": "^3.5.0",
+    "vue-router": "^5.3.1"
   }
 }

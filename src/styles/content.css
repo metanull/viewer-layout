@@ -867,3 +867,71 @@
     max-width: none;
   }
 }
+
+/* ── The composed views ─────────────────────────────────────────────────── */
+/* Only the arrangement of the parts: what a view is made of carries its own
+   tokens above. A website themes a composed page by theming its parts. */
+
+.mwnf-home,
+.mwnf-catalogue,
+.mwnf-record {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-view-gap, 1rem);
+}
+
+.mwnf-home__title,
+.mwnf-catalogue__title,
+.mwnf-record__title {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-view-title-size, 1.5rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-view-title-color, inherit);
+}
+
+.mwnf-home__intro {
+  max-width: var(--mwnf-view-intro-width, 42rem);
+}
+
+.mwnf-catalogue__body,
+.mwnf-record__body {
+  display: flex;
+  gap: var(--mwnf-view-gap, 1rem);
+  align-items: flex-start;
+}
+
+.mwnf-catalogue__results,
+.mwnf-record__main {
+  flex: 1;
+  min-width: 0;
+}
+
+.mwnf-catalogue__aside,
+.mwnf-record__aside {
+  flex: 0 0 var(--mwnf-view-aside-width, 16rem);
+}
+
+.mwnf-record__back {
+  font-size: var(--mwnf-view-back-size, 0.8125rem);
+  color: var(--mwnf-view-back-color, inherit);
+}
+
+.mwnf-record__status {
+  margin: 0;
+  font-size: var(--mwnf-view-status-size, 0.75rem);
+  color: var(--mwnf-color-muted, #555555);
+}
+
+@media (max-width: 48rem) {
+  .mwnf-catalogue__body,
+  .mwnf-record__body {
+    flex-direction: column;
+  }
+
+  .mwnf-catalogue__aside,
+  .mwnf-record__aside {
+    flex: none;
+    width: 100%;
+  }
+}

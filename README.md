@@ -184,6 +184,50 @@ The texts they read — `core.action.apply`, `.reset`, `.close`,
 `record.media.photograph`, `record.sheet.credits`, `.languages` — are in
 every bundle of `@metanull/viewer-i18n` from 1.7.0. Every other text is a prop.
 
+## Composed views
+
+Three whole pages, made of the content components on viewer-core's
+composables and driven by a declaration the website writes instead of a
+page. They are exported from the package and, on their own, from
+`@metanull/viewer-layout/views`. A website names them in viewer-core's
+`config.views` — the `home`, `list` and `detail` slots of the router — or
+on its own routes, with the spec as route props. A website whose page is
+not this shape writes its own component on the same content components:
+the escape hatch stays open. They live here rather than in viewer-core
+because they are made of this package's components, and viewer-core does
+not depend on the layout.
+
+Every text in a declaration is an **entry name, written out**, resolved by
+the view through `t`; a number is placed beside its text by the view, never
+inside it.
+
+```js
+import { CatalogueResultsView, HomeView, RecordView } from '@metanull/viewer-layout/views'
+
+export default {
+  views: { home: HomeView },
+  home: {
+    title: 'mysite.home.title',
+    intro: 'mysite.home.intro',
+    cards: [{ title: 'mysite.nav.catalogue', description: 'mysite.home.catalogueText', action: 'core.action.browse', to: { name: 'catalogue' } }],
+    featured: { entity: 'items', heading: 'mysite.home.itemOnDisplay', action: 'core.action.viewDetails', route: 'item', eyebrow: 'type', meta: ['location', 'dates'] },
+  },
+  extraViews: [
+    { path: '/catalogue', name: 'catalogue', component: CatalogueResultsView, props: { spec: catalogue }, meta: { section: 'catalogue', entities: ['items', 'countries'] } },
+    { path: '/item/:id', name: 'item', component: RecordView, props: (route) => ({ spec: sheet, id: route.params.id }), meta: { section: 'catalogue', entities: ['items', 'countries'] } },
+  ],
+}
+```
+
+| View | Declaration | Slots |
+|---|---|---|
+| `HomeView` | `config.home` or the same as props: `title`, `intro` (Markdown), `cards: [{ title, description, action, to \| href }]`, `featured: { entity, heading, action, route, eyebrow, meta, seed }` — the pick is `useFeaturedRecord` | `before`, default, `after` |
+| `CatalogueResultsView` | `spec`: `entity`, `keys`, `facets` (viewer-core's facet spec), `facetScope: 'all' \| 'matching'`, `controls: [{ key, type: 'select' \| 'year', label, placeholder, anyLabel, hideEmpty }]`, `filterMode: 'apply' \| 'immediate'`, `scope(record, filters)`, `match(record, filters)`, `dates: { mode, begin, end }`, `sort`, `pageSize`, `variant: 'list' \| 'grid'`, `record(record, helpers)`, `recordRoute`, `summary(context)`, `title`, `filterTitle`, `empty`, `actionLabel`, `pagination` | `before`, `filters`, `actions`, `aside`, `empty`, `after` — each given `{ filters, active, apply, reset, matching, pageInfo, options }` |
+| `RecordView` | `spec` and `id`: `entity`, `translations`, `attribution`, `fields` (viewer-core's `sheetRows` spec, or a function of the context), `sections`, `layout`, `shortDescription`, `media(record, ctx)`, `mediaVariant`, `credits`, `workingNumber`, `citation: { project, permalink, heading } \| false`, `related: { variant, heading, record, route } \| false`, `back: { label, to \| href }`, `title(ctx)` | `header`, `before-sheet`, `after-sheet`, `aside`, `related`, `after`, and one named after every `custom` or `link` row — each given `{ record, text, language, dir, glossary, ready, attribution, t, tr }` |
+
+The tokens they read — `--mwnf-view-*` — arrange the parts; a website themes
+a composed page by theming the parts.
+
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@metanull/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.

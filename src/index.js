@@ -9,6 +9,8 @@ export { default as AppHyperlinks } from './sections/AppHyperlinks.vue'
 export { default as AppSponsors } from './sections/AppSponsors.vue'
 export { default as AppFooter } from './sections/AppFooter.vue'
 
-// The content components are also reachable from here; `/content` is the
-// entry point for code that wants them without the shell.
+// The content components and the composed views are also reachable from
+// here; `/content` and `/views` are the entry points for code that wants
+// them without the shell.
 export * from './content/index.js'
+export * from './views/index.js'
