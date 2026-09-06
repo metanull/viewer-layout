@@ -1,5 +1,19 @@
 # Changelog
 
+## 2.4.0
+
+Two hooks the first site adoptions of the composed views asked for.
+Additive.
+
+- `CatalogueResultsView`: `spec.narrow(list, filters, helpers)` — a site rule
+  over the whole list, applied after `scope`, the facets and `match` and
+  before the date rule. A keyword index answers a list, not a predicate per
+  record; this is where a results page that also searches hands the engine
+  its hits.
+- `RecordView`: the context every slot receives gains `languages` (the
+  record's, labelled) and `select`, so a `header` of the site's own — a
+  type badge, a timeline link — can still offer the record's languages.
+
 ## 2.3.0
 
 Wave E of the shared-pages epic (metanull/inventory-app#1691), the composed

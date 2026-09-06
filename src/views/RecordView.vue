@@ -39,8 +39,10 @@ import SmartLink from '../content/SmartLink.vue'
 // `fields` and `sections` may be functions of the context (a monument and an
 // object read different fields on the standalone sites). Slots — `header`,
 // `before-sheet`, `after-sheet`, `aside`, `related`, `after` — receive the
-// context `{ record, text, language, dir, glossary, ready, attribution, t,
-// tr }`; a slot named after a `custom` or `link` row's key reaches the sheet.
+// context `{ record, text, language, languages, select, dir, glossary,
+// ready, attribution, t, tr }` (`languages` and `select` so a `header` of the
+// site's own can still offer the record's languages); a slot named after a
+// `custom` or `link` row's key reaches the sheet.
 // A website whose page is not this shape registers its own component instead.
 
 const props = defineProps({
@@ -78,6 +80,8 @@ const ctx = computed(() => ({
   record: record.value,
   text: text.value,
   language: language.value,
+  languages: languageEntries.value,
+  select,
   dir: dir.value,
   glossary: glossary.value,
   ready: ready.value,

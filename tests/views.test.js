@@ -154,6 +154,15 @@ describe('CatalogueResultsView', () => {
     expect(router.currentRoute.value.query.country).toBe('c-sy')
   })
 
+  it('hands the whole list to a site rule that narrows it — a keyword index, say', async () => {
+    const { wrapper } = await mountView(CatalogueResultsView, {
+      props: { spec: { ...spec, narrow: (list, filters) => (filters.country ? list : list.filter((r) => r.id === 'o2')) } },
+      route: '/objects',
+    })
+    await settle(() => wrapper.findAll('.mwnf-list__row').length > 0)
+    expect(wrapper.findAll('.mwnf-list__name').map((n) => n.text())).toEqual(['Mosque lamp'])
+  })
+
   it('renders the tiles when the spec says grid, and the empty text when nothing matches', async () => {
     const { wrapper } = await mountView(CatalogueResultsView, {
       props: { spec: { ...spec, variant: 'grid', match: () => false } },
@@ -198,6 +207,19 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-related .mwnf-list__meta').text()).toContain('Same workshop')
     expect(wrapper.find('.mwnf-record__back').text()).toContain('Back to results')
     expect(wrapper.find('.mwnf-media').exists()).toBe(true)
+  })
+
+  it("gives a header of the site's own the record's languages and the switch", async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec, id: 'o1' },
+      slots: { header: '<template #header="{ languages, select, text }"><p class="own-header">{{ text.name }} in {{ languages.map((l) => l.code).join("+") }}</p><button class="own-switch" @click="select(\'fr\')">fr</button></template>' },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('.own-header').text()).toContain('in en+fr')
+    await wrapper.find('.own-switch').trigger('click')
+    await settle(() => wrapper.find('.own-header').text().includes('Bol'))
+    expect(wrapper.find('.own-header').text()).toContain('Bol glaçuré')
   })
 
   it('reads a monument and an object with different fields when the spec is a function', async () => {

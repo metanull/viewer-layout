@@ -28,6 +28,7 @@ import ResultsSummary from '../content/ResultsSummary.vue'
 //     filterMode: 'apply' | 'immediate',
 //     scope: (record, filters) => boolean,             // a site rule applied before anything else
 //     match: (record, filters) => boolean,             // the site's own filters (its extras)
+//     narrow: (list, filters, helpers) => list,        // a site rule over the whole list — a keyword index, say
 //     dates: { mode: 'overlap' | 'contain', begin: 'begin', end: 'end' },   // decision D5, declared once
 //     sort: 'chronological' | { undated: 'first' } | (list) => list | false,
 //     pageSize: 20,
@@ -92,6 +93,7 @@ const matching = computed(() => {
     list = list.filter((record) => facetValues(record, facet).map(String).includes(String(wanted)))
   }
   if (s.match) list = list.filter((record) => s.match(record, filters, helpers))
+  if (s.narrow) list = s.narrow(list, filters, helpers)
   if (s.dates) {
     list = dateRange(list, {
       begin: filters[s.dates.begin ?? 'begin'],
