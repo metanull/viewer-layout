@@ -1,0 +1,21 @@
+// The content components: what renders inside a page, from props, rather
+// than the frame around it. Importing this entry point brings none of the
+// shell — a results page that composes a list and a pagination does not
+// carry the header, the banner and the footer with them.
+import '../styles/content.css'
+
+export { default as SectionCards } from './SectionCards.vue'
+export { default as FeaturedRecord } from './FeaturedRecord.vue'
+export { default as RecordList } from './RecordList.vue'
+export { default as RecordGrid } from './RecordGrid.vue'
+export { default as Pagination } from './Pagination.vue'
+export { default as FacetSelect } from './FacetSelect.vue'
+export { default as FilterPanel } from './FilterPanel.vue'
+export { default as ResultsSummary } from './ResultsSummary.vue'
+export { default as RecordLanguages } from './RecordLanguages.vue'
+export { default as RecordSheet } from './RecordSheet.vue'
+export { default as SheetSection } from './SheetSection.vue'
+export { default as RecordCredits } from './RecordCredits.vue'
+export { default as RelatedRecords } from './RelatedRecords.vue'
+export { default as MediaGallery } from './MediaGallery.vue'
+export { default as GlossaryPopover } from './GlossaryPopover.vue'

@@ -140,6 +140,50 @@ The image's `alt` is `imageAlt`, else the caption's name (with
   one tile per link, each with its `label` and `description`. An exhibition's
   bottom banner.
 
+## Content components
+
+What renders *inside* a page, from props: the pieces every website's landing
+page, results pages and record page are made of. Behaviour is viewer-core's
+(`useListQuery`, `paginate`, `useFacets`, `useRecordSheet`, `sheetRows`, …);
+what a page holds — which cards, which fields, which filters — is the site's;
+these render it. They are exported from the package and, on their own,
+from `@metanull/viewer-layout/content`, which brings none of the shell.
+
+```js
+import { RecordList, Pagination } from '@metanull/viewer-layout/content'
+```
+
+Links take an `href` the website's router produced — the same rule as the
+sections. A route location (`to`) is honoured too, through the `RouterLink`
+the application registered, without any router coupling here.
+
+| Component | Props | Notes |
+|---|---|---|
+| `SectionCards` | `cards: [{ title, description, action, href \| to }]` | a landing page's grid of section cards |
+| `FeaturedRecord` | `heading`, `image`, `imageAlt`, `eyebrow`, `name` (inline HTML), `meta: [string]`, `action`, `href \| to` | the "item on display" spotlight; the default slot replaces the record |
+| `RecordList` | `records`, `loading`, `loadingText` | records as rows; `#empty` slot |
+| `RecordGrid` | `records`, `loading`, `loadingText`, `actionLabel`, `dateCutoff` (80) | records as tiles with a hover card, shown under the image on a narrow screen; `#empty` slot |
+| `Pagination` | `pageInfo` (viewer-core's `paginate()` result), `window` (5), `jump`, `ends`; emits `navigate(page)` | first / previous / a window of pages / next / last, the position beside the texts |
+| `FacetSelect` | `label`, `options: [{ value, label }]`, `modelValue`, `placeholder`, `anyLabel`, `disabled`, `hideEmpty`; emits `update:modelValue` | one labelled select for one facet |
+| `FilterPanel` | `title`, `mode: 'apply' \| 'immediate'`, `applyLabel`, `resetLabel`, `disabled`; emits `apply`, `reset` | the box the controls (default slot) sit in; `apply` has both buttons, `immediate` only Reset |
+| `ResultsSummary` | `parts: [{ label, count?, value? }]` | each count beside its label, never inside a text; `#actions` slot |
+| `RecordLanguages` | `languages`, `language`; emits `select(code)` | the languages one record carries, as pressed buttons |
+| `RecordSheet` | `rows` (viewer-core's `sheetRows()`), `layout: 'table' \| 'list'`, `dir`, `shortDescription: { html }`, `shortDescriptionAfter`, `shortDescriptionOpen` | a row rendered `custom` or `link` is handed to a slot named after its key |
+| `SheetSection` | `heading`, `html`, `dir` | a headed block under the sheet |
+| `RecordCredits` | `credits: [{ label, value }]`, `workingNumber`, `workingNumberLabel`, `citation`, `heading`, `citationHeading` | who made the sheet, the working number, the citation |
+| `RelatedRecords` | `heading`, `records`, `variant: 'list' \| 'grid'`, `actionLabel` | the same two presentations as a results page; outside references go in the default slot |
+| `MediaGallery` | `images: [{ url, alt, caption, photographer, copyright }]`, `start`, `variant: '' \| 'row'` | the current image, thumbnails, caption, a lightbox (Escape closes, arrows move, focus returns); `row` renders every image in a row |
+| `GlossaryPopover` | `term: { word, spelling, definition }`, `html`, `dir`; emits `close` | the definition of a clicked term, fixed in a corner; Escape closes, focus returns |
+
+The record contract `RecordList`, `RecordGrid` and `RelatedRecords` share:
+`{ id, image?, imageAlt?, name (inline HTML), meta: [string], badge?, href? | to? }`.
+
+The texts they read — `core.action.apply`, `.reset`, `.close`,
+`core.pagination.*`, `catalogue.pagination.*`, `record.action.*ShortDescription`,
+`record.citation.heading`, `record.glossary.heading`, `.close`,
+`record.media.photograph`, `record.sheet.credits`, `.languages` — are in
+every bundle of `@metanull/viewer-i18n` from 1.7.0. Every other text is a prop.
+
 ## Theming
 
 Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@metanull/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.

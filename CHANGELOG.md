@@ -1,5 +1,43 @@
 # Changelog
 
+## 2.2.0
+
+Wave C of the shared-pages epic (metanull/inventory-app#1691): the content
+components — what renders inside a page, from props. Additive; every export
+of 2.1.0 is unchanged. The texts these read are in every bundle of
+`@metanull/viewer-i18n` from 1.7.0.
+
+- A second entry point, `@metanull/viewer-layout/content` (#23), for a page
+  that composes a list and a pagination without carrying the shell; the
+  same components are exported from the package too. One stylesheet for
+  both. Their tokens — `--mwnf-card-*`, `--mwnf-featured-*`, `--mwnf-list-*`,
+  `--mwnf-grid-*`, `--mwnf-pagination-*`, `--mwnf-filter-*`, `--mwnf-facet-*`,
+  `--mwnf-summary-*`, `--mwnf-languages-*`, `--mwnf-sheet-*`, `--mwnf-credits-*`,
+  `--mwnf-media-*`, `--mwnf-popover-*` — are in `tokens.reference.css`, and a
+  test now fails when a stylesheet reads a token the reference does not
+  document.
+- `SectionCards` and `FeaturedRecord` (#24): a landing page's cards and its
+  spotlight, which three websites carried with the same hundred lines of CSS.
+- `RecordList` and `RecordGrid` (#25): records as rows (the standalone row)
+  and as tiles with a hover card (the DXA grid), over one record contract —
+  `{ id, image, imageAlt, name, meta, badge, href | to }` — so a page swaps
+  one for the other by changing a component name.
+- `Pagination`, `FacetSelect`, `FilterPanel`, `ResultsSummary` (#26): one
+  pagination for the five that existed, a labelled facet select, the panel
+  in its two legacy shapes (`apply` and `immediate`), and a summary that
+  renders every count beside its label.
+- `RecordLanguages`, `RecordSheet`, `SheetSection`, `RecordCredits`,
+  `RelatedRecords` (#27): the sheet in its two legacy layouts (table and
+  list) with the short-description toggle built in and a slot per custom
+  row, and the blocks around it.
+- `MediaGallery` and `GlossaryPopover` (#28): one image gallery with
+  thumbnails and a lightbox (and a `row` variant for the standalone sites'
+  flat row until they adopt the gallery — decision D4), and one glossary
+  popover. Escape closes both and focus returns to what opened them.
+- Links: an `href` the website's router produced, as everywhere in this
+  package; a route location (`to`) is honoured through the application's
+  `RouterLink` when it registered one. Nothing here imports vue-router.
+
 ## 2.1.0
 
 The alignment pass (metanull/inventory-app#1683): `PageShell` covers the

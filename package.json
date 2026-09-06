@@ -1,7 +1,7 @@
 {
   "name": "@metanull/viewer-layout",
-  "version": "2.1.0",
-  "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections.",
+  "version": "2.2.0",
+  "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, and the content components a page is made of.",
   "type": "module",
   "license": "UNLICENSED",
   "repository": {
@@ -19,6 +19,7 @@
   "module": "./dist/index.js",
   "exports": {
     ".": "./dist/index.js",
+    "./content": "./dist/content.js",
     "./style.css": "./dist/viewer-layout.css",
     "./tokens.reference.css": "./src/tokens.reference.css"
   },
