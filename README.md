@@ -188,14 +188,19 @@ every bundle of `@metanull/viewer-i18n` from 1.7.0. Every other text is a prop.
 
 Three whole pages, made of the content components on viewer-core's
 composables and driven by a declaration the website writes instead of a
-page. They are exported from the package and, on their own, from
-`@metanull/viewer-layout/views`. A website names them in viewer-core's
-`config.views` — the `home`, `list` and `detail` slots of the router — or
-on its own routes, with the spec as route props. A website whose page is
-not this shape writes its own component on the same content components:
-the escape hatch stays open. They live here rather than in viewer-core
-because they are made of this package's components, and viewer-core does
-not depend on the layout.
+page. They are exported from `@metanull/viewer-layout/views` — and only from
+there: they read the records and the engine from `@metanull/viewer-core`
+itself, whose entry point carries `.vue` files, and a website's test runner
+that loads this package natively would fail on the first one if the package
+root imported them. A website that names the composed views imports the
+`/views` entry point and lists `@metanull/viewer-layout` next to
+`@metanull/viewer-core` in its Vitest `server.deps.inline` (the template
+does both). A website names them in viewer-core's `config.views` — the
+`home`, `list` and `detail` slots of the router — or on its own routes, with
+the spec as route props. A website whose page is not this shape writes its
+own component on the same content components: the escape hatch stays open.
+They live here rather than in viewer-core because they are made of this
+package's components, and viewer-core does not depend on the layout.
 
 Every text in a declaration is an **entry name, written out**, resolved by
 the view through `t`; a number is placed beside its text by the view, never

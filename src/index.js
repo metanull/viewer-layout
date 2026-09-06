@@ -9,8 +9,14 @@ export { default as AppHyperlinks } from './sections/AppHyperlinks.vue'
 export { default as AppSponsors } from './sections/AppSponsors.vue'
 export { default as AppFooter } from './sections/AppFooter.vue'
 
-// The content components and the composed views are also reachable from
-// here; `/content` and `/views` are the entry points for code that wants
-// them without the shell.
+// The content components are also reachable from here; `/content` is the
+// entry point for code that wants them without the shell.
+//
+// The composed views are NOT re-exported here, on purpose. They read the
+// records and the engine from `@metanull/viewer-core` itself, whose entry
+// point carries `.vue` files; a website's test runner loads this package
+// natively and inlines viewer-core, so an import of viewer-core from this
+// entry point would be resolved by Node and fail on the first `.vue`. A
+// website that names the composed views imports `@metanull/viewer-layout/views`
+// and inlines this package in its test runner too (the template does both).
 export * from './content/index.js'
-export * from './views/index.js'
