@@ -11,6 +11,25 @@ export const layoutTexts = {
   'layout.nav.menu': 'Menu',
   'layout.nav.skipToContent': 'Skip to content',
   'layout.sponsors.label': 'Sponsors',
+  // The entries the content components read, from viewer-i18n 1.7.0's
+  // `core`, `catalogue` and `record` namespaces.
+  'core.action.apply': 'Apply',
+  'core.action.close': 'Close',
+  'core.action.reset': 'Reset',
+  'core.pagination.next': 'Next',
+  'core.pagination.previous': 'Previous',
+  'catalogue.pagination.first': 'First',
+  'catalogue.pagination.go': 'Go',
+  'catalogue.pagination.last': 'Last',
+  'catalogue.pagination.page': 'Page',
+  'record.action.hideShortDescription': 'Hide short description',
+  'record.action.viewShortDescription': 'View short description',
+  'record.citation.heading': 'Citation',
+  'record.glossary.close': 'Close',
+  'record.glossary.heading': 'Glossary',
+  'record.media.photograph': 'Photograph',
+  'record.sheet.credits': 'Credits',
+  'record.sheet.languages': 'Languages',
 }
 
 export function globalWithI18n(options = {}) {

@@ -154,4 +154,182 @@
   /* --mwnf-footer-gap: 0.5rem;                      Gap between footer links */
   /* --mwnf-footer-links-separator: "|";             Separator between footer links */
   /* --mwnf-footer-link-color: inherit;              Footer link color */
+
+  /* ---------- Content: SectionCards ---------- */
+  /* --mwnf-card-columns: 3;                         Cards per row */
+  /* --mwnf-card-columns-narrow: 1;                  … on a narrow screen */
+  /* --mwnf-card-gap: 1rem;                          Gap between cards */
+  /* --mwnf-card-inner-gap: 0.5rem;                  Gap between a card's title, text and action */
+  /* --mwnf-card-padding: 1rem;                      Card padding */
+  /* --mwnf-card-border: 1px solid #dddddd;          Card border */
+  /* --mwnf-card-radius: 0;                          Card corner radius */
+  /* --mwnf-card-background: transparent;            Card background */
+  /* --mwnf-card-title-size: 1.125rem;               Card title size */
+  /* --mwnf-card-title-color: inherit;               Card title color */
+  /* --mwnf-card-text-size: 0.875rem;                Card text size */
+  /* --mwnf-card-text-color: #555555;                Card text color */
+  /* --mwnf-card-action-weight: 600;                 Weight of the action line */
+  /* --mwnf-card-action-color: #1c1c1c;              Color of the action line (cards and featured record) */
+
+  /* ---------- Content: FeaturedRecord ---------- */
+  /* --mwnf-featured-heading-size: 1rem;             Heading over the spotlight */
+  /* --mwnf-featured-heading-color: inherit;         Its color */
+  /* --mwnf-featured-gap: 1.25rem;                   Gap between the image and the text */
+  /* --mwnf-featured-body-gap: 0.375rem;             Gap between the text lines */
+  /* --mwnf-featured-image-width: 12.5rem;           Image width */
+  /* --mwnf-featured-image-height: 10rem;            Image height */
+  /* --mwnf-featured-image-border: 1px solid #dddddd; Image border */
+  /* --mwnf-featured-eyebrow-size: 0.625rem;         Line above the name */
+  /* --mwnf-featured-name-size: 1.125rem;            Name size */
+  /* --mwnf-featured-name-color: inherit;            Name color */
+  /* --mwnf-featured-meta-size: 0.8125rem;           Size of the lines under the name */
+  /* --mwnf-featured-meta-color: #555555;            Their color */
+
+  /* ---------- Content: RecordList ---------- */
+  /* --mwnf-list-gap: 0.875rem;                      Gap between the thumbnail and the text */
+  /* --mwnf-list-row-padding: 0.75rem 0;             Row padding */
+  /* --mwnf-list-row-border: 1px solid #dddddd;      Line between rows */
+  /* --mwnf-list-thumb-width: 5rem;                  Thumbnail width */
+  /* --mwnf-list-thumb-height: 4rem;                 Thumbnail height */
+  /* --mwnf-list-thumb-background: #dddddd;          Behind the thumbnail, and when there is none */
+  /* --mwnf-list-body-gap: 0.25rem;                  Gap between the name and the metadata */
+  /* --mwnf-list-name-size: 1rem;                    Name size */
+  /* --mwnf-list-name-color: inherit;                Name color */
+  /* --mwnf-list-meta-gap: 0.5rem;                   Gap between metadata items */
+  /* --mwnf-list-meta-size: 0.8125rem;               Metadata size */
+  /* --mwnf-list-meta-color: #555555;                Metadata color */
+  /* --mwnf-list-meta-separator: "·";                Separator between metadata items */
+  /* --mwnf-list-badge-size: 0.625rem;               Badge size */
+  /* --mwnf-list-badge-color: #555555;               Badge color */
+
+  /* ---------- Content: RecordGrid ---------- */
+  /* --mwnf-grid-columns: 3;                         Tiles per row */
+  /* --mwnf-grid-columns-narrow: 2;                  … on a narrow screen (one below 31.25rem) */
+  /* --mwnf-grid-gap: 0.25rem;                       Gap between tiles */
+  /* --mwnf-grid-tile-background: #dddddd;           Behind the image, and when there is none */
+  /* --mwnf-grid-image-height-narrow: 13.75rem;      Image height on a narrow screen */
+  /* --mwnf-grid-card-background: rgba(0,0,0,0.85);  The card over the tile */
+  /* --mwnf-grid-card-text: #ffffff;                 Its text color */
+  /* --mwnf-grid-card-padding: 0.625rem;             Its padding */
+  /* --mwnf-grid-card-gap: 0.625rem;                 Gap between its image and its text */
+  /* --mwnf-grid-card-size: 0.8125rem;               Its text size */
+  /* --mwnf-grid-card-line-height: 1.35;             Its line height */
+  /* --mwnf-grid-card-line-gap: 0.1875rem;           Gap between its lines */
+
+  /* ---------- Content: Pagination ---------- */
+  /* --mwnf-pagination-gap: 0.25rem;                 Gap between the buttons */
+  /* --mwnf-pagination-padding: 0.75rem 0;           Vertical padding */
+  /* --mwnf-pagination-size: 0.8125rem;              Text size */
+  /* --mwnf-pagination-button-padding: 0.1875rem 0.5625rem; Button padding */
+  /* --mwnf-pagination-button-border: 1px solid #dddddd; Button border */
+  /* --mwnf-pagination-button-background: transparent; Button background */
+  /* --mwnf-pagination-button-hover-background: #dddddd; … on hover */
+  /* --mwnf-pagination-button-text: #1c1c1c;         Button text color */
+  /* --mwnf-pagination-active-background: #1c1c1c;   The current page */
+  /* --mwnf-pagination-active-text: #ffffff;         Its text color */
+  /* --mwnf-pagination-position-color: #555555;      The "3 / 12" position */
+  /* --mwnf-pagination-jump-width: 3.75rem;          The "go to page" field */
+
+  /* ---------- Content: FilterPanel, FacetSelect, ResultsSummary ---------- */
+  /* --mwnf-filter-gap: 0.75rem;                     Gap between the controls */
+  /* --mwnf-filter-padding: 1rem;                    Panel padding */
+  /* --mwnf-filter-border: 1px solid #dddddd;        Panel border */
+  /* --mwnf-filter-background: transparent;          Panel background */
+  /* --mwnf-filter-title-size: 0.75rem;              Panel title size */
+  /* --mwnf-filter-title-color: #555555;             Panel title color */
+  /* --mwnf-filter-label-size: 0.8125rem;            Label and button size */
+  /* --mwnf-filter-label-color: #555555;             Label color */
+  /* --mwnf-facet-gap: 0.25rem;                      Gap between a label and its select */
+  /* --mwnf-filter-control-padding: 0.25rem 0.375rem; Select padding */
+  /* --mwnf-filter-control-border: 1px solid #dddddd; Select border */
+  /* --mwnf-filter-control-background: #ffffff;      Select background */
+  /* --mwnf-filter-control-text: #1c1c1c;            Select text color */
+  /* --mwnf-filter-button-padding: 0.375rem 0.875rem; Button padding */
+  /* --mwnf-filter-button-border: 1px solid #1c1c1c; Apply button border */
+  /* --mwnf-filter-button-background: #1c1c1c;       Apply button background */
+  /* --mwnf-filter-button-text: #ffffff;             Apply button text color */
+  /* --mwnf-filter-reset-background: transparent;    Reset button background */
+  /* --mwnf-filter-reset-text: #1c1c1c;              Reset button text color */
+  /* --mwnf-summary-gap: 0.75rem;                    Gap between the parts of the summary line */
+  /* --mwnf-summary-part-gap: 0.25rem;               Gap between a label and its count */
+  /* --mwnf-summary-padding: 0 0 0.5rem;             Summary padding */
+  /* --mwnf-summary-border: 1px solid #dddddd;       Line under the summary */
+  /* --mwnf-summary-size: 0.8125rem;                 Summary text size */
+  /* --mwnf-summary-color: #555555;                  Summary text color */
+  /* --mwnf-summary-value-color: inherit;            Color of the counts and values */
+
+  /* ---------- Content: RecordLanguages ---------- */
+  /* --mwnf-languages-gap: 0.25rem;                  Gap between the buttons */
+  /* --mwnf-languages-button-padding: 0.125rem 0.5rem; Button padding */
+  /* --mwnf-languages-button-border: 1px solid #dddddd; Button border */
+  /* --mwnf-languages-button-background: transparent; Button background */
+  /* --mwnf-languages-button-text: inherit;          Button text color */
+  /* --mwnf-languages-button-size: 0.75rem;          Button text size */
+  /* --mwnf-languages-active-background: #1c1c1c;    The active language */
+  /* --mwnf-languages-active-text: #ffffff;          Its text color */
+
+  /* ---------- Content: RecordSheet, SheetSection, RecordCredits, RelatedRecords ---------- */
+  /* --mwnf-sheet-text-size: 0.875rem;               Value text size */
+  /* --mwnf-sheet-text-color: inherit;               Value text color */
+  /* --mwnf-sheet-label-size: 0.8125rem;             Label size */
+  /* --mwnf-sheet-label-weight: 600;                 Label weight */
+  /* --mwnf-sheet-label-color: inherit;              Label color */
+  /* --mwnf-sheet-label-background: transparent;     Label cell background (table) */
+  /* --mwnf-sheet-label-width: 36%;                  Label column width (table) */
+  /* --mwnf-sheet-cell-padding: 0.375rem 0.625rem;   Cell padding (table) */
+  /* --mwnf-sheet-cell-border: 1px solid #dddddd;    Cell border (table) */
+  /* --mwnf-sheet-gap: 0.75rem;                      Gap between rows (list) */
+  /* --mwnf-sheet-paragraph-gap: 0.75em;             Gap between paragraphs of a block */
+  /* --mwnf-sheet-list-indent: 1.5em;                Indent of a list in a block */
+  /* --mwnf-sheet-toggle-color: #1c1c1c;             The short-description toggle */
+  /* --mwnf-sheet-term-color: inherit;               A glossary term in a text */
+  /* --mwnf-sheet-term-underline: #1c1c1c;           Its dotted underline */
+  /* --mwnf-sheet-section-gap: 1.25rem;              Space above a section, the credits, the related block */
+  /* --mwnf-sheet-section-padding: 1rem;             Space under their top border */
+  /* --mwnf-sheet-section-border: 1px solid #dddddd; That border */
+  /* --mwnf-sheet-heading-size: 0.8125rem;           Section heading size */
+  /* --mwnf-sheet-heading-color: #555555;            Section heading color */
+  /* --mwnf-credits-border: 2px solid #1c1c1c;       Line above the credits */
+  /* --mwnf-credits-size: 0.75rem;                   Credits text size */
+  /* --mwnf-credits-color: #555555;                  Credits text color */
+  /* --mwnf-credits-gap: 0.25rem 1rem;               Gap in the credits list */
+
+  /* ---------- Content: MediaGallery ---------- */
+  /* --mwnf-media-gap: 0.75rem;                      Gap between the image and the thumbnails, and between row images */
+  /* --mwnf-media-background: #dddddd;               Behind an image */
+  /* --mwnf-media-row-width: 11.25rem;               Image width (row variant) */
+  /* --mwnf-media-row-height: 8.75rem;               Image height (row variant) */
+  /* --mwnf-media-row-border: 1px solid #dddddd;     Image border (row variant) */
+  /* --mwnf-media-thumb-gap: 0.375rem;               Gap between thumbnails */
+  /* --mwnf-media-thumb-size: 4rem;                  Thumbnail size */
+  /* --mwnf-media-thumb-border: 2px solid transparent; Thumbnail border */
+  /* --mwnf-media-thumb-active-border: 2px solid #1c1c1c; The current thumbnail */
+  /* --mwnf-media-caption-margin: 0.375rem 0 0;      Caption margin */
+  /* --mwnf-media-caption-gap: 0.125rem;             Gap between caption and credit */
+  /* --mwnf-media-caption-size: 0.8125rem;           Caption size */
+  /* --mwnf-media-caption-color: #555555;            Caption color */
+  /* --mwnf-media-lightbox-background: rgba(0,0,0,0.9); The lightbox */
+  /* --mwnf-media-lightbox-text: #ffffff;            Its controls */
+  /* --mwnf-media-lightbox-max-width: 88vw;          The image's max width in it */
+  /* --mwnf-media-lightbox-max-height: 88vh;         The image's max height in it */
+  /* --mwnf-media-lightbox-control-size: 3.75rem;    Size of the previous/next controls */
+  /* --mwnf-media-lightbox-control-padding: 0 1.25rem; Their padding */
+  /* --mwnf-media-lightbox-close-size: 1.75rem;      Size of the close control */
+  /* --mwnf-media-lightbox-close-inset: 0.75rem;     Its distance from the corner */
+
+  /* ---------- Content: GlossaryPopover ---------- */
+  /* --mwnf-popover-inset: 1.5rem;                   Distance from the corner */
+  /* --mwnf-popover-inset-narrow: 0.75rem;           … on a narrow screen */
+  /* --mwnf-popover-width: 23.75rem;                 Width */
+  /* --mwnf-popover-max-height: 20rem;               Height of the scrolling body */
+  /* --mwnf-popover-border: 2px solid #1c1c1c;       Border */
+  /* --mwnf-popover-background: #ffffff;             Background */
+  /* --mwnf-popover-text: inherit;                   Text color */
+  /* --mwnf-popover-shadow: 0 4px 16px rgba(0,0,0,0.35); Shadow */
+  /* --mwnf-popover-title-padding: 0.375rem 0.75rem; Title bar padding */
+  /* --mwnf-popover-title-background: #1c1c1c;       Title bar background */
+  /* --mwnf-popover-title-text: #ffffff;             Title bar text color */
+  /* --mwnf-popover-close-size: 1rem;                Close control size */
+  /* --mwnf-popover-padding: 0.625rem 0.75rem;       Body padding */
+  /* --mwnf-popover-term-size: 1rem;                 The term's size */
 }

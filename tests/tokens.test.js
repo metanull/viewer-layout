@@ -8,6 +8,9 @@ import { globalWithI18n } from './helpers.js'
 // vitest runs with the package root as cwd; ?raw imports and import.meta.url
 // are both unreliable for CSS here, so read the file directly.
 const layoutCss = readFileSync(resolve('src/styles/layout.css'), 'utf8')
+// The content components follow the same rule, in their own stylesheet.
+const contentCss = readFileSync(resolve('src/styles/content.css'), 'utf8')
+const tokensReference = readFileSync(resolve('src/tokens.reference.css'), 'utf8')
 
 describe('token styling', () => {
   afterEach(() => {
@@ -40,13 +43,25 @@ describe('token styling', () => {
     expect(layoutCss).toMatch(/\.mwnf-header\s*{[^}]*background-color:\s*var\(--mwnf-header-background/)
   })
 
-  it('every color, font, spacing and radius in layout.css is token-driven', () => {
+  it('every token a stylesheet reads is in the reference file', () => {
+    const declared = new Set(tokensReference.match(/--mwnf-[a-z0-9-]+/g))
+    const read = new Set(`${layoutCss}\n${contentCss}`.match(/--mwnf-[a-z0-9-]+/g))
+    const missing = [...read].filter((token) => !declared.has(token))
+    expect(missing, `tokens read but not documented:\n${missing.join('\n')}`).toEqual([])
+  })
+
+  it.each([
+    ['layout.css', layoutCss],
+    ['content.css', contentCss],
+  ])('every color, font, spacing and radius in %s is token-driven', (name, layoutCss) => {
     const declarations = layoutCss
       .replace(/\/\*[\s\S]*?\*\//g, '')
       .split(';')
       .map((decl) => decl.slice(decl.lastIndexOf('{') + 1).replace(/\s+/g, ' ').trim())
       .filter((line) =>
-        /^(background(-color)?|color|font-family|font-size|padding|padding-\S+|gap|margin(-\S+)?|border(-\S+)?|border-radius|line-height|height|max-height|font-weight):/.test(
+        // `border-collapse` is structure, not a visual value; every other
+        // border property carries a width, style or colour and is a token's.
+        /^(background(-color)?|color|font-family|font-size|padding|padding-\S+|gap|margin(-\S+)?|border(?!-collapse)(-\S+)?|border-radius|line-height|height|max-height|font-weight):/.test(
           line,
         ),
       )
