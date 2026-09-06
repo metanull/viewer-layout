@@ -42,7 +42,9 @@ import ResultsSummary from '../content/ResultsSummary.vue'
 //
 // Slots — `filters` (more controls inside the panel), `actions` (beside the
 // summary), `aside` (next to the results), `empty`, `before`, `after` — each
-// receiving `{ filters, apply, reset, matching, pageInfo, options }`. A
+// receiving `{ filters, active, apply, reset, goToPage, matching, pageInfo,
+// options }`: enough for a website to compose the panel itself, in the aside
+// where legacy put it, or a second pagination above the tiles. A
 // website whose page is not this shape registers its own component instead.
 
 const props = defineProps({
@@ -139,6 +141,7 @@ const slotProps = computed(() => ({
   active: active.value,
   apply,
   reset,
+  goToPage,
   matching: matching.value,
   pageInfo: pageInfo.value,
   options: options.value,
