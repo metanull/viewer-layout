@@ -41,8 +41,10 @@ import SmartLink from '../content/SmartLink.vue'
 // `before-sheet`, `after-sheet`, `aside`, `related`, `after` — receive the
 // context `{ record, text, language, languages, select, dir, glossary,
 // ready, attribution, t, tr }` (`languages` and `select` so a `header` of the
-// site's own can still offer the record's languages); a slot named after a
-// `custom` or `link` row's key reaches the sheet.
+// site's own can still offer the record's languages); `related` also receives
+// `records` (the rows the spec made) and `outside` (the related records the
+// package does not carry), so a website can surround the block with its own;
+// a slot named after a `custom` or `link` row's key reaches the sheet.
 // A website whose page is not this shape registers its own component instead.
 
 const props = defineProps({
@@ -231,7 +233,7 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
           :citation-heading="spec.citation?.heading ? t(spec.citation.heading) : ''"
         />
 
-        <slot name="related" v-bind="ctx">
+        <slot name="related" v-bind="{ ...ctx, records: relatedRows, outside: related.outside }">
           <RelatedRecords
             v-if="relatedSpec"
             :heading="t(relatedSpec.heading ?? 'record.related.items')"

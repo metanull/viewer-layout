@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.4.1
+
+What the DXA family's adoption asked for. Additive.
+
+- `CatalogueResultsView`: every slot also receives `goToPage`, so a website
+  can compose the filter panel itself — in the aside, where the galleries
+  put it — and turn the pages from a second pagination above the tiles.
+- `RecordView`: the `related` slot also receives `records` (the rows the
+  spec made) and `outside` (the related records the package does not
+  carry), so a website can surround the related block with its own without
+  computing the relation again.
+
 ## 2.4.0
 
 Two hooks the first site adoptions of the composed views asked for.

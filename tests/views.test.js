@@ -144,11 +144,15 @@ describe('CatalogueResultsView', () => {
   it('navigates when a control changes in immediate mode, and hands its slots the state', async () => {
     const { wrapper, router } = await mountView(CatalogueResultsView, {
       props: { spec: { ...spec, filterMode: 'immediate' } },
-      slots: { aside: '<template #aside="{ pageInfo }"><p class="aside">{{ pageInfo.total }} in the aside</p></template>' },
+      slots: { aside: '<template #aside="{ pageInfo, goToPage }"><p class="aside">{{ pageInfo.total }} in the aside</p><button class="own-page" @click="goToPage(2)">2</button></template>' },
       route: '/objects',
     })
     await settle(() => wrapper.text().includes('Items found'))
     expect(wrapper.find('.aside').text()).toBe('4 in the aside')
+    // A second pagination of the website's own turns the same pages.
+    await wrapper.find('.own-page').trigger('click')
+    await settle(() => router.currentRoute.value.query.page === '2')
+    expect(router.currentRoute.value.query.page).toBe('2')
     await wrapper.find('.mwnf-facet__select').setValue('c-sy')
     await settle(() => router.currentRoute.value.query.country === 'c-sy')
     expect(router.currentRoute.value.query.country).toBe('c-sy')
@@ -207,6 +211,18 @@ describe('RecordView', () => {
     expect(wrapper.find('.mwnf-related .mwnf-list__meta').text()).toContain('Same workshop')
     expect(wrapper.find('.mwnf-record__back').text()).toContain('Back to results')
     expect(wrapper.find('.mwnf-media').exists()).toBe(true)
+  })
+
+  it("hands a related block of the site's own the rows and the records outside the package", async () => {
+    const { wrapper } = await mountView(RecordView, {
+      props: { spec, id: 'o1' },
+      slots: { related: '<template #related="{ records, outside }"><p class="own-related">{{ records.map((r) => r.name).join("+") }} / {{ outside.length }} outside</p></template>' },
+      route: '/objects/o1',
+    })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    // The fixture relates o1 to a record it does not carry, as a gallery does.
+    expect(wrapper.find('.own-related').text()).toBe('Mosque lamp / 1 outside')
+    expect(wrapper.find('.mwnf-related').exists()).toBe(false)
   })
 
   it("gives a header of the site's own the record's languages and the switch", async () => {
