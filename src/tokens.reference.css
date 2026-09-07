@@ -382,15 +382,44 @@
   /* --mwnf-text-page-heading-size: 1.75rem;         Page heading size */
   /* --mwnf-text-page-heading-color: inherit;        Page heading color */
 
-  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView ---------- */
+  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView, EssayView ---------- */
   /* Only the arrangement: the parts a view is made of carry the tokens above,
      and a website themes a composed page by theming its parts. */
   /* --mwnf-view-gap: 1rem;                          Between the parts of a page, and between the results and the aside */
   /* --mwnf-view-title-size: 1.5rem;                 The page title */
   /* --mwnf-view-title-color: inherit;               Its color */
   /* --mwnf-view-intro-width: 42rem;                 The landing page's welcome text */
-  /* --mwnf-view-aside-width: 16rem;                 The column beside the results or the sheet */
-  /* --mwnf-view-back-size: 0.8125rem;               The record page's back link */
+  /* --mwnf-view-aside-width: 16rem;                 The column beside the results, the sheet, or the essay */
+  /* --mwnf-view-back-size: 0.8125rem;               The record page's back link, the essay's panel link and nav row */
   /* --mwnf-view-back-color: inherit;                Its color */
-  /* --mwnf-view-status-size: 0.75rem;               "Loading…" on the record page */
+  /* --mwnf-view-status-size: 0.75rem;               "Loading…" on the record page and the essay */
+
+  /* ---------- Content: EssayView ---------- */
+  /* --mwnf-view-essay-breadcrumb-gap: 0.375rem;     Gap between breadcrumb parts */
+  /* --mwnf-view-essay-breadcrumb-size: 0.8125rem;   Breadcrumb text size */
+  /* --mwnf-view-essay-breadcrumb-color: #555555;    Breadcrumb text color */
+  /* --mwnf-view-essay-breadcrumb-separator: "›";    Separator between breadcrumb links */
+  /* --mwnf-view-essay-tabs-gap: 0.25rem;             Gap between tabs */
+  /* --mwnf-view-essay-tabs-border: 1px solid #dddddd; Line under the tab strip */
+  /* --mwnf-view-essay-tab-padding: 0.5rem 1rem;     Tab padding */
+  /* --mwnf-view-essay-tab-color: #555555;           Tab text color */
+  /* --mwnf-view-essay-tab-size: 0.8125rem;          Tab text size */
+  /* --mwnf-view-essay-tab-weight: 500;              Tab font weight */
+  /* --mwnf-view-essay-tab-active-color: #1c1c1c;    The active tab's text and underline */
+  /* --mwnf-view-essay-tab-active-border-width: 3px; The active tab's underline thickness */
+  /* --mwnf-view-essay-number-gap: 0.5rem;           Space after the theme number, before the title */
+  /* --mwnf-view-essay-number-color: #555555;        Theme number color */
+  /* --mwnf-view-essay-quote-color: inherit;         The pull quote's color */
+  /* --mwnf-view-essay-quote-size: 1rem;             The pull quote's size */
+  /* --mwnf-view-essay-panel-border: 1px solid #dddddd; The picture panel's border */
+  /* --mwnf-view-essay-panel-padding: 0.875rem;      The picture panel's padding */
+  /* --mwnf-view-essay-panel-name-size: 1rem;        The selected item's name size */
+  /* --mwnf-view-essay-panel-name-color: inherit;    Its color */
+  /* --mwnf-view-essay-panel-field-gap: 0.25rem;     Gap between panel field rows */
+  /* --mwnf-view-essay-panel-field-size: 0.8125rem;  Panel field text size */
+  /* --mwnf-view-essay-panel-field-color: #555555;   Panel field text color */
+  /* --mwnf-view-essay-thumbs-columns: 4;            Thumbnail strip columns */
+  /* --mwnf-view-essay-thumbs-gap: 0.375rem;         Gap between thumbnails */
+  /* --mwnf-view-essay-thumb-border: 2px solid transparent; Thumbnail border */
+  /* --mwnf-view-essay-thumb-active-border: #1c1c1c; The selected thumbnail's border color */
 }

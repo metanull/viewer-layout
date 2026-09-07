@@ -1,0 +1,26 @@
+{
+  "root1": { "title": "Test Tree Root" },
+  "theme-a": {
+    "title": "Theme A",
+    "quote": "A theme about *kufic* calligraphy.",
+    "description": "This theme explores kufic script across the collection."
+  },
+  "theme-b": { "title": "Theme B" },
+  "extra-a": { "title": "Not A Theme" },
+  "page-a1": {
+    "title": "Page A1",
+    "quote": "An opening page.",
+    "description": "The bowl shown here carries a band of kufic script."
+  },
+  "page-a2": {
+    "title": "Page A2",
+    "description": "The second page of theme A."
+  },
+  "page-a3": {
+    "title": "Page 999"
+  },
+  "page-b1": {
+    "title": "Page B1",
+    "description": "The first page of theme B."
+  }
+}
