@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.2
+
+- Fix: `TimelineResultsView`'s entrance now offers bucketed year selects with the full data range, not the rightly-empty entrance event list.
+
 ## 2.9.1
 
 - Fix: `TimelineResultsView` now passes the plain helpers context to `event()`, matching the other two callers (`collections` and `options`).
