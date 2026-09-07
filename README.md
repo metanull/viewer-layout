@@ -159,7 +159,7 @@ the application registered, without any router coupling here.
 
 | Component | Props | Notes |
 |---|---|---|
-| `SectionCards` | `cards: [{ title, description, action, href \| to }]` | a landing page's grid of section cards |
+| `SectionCards` | `cards: [{ title, description, action, image?, alt?, number?, children?, href \| to }]`, `variant: 'cards' \| 'rows' \| 'covers' \| 'accordion'` | a landing page's grid of section cards, themed by variant; `number` is formatted by the caller (Roman or decimal); `children` (accordion only) are subsections with their own `to`/`href` |
 | `FeaturedRecord` | `heading`, `image`, `imageAlt`, `eyebrow`, `name` (inline HTML), `meta: [string]`, `action`, `href \| to` | the "item on display" spotlight; the default slot replaces the record |
 | `RecordList` | `records`, `loading`, `loadingText` | records as rows; `#empty` slot |
 | `RecordGrid` | `records`, `loading`, `loadingText`, `actionLabel`, `dateCutoff` (80) | records as tiles with a hover card, shown under the image on a narrow screen; `#empty` slot |

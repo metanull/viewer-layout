@@ -1,6 +1,6 @@
 {
   "name": "@metanull/viewer-layout",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "Page structure for MWNF websites: PageShell composing seven optional, token-styled sections, the content components a page is made of, and the composed views a website names instead of writing a page.",
   "type": "module",
   "license": "UNLICENSED",
