@@ -177,7 +177,9 @@ function defaultEventRow(event) {
   }
 }
 
-const rows = computed(() => pageInfo.value.rows.map((event) => (spec.value.event ?? defaultEventRow)(event, helpers)))
+// The three callers — collections, options, and event — share one helpers context;
+// unwrap it for all of them so they see the same { t, tr, years } object.
+const rows = computed(() => pageInfo.value.rows.map((event) => (spec.value.event ?? defaultEventRow)(event, helpers.value)))
 
 // ── Controls' own options ───────────────────────────────────────────────
 
