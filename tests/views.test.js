@@ -3,8 +3,8 @@ import { mount } from '@vue/test-utils'
 import { nextTick, ref } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@metanull/viewer-core/i18n'
-import { collectionTreeFromThemes, loadEntities, useDataPackage } from '@metanull/viewer-core'
-import { CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, TextPageView } from '../src/views/index.js'
+import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@metanull/viewer-core'
+import { CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, SearchFormView, TextPageView } from '../src/views/index.js'
 import { layoutTexts } from './helpers.js'
 
 // The composed views render a real page out of the fixture package behind
@@ -23,6 +23,20 @@ const texts = {
   'catalogue.facet.keyword': 'Keyword',
   'catalogue.facet.keywordPlaceholder': 'Search…',
   'catalogue.facet.epm': 'European partners',
+  'catalogue.facet.dateFrom': 'Date (from year)',
+  'catalogue.facet.dateTo': 'Date (to year)',
+  'catalogue.facet.startDate': 'Start date',
+  'catalogue.facet.endDate': 'End date',
+  'catalogue.field.keywords': 'Keyword(s)',
+  'catalogue.search.and': 'AND',
+  'catalogue.search.or': 'OR',
+  'catalogue.search.anyLanguage': 'Any',
+  'catalogue.search.howTo': 'How to search',
+  'catalogue.search.keywordOne': 'Keyword 1',
+  'catalogue.search.keywordTwo': 'Keyword 2',
+  'catalogue.search.keywordPlaceholder': 'keyword…',
+  'catalogue.search.language': 'Search language',
+  'catalogue.search.showAll': 'Show all',
   'catalogue.filter.heading': 'Filter',
   'catalogue.results.itemsFound': 'Items found',
   'catalogue.results.noResults': 'No results',
@@ -68,6 +82,8 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
       { path: '/objects/:id', name: 'objects-detail', component: { template: '<p>detail</p>' } },
       { path: '/item/:id', name: 'item', component: { template: '<p>item</p>' } },
       { path: '/theme/:id', name: 'theme', component: { template: '<p>theme</p>' } },
+      { path: '/search-results', name: 'search-results', component: { template: '<p>results</p>' } },
+      { path: '/how-to-search', name: 'search-how-to', component: { template: '<p>how to</p>' } },
     ],
   })
   // The view reads its filters from the URL, so the URL is in place first —
@@ -448,6 +464,165 @@ describe('TextPageView', () => {
   })
 })
 
+describe('SearchFormView', () => {
+  it('rows mode: writes q/field per row, from/to, lang and an extra, and navigates to target on submit', async () => {
+    const { wrapper, router } = await mountView(SearchFormView, {
+      props: {
+        spec: {
+          mode: 'rows',
+          rows: 2,
+          fields: [{ key: 'keyword', label: 'catalogue.field.keywords' }, { key: 'name', label: 'sheet.field.name' }],
+          dates: { presets: centuryPresets },
+          language: 'objects',
+          extras: [{ key: 'epm', type: 'checkbox', label: 'catalogue.facet.epm' }],
+          target: 'search-results',
+          showAllLabel: 'catalogue.search.showAll',
+        },
+      },
+    })
+    const keywords = wrapper.findAll('.mwnf-search-form__keyword')
+    const fields = wrapper.findAll('.mwnf-search-form__field')
+    expect(keywords).toHaveLength(2)
+    await keywords[0].setValue('bowl')
+    await fields[0].setValue('name')
+    await keywords[1].setValue('glass')
+    await wrapper.find('.mwnf-search-form__operator').setValue('OR')
+    const dateSelects = wrapper.findAll('.mwnf-search-form__dates .mwnf-facet__select')
+    await dateSelects[0].setValue('1001')
+    await dateSelects[1].setValue('1600')
+    await wrapper.find('.mwnf-search-form__language').setValue('fr')
+    await wrapper.find('.mwnf-facet__checkbox').setValue(true)
+
+    await wrapper.find('form').trigger('submit')
+    await settle(() => router.currentRoute.value.name === 'search-results')
+
+    expect(router.currentRoute.value.query).toMatchObject({
+      q: 'bowl',
+      field: 'name',
+      q2: 'glass',
+      field2: 'keyword',
+      op2: 'OR',
+      from: '1001',
+      to: '1600',
+      lang: 'fr',
+      epm: '1',
+    })
+  })
+
+  it('rows mode: the from/to selects offer centuryPresets\' asymmetric boundaries', async () => {
+    const { wrapper } = await mountView(SearchFormView, {
+      props: { spec: { mode: 'rows', dates: { presets: centuryPresets }, target: 'search-results' } },
+    })
+    const [fromSelect, toSelect] = wrapper.findAll('.mwnf-search-form__dates .mwnf-facet__select')
+    const fromValues = fromSelect.findAll('option').map((o) => o.element.value).filter(Boolean)
+    const toValues = toSelect.findAll('option').map((o) => o.element.value).filter(Boolean)
+    expect(fromValues).toHaveLength(16)
+    expect(toValues).toHaveLength(15)
+    expect(fromValues[0]).toBe('501')
+    expect(toValues[0]).toBe('600')
+  })
+
+  it('rows mode: the search-language select lists the entity\'s own translated languages', async () => {
+    const { wrapper } = await mountView(SearchFormView, {
+      props: { spec: { mode: 'rows', language: 'objects', target: 'search-results' } },
+    })
+    const options = wrapper.find('.mwnf-search-form__language').findAll('option').map((o) => o.text())
+    expect(options).toEqual(['Any', 'EN', 'FR'])
+  })
+
+  it('facets mode: choosing a facet or a date bucket navigates immediately, with only that one key', async () => {
+    const { wrapper, router } = await mountView(SearchFormView, {
+      props: {
+        spec: {
+          mode: 'facets',
+          entity: 'objects',
+          facets: [{ key: 'country', label: 'catalogue.facet.country', field: 'country_id' }],
+          dates: 'buckets',
+          target: 'search-results',
+        },
+      },
+      route: '/objects',
+    })
+    await settle(() => wrapper.findAll('.mwnf-facet__select').length > 0)
+    const selects = wrapper.findAll('.mwnf-facet__select')
+    await selects[0].setValue('c-eg')
+    await settle(() => router.currentRoute.value.query.country === 'c-eg')
+    expect(router.currentRoute.value.query).toEqual({ country: 'c-eg' })
+
+    // A second choice — the date bucket — replaces the query with its own
+    // one key, exactly as legacy's `CollectionSearch.vue` always did.
+    const dateSelects = wrapper.findAll('.mwnf-search-form__dates .mwnf-facet__select')
+    await dateSelects[0].setValue(dateSelects[0].findAll('option')[1].element.value)
+    await settle(() => Boolean(router.currentRoute.value.query.from))
+    expect(router.currentRoute.value.query).toEqual({ from: router.currentRoute.value.query.from })
+  })
+
+  it('radio mode: the active radio names the query key the chosen value is written under', async () => {
+    const { wrapper, router } = await mountView(SearchFormView, {
+      props: {
+        spec: {
+          mode: 'radio',
+          facets: [
+            { key: 'country', label: 'catalogue.facet.country', options: [{ value: 'c-eg', label: 'Egypt' }] },
+            { key: 'begin', label: 'catalogue.facet.startDate', type: 'year' },
+          ],
+          target: 'search-results',
+        },
+      },
+    })
+    const radios = wrapper.findAll('input[type="radio"]')
+    expect(radios).toHaveLength(2)
+    await radios[1].setValue(true)
+    await wrapper.find('.mwnf-search-form__year').setValue('1200')
+    await wrapper.find('form').trigger('submit')
+    await settle(() => router.currentRoute.value.query.begin === '1200')
+    expect(router.currentRoute.value.query).toEqual({ begin: '1200' })
+  })
+
+  it('"show all" keeps a checked extra but drops everything else, and the how-to link points at its route', async () => {
+    const { wrapper, router } = await mountView(SearchFormView, {
+      props: {
+        spec: {
+          mode: 'rows',
+          extras: [{ key: 'epm', type: 'checkbox', label: 'catalogue.facet.epm' }],
+          target: 'search-results',
+          howTo: 'search-how-to',
+          showAllLabel: 'catalogue.search.showAll',
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-search-form__how-to a').attributes('href')).toBe('/how-to-search')
+    await wrapper.find('.mwnf-facet__checkbox').setValue(true)
+    await wrapper.findAll('.mwnf-search-form__keyword')[0].setValue('bowl')
+    await wrapper.find('.mwnf-filter__button--reset').trigger('click')
+    await settle(() => router.currentRoute.value.name === 'search-results')
+    expect(router.currentRoute.value.query).toEqual({ epm: '1' })
+  })
+
+  it('renders no how-to link when the spec says false', async () => {
+    const { wrapper } = await mountView(SearchFormView, {
+      props: { spec: { mode: 'rows', target: 'search-results', howTo: false } },
+    })
+    expect(wrapper.find('.mwnf-search-form__how-to').exists()).toBe(false)
+  })
+
+  it('hands #intro/#before/#extras/#actions their slot content', async () => {
+    const { wrapper } = await mountView(SearchFormView, {
+      props: { spec: { mode: 'rows', target: 'search-results' } },
+      slots: {
+        intro: '<p class="own-intro">Intro</p>',
+        before: '<p class="own-before">Before</p>',
+        extras: '<label class="own-extra">Extra</label>',
+        actions: '<button class="own-action">Own action</button>',
+      },
+    })
+    expect(wrapper.find('.own-intro').exists()).toBe(true)
+    expect(wrapper.find('.own-before').exists()).toBe(true)
+    expect(wrapper.find('.own-extra').exists()).toBe(true)
+    expect(wrapper.find('.own-action').exists()).toBe(true)
+  })
+})
+
 describe('EssayView', () => {
   // The fixture tree (`test-tree-root`): theme-a (page-a1[o1], page-a2[o2],
   // page-a3[]) and theme-b (page-b1[o3]), with a third child (extra-a) that
@@ -715,7 +890,7 @@ describe('EssayView', () => {
 describe('the views entry point', () => {
   it('exports the five views and no shell', async () => {
     const entry = await import('../src/views/index.js')
-    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'RecordView', 'TextPageView'])
+    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'RecordView', 'SearchFormView', 'TextPageView'])
     vi.restoreAllMocks()
   })
 })

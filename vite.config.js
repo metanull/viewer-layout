@@ -24,8 +24,10 @@ export default defineConfig({
     rollupOptions: {
       // viewer-core is the application's, not ours: the layout reads the
       // active language, the records and the engine from the same instance
-      // the application installed.
-      external: ['vue', '@metanull/viewer-core', '@metanull/viewer-core/i18n'],
+      // the application installed. `vue-router` is external for the same
+      // reason — `SearchFormView` navigates on the application's own router
+      // instance, the one every website already provides.
+      external: ['vue', 'vue-router', '@metanull/viewer-core', '@metanull/viewer-core/i18n'],
       output: {
         assetFileNames: 'viewer-layout.[ext]',
       },
