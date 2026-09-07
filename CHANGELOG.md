@@ -2,7 +2,19 @@
 
 ## 2.9.0
 
-- _(pending: `TimelineEventList`, `TimelineResultsView` — metanull/viewer-layout#37)_
+- `TimelineEventList` and `TimelineResultsView` (#37): the seven sites'
+  hand-written Timeline pages — none importing `FacetSelect`/`FilterPanel`,
+  each with its own query mirroring and its own rows — as one engine over
+  viewer-core's `useTimelineEvents`. `TimelineResultsView`'s spec covers all
+  three axes (the worldwide country merge, an exhibition's own narrative
+  chronology, Sharing History's exhibition split) and both legacy pages per
+  site: `entrance: true` renders the form alone, with validation, navigating
+  to a target route; `entrance: false` (default) is the results, with the
+  filter panel, the summary, pagination, and DXA's "See gallery" cross-link
+  over an item predicate the site supplies. `TimelineEventList` renders the
+  per-event rows the results page and a slot both need — a date, a caption,
+  a Markdown description, an image/item strip and per-event actions such as
+  the standalone sites' "View items from this period".
 
 - _(pending: `PartnerListView` — metanull/viewer-layout#38)_
 

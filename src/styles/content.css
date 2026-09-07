@@ -1330,6 +1330,107 @@
   color: var(--mwnf-text-page-heading-color, inherit);
 }
 
+/* Timeline events (TimelineEventList) */
+
+.mwnf-timeline__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-timeline__row {
+  display: flex;
+  gap: var(--mwnf-timeline-gap, 1rem);
+  padding: var(--mwnf-timeline-row-padding, 0.875rem 0);
+  border-bottom: var(--mwnf-timeline-row-border, 1px solid #dddddd);
+}
+
+.mwnf-timeline__row:last-child {
+  border-bottom: none;
+}
+
+.mwnf-timeline__date {
+  flex: 0 0 var(--mwnf-timeline-date-width, 9rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  font-size: var(--mwnf-timeline-date-size, 0.875rem);
+  color: var(--mwnf-timeline-date-color, inherit);
+}
+
+.mwnf-timeline__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.mwnf-timeline__caption {
+  font-size: var(--mwnf-timeline-caption-size, 0.75rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--mwnf-timeline-caption-color, #555555);
+  margin-bottom: var(--mwnf-timeline-caption-gap, 0.25rem);
+}
+
+.mwnf-timeline__description {
+  font-size: var(--mwnf-timeline-description-size, 0.9375rem);
+  color: var(--mwnf-timeline-description-color, inherit);
+}
+
+.mwnf-timeline__media {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mwnf-timeline-media-gap, 0.5rem);
+  margin-top: var(--mwnf-timeline-caption-gap, 0.25rem);
+}
+
+.mwnf-timeline__media-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mwnf-timeline-media-gap, 0.5rem);
+  max-width: var(--mwnf-timeline-media-width, 20rem);
+  color: inherit;
+  text-decoration: none;
+}
+
+.mwnf-timeline__media-item img {
+  display: block;
+  height: var(--mwnf-timeline-media-height, 4rem);
+  background-color: var(--mwnf-list-thumb-background, #dddddd);
+}
+
+.mwnf-timeline__media-caption {
+  font-size: var(--mwnf-timeline-media-caption-size, 0.75rem);
+  color: var(--mwnf-timeline-description-color, inherit);
+}
+
+.mwnf-timeline__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mwnf-timeline-gap, 1rem);
+  margin-top: var(--mwnf-timeline-caption-gap, 0.25rem);
+}
+
+.mwnf-timeline__action {
+  font-size: var(--mwnf-timeline-action-size, 0.8125rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-timeline-action-color, inherit);
+}
+
+.mwnf-timeline__empty {
+  padding: var(--mwnf-timeline-row-padding, 0.875rem 0);
+  color: var(--mwnf-list-meta-color, #555555);
+}
+
+@media (max-width: 32rem) {
+  .mwnf-timeline__row {
+    flex-direction: column;
+    gap: var(--mwnf-timeline-caption-gap, 0.25rem);
+  }
+
+  .mwnf-timeline__date {
+    flex: none;
+  }
+}
+
 /* ── The composed views ─────────────────────────────────────────────────── */
 /* Only the arrangement of the parts: what a view is made of carries its own
    tokens above. A website themes a composed page by theming its parts. */
@@ -2034,4 +2135,37 @@
 .mwnf-search-form__how-to {
   margin: 0;
   font-size: var(--mwnf-view-back-size, 0.8125rem);
+}
+
+/* ── TimelineResultsView ────────────────────────────────────────────────── */
+/* The timeline entrance and results: a filter panel (or, in entrance mode,
+   the same panel alone), a validation line, a summary, a "See gallery"
+   cross-link and the events list. Reuses the .mwnf-view- and .mwnf-filter-
+   rhythm above; only what is unique to this shape gets its own tokens. */
+
+.mwnf-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-view-gap, 1rem);
+}
+
+.mwnf-timeline__title {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-view-title-size, 1.5rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-view-title-color, inherit);
+}
+
+.mwnf-timeline__error {
+  margin: 0;
+  font-size: var(--mwnf-timeline-error-size, 0.8125rem);
+  color: var(--mwnf-timeline-error-color, #1c1c1c);
+}
+
+.mwnf-timeline__gallery {
+  display: inline-block;
+  font-size: var(--mwnf-timeline-gallery-size, 0.875rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-timeline-gallery-color, inherit);
 }

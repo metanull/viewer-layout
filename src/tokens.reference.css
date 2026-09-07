@@ -403,7 +403,26 @@
   /* --mwnf-text-page-heading-size: 1.75rem;         Page heading size */
   /* --mwnf-text-page-heading-color: inherit;        Page heading color */
 
-  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView, EssayView, SearchFormView ---------- */
+  /* ---------- Content: TimelineEventList ---------- */
+  /* --mwnf-timeline-gap: 1rem;                      Gap between the date and the body, and between actions */
+  /* --mwnf-timeline-row-padding: 0.875rem 0;        Row padding */
+  /* --mwnf-timeline-row-border: 1px solid #dddddd;  Line between rows */
+  /* --mwnf-timeline-date-width: 9rem;               Date column width */
+  /* --mwnf-timeline-date-size: 0.875rem;            Date text size */
+  /* --mwnf-timeline-date-color: inherit;            Date text color */
+  /* --mwnf-timeline-caption-size: 0.75rem;          Caption size */
+  /* --mwnf-timeline-caption-color: #555555;         Caption color */
+  /* --mwnf-timeline-caption-gap: 0.25rem;           Gap under the caption, and above media/actions */
+  /* --mwnf-timeline-description-size: 0.9375rem;    Description text size */
+  /* --mwnf-timeline-description-color: inherit;     Description text color */
+  /* --mwnf-timeline-media-gap: 0.5rem;              Gap between media items */
+  /* --mwnf-timeline-media-width: 20rem;             Max width of one media item */
+  /* --mwnf-timeline-media-height: 4rem;             Media image height */
+  /* --mwnf-timeline-media-caption-size: 0.75rem;    Media caption size */
+  /* --mwnf-timeline-action-size: 0.8125rem;         Per-event action link size */
+  /* --mwnf-timeline-action-color: inherit;          Per-event action link color */
+
+  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView, EssayView, SearchFormView, TimelineResultsView ---------- */
   /* Only the arrangement: the parts a view is made of carry the tokens above,
      and a website themes a composed page by theming its parts. */
   /* --mwnf-view-gap: 1rem;                          Between the parts of a page, and between the results and the aside */
@@ -534,4 +553,10 @@
   /* --mwnf-search-form-label-width: 8rem;           Width of a row's own label, or a radio's own choice */
   /* --mwnf-search-form-operator-width: 4.5rem;      Width of the AND/OR select, and of a radio's year input */
   /* --mwnf-search-form-field-width: 12rem;          Width of the field select */
+
+  /* ---------- Content: TimelineResultsView ---------- */
+  /* --mwnf-timeline-error-size: 0.8125rem;          The entrance form's validation line */
+  /* --mwnf-timeline-error-color: #1c1c1c;           Its color */
+  /* --mwnf-timeline-gallery-size: 0.875rem;         The "See gallery" cross-link size */
+  /* --mwnf-timeline-gallery-color: inherit;         Its color */
 }

@@ -182,6 +182,7 @@ the application registered, without any router coupling here.
 | `GlossaryTool` | `language`, `entity` ('glossary'), `labels` (entry-name overrides), `dir` | the search box four item sheets and a theme page each wrote for themselves: an input, the hits viewer-core's `searchGlossary` finds, the chosen definition as Markdown; a native `<details>` toggle |
 | `DynastyPopout` | `dynasty` (record: `from_ah`/`to_ah`/`from_ad`/`to_ad`), `text` (its translation: `name`, `also_known_as`, `area`, `history`), `dir` | one dynasty, collapsed behind a native `<details>` toggle: name, also known as, area, AH/AD dates, history as Markdown |
 | `DynastyList` | `heading`, `dynasties`, `tr` (dynasty → its translation), `dir` | one `DynastyPopout` per dynasty of a record, `RelatedRecords`'s shape |
+| `TimelineEventList` | `events: [{ id, date, caption?, description? (block HTML), media?: [{ image, alt?, to? \| href?, caption? }], actions?: [{ label, to? \| href? }] }]` | one row per event; `caption`/`description` are rendered output, the same convention `RecordList`'s `name` follows; `#date`, `#caption`, `#media`, `#actions` slots (each given `{ event }`), `#empty` slot |
 
 The record contract `RecordList`, `RecordGrid` and `RelatedRecords` share:
 `{ id, image?, imageAlt?, name (inline HTML), meta: [string], badge?, href? | to? }`.
@@ -244,6 +245,7 @@ export default {
 | `LinkListView` | `spec`: `title` (entry), `groups: [{ heading (entry), links: [{ label, href \| to, note? }] }] \| (ctx) => groups` (`label`/`note` are Markdown, rendered inline through `mdInline`), `back: { label, to \| href } \| false`, `empty` (entry) | `before`, `group` (given `{ group }`; the default renders the heading and its links — replace it for a citation list that is not link-shaped), `after` |
 | `TextPageView` | `spec`: `heading?` (entry), `body` (entry \| (ctx) => Markdown, `ctx` the same `{ t, tr, language }` shape `EssayView`'s spec functions read), `back: { label, to \| href } \| true \| false` | none |
 | `SearchFormView` | `spec`: `mode: 'rows' \| 'facets' \| 'radio'`, `entity` (records an entity-backed facet or `dates: 'buckets'` read), `rows` (`'rows'`: keyword-row count, default 3), `fields: [{ key, label }]` (`'rows'`: the field select), `operators: [{ key, label }]` (`'rows'`: the AND/OR select, default AND/OR), `dates: { presets } \| 'buckets' \| false` (a from/to year select — `centuryPresets`'s asymmetric boundaries, or one `yearBuckets` list used for both ends), `language: entity \| false` (the search-language select, over `useSearchLanguage`), `extras: [{ key, type: 'checkbox', label }]`, `facets: [{ key, label, type: 'select' \| 'year', options: [{ value, label }] }]` (`'facets'`/`'radio'`: options given directly, or derived from `entity`'s own records when left out; `type: 'year'` is a plain number input), `target` (the results route this form writes into), `submitLabel`, `showAllLabel`, `howTo: routeName \| false` (a link to the search-syntax essay) | `intro`, `before`, `extras`, `actions` — each given `{ mode, submit, showAll }` |
+| `TimelineResultsView` | `spec`: `scope: 'country' \| 'local' \| 'collection'` (viewer-core's `useTimelineEvents` axis), `countryLabel(id)`, `countryIdForCode(code)` (DXA's legacy 2-letter code), `collections(ctx) => [{ value, label }]` (Sharing History's exhibition/PC picker — `'pc'` is the Permanent Collection sentinel), `tr(id)` (an event's translation, the site's own), `timelinesEntity`/`eventsEntity` (data package file names), `keys` (default: every control's key), `controls: [{ key: 'country' \| 'collection' \| 'begin' \| 'end', label, placeholder, anyLabel, hideEmpty }]`, `pageSize`, `entrance: false \| true` (renders the form alone, with validation, navigating to `route` on submit), `route` (the entrance's own target route), `event(event, ctx) => { date, caption, description, media, actions }` (the row, see `TimelineEventList`), `gallery: { route, items(ctx) => count \| array \| boolean, label } \| false` (the "See gallery" cross-link — an item's own shape stays the site's), `summary(ctx)`, `errorSelect`, `errorPeriod` (the entrance's own validation entries), `title`, `filterTitle`, `applyLabel`, `resetLabel`, `submitLabel`, `empty`, `pagination` | `summary`, `cross-link`, `event` (replaces the whole events list), `before`, `after` — each given `{ filters, active, apply, reset, goToPage, events, pageInfo, countries, collections, gallery, t, tr }` |
 
 The tokens they read — `--mwnf-view-*` — arrange the parts; a website themes
 a composed page by theming the parts.
@@ -273,6 +275,18 @@ spec and the slots, not a branch in the view:
 | islamicart / sharinghistory / baroqueart `Database` | `rows` | three keyword rows over `fields`/`operators`, `dates: { presets: centuryPresets }` for the from/to century selects, `language: 'items'` for the search-language select, an `extras` checkbox for islamicart's "include EPM" |
 | carpets / water-in-islam / the-use-of-colours-in-art / amulets `CollectionSearch` | `facets` | one `facets` entry a category, `dates: 'buckets'` for the shared start/end year list (`yearBuckets` over `entity`'s own records, as legacy's client-side bucket algorithm built it) |
 | islamicart / sharinghistory `PcEntrance` | `radio` | `facets` again, but chosen one at a time — country, dynasty (or sharinghistory's theme, its own `options`), holding institution, and `begin`/`end` as `type: 'year'` rows; islamicart's "include EPM" is again an `extras` checkbox |
+
+### `TimelineResultsView` and the seven site pages
+
+Two instances of the one view per site — `entrance: true` for the form-only
+page, `entrance: false` (default) for the results — over `scope: 'country'`
+except where noted:
+
+| Page | What it declares |
+| --- | --- |
+| DXA `Timeline`/`TimelineResults` | `controls: [{ key: 'country' }, { key: 'begin' }, { key: 'end' }]`; the results instance adds `gallery: { route: 'timeline-gallery', items: (ctx) => site's own country/period join }` for the "See Gallery" box; water-in-islam's suppressed country column and `hasTimeline`/`usesLocalTimeline` gate are a `controls` without `'country'` and the site's own guard before the route renders this view at all |
+| islamicart/baroqueart `TimelineEntrance`/`TimelineResults` | the same controls, `event: (event, ctx) => ({ ..., actions: [{ label: 'timeline.action.viewItemsFromPeriod', to: itemsLink(event) }] })` for the per-event "View items from this period" link |
+| sharinghistory `TimelineResults` (no separate entrance page in legacy; `entrance: true` on the same spec shape covers it) | `scope: 'collection'`, `controls` adding `{ key: 'collection', label: 'sharinghistory.nav.timeline' }` fed by `collections: (ctx) => [{ value: 'pc', label: t('sharinghistory.nav.permanentCollection') }, ...exhibitions]`, `event(...)` composing the "Country \| Theme" `caption` and the image/item strip as `media` |
 
 ## Theming
 

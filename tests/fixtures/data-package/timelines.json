@@ -1,0 +1,6 @@
+[
+  { "id": "tl-eg", "country_id": "c-eg", "collection_id": null, "source": "mwnf3" },
+  { "id": "tl-sy", "country_id": "c-sy", "collection_id": null, "source": "mwnf3" },
+  { "id": "tl-theme-a", "country_id": "c-eg", "collection_id": "theme-a", "source": "mwnf3" },
+  { "id": "tl-local", "country_id": null, "collection_id": null, "source": "thg_local" }
+]
