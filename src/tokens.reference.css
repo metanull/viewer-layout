@@ -352,6 +352,36 @@
   /* --mwnf-popover-padding: 0.625rem 0.75rem;       Body padding */
   /* --mwnf-popover-term-size: 1rem;                 The term's size */
 
+  /* ---------- Content: Prose, LinkListView, TextPageView ---------- */
+  /* --mwnf-prose-width: 42rem;                      Max width of readable text */
+  /* --mwnf-prose-size: 0.9375rem;                   Body text size */
+  /* --mwnf-prose-line-height: 1.75;                 Line height for readable measure */
+  /* --mwnf-prose-text-color: inherit;               Text color */
+  /* --mwnf-prose-paragraph-gap: 1rem;               Gap between paragraphs */
+  /* --mwnf-prose-list-indent: 1.5em;                Left indent of lists */
+  /* --mwnf-prose-list-item-gap: 0.5rem;             Gap between list items */
+  /* --mwnf-prose-link-hover-color: #555555;         Link hover color */
+  /* --mwnf-link-list-gap: 1.5rem;                   Gap between sections */
+  /* --mwnf-link-list-back-size: 0.8125rem;          Back link size */
+  /* --mwnf-link-list-title-size: 1.5rem;            Page title size */
+  /* --mwnf-link-list-title-color: inherit;          Page title color */
+  /* --mwnf-link-list-group-gap: 1.5rem;             Gap between groups */
+  /* --mwnf-link-list-heading-gap: 0.75rem;          Gap between heading and links */
+  /* --mwnf-link-list-heading-size: 1.125rem;        Group heading size */
+  /* --mwnf-link-list-heading-color: inherit;        Group heading color */
+  /* --mwnf-link-list-item-gap: 0.5rem;              Gap between links */
+  /* --mwnf-link-list-note-gap: 0.25rem;             Gap between link and note */
+  /* --mwnf-link-list-link-weight: 500;              Link font weight */
+  /* --mwnf-link-list-note-size: 0.8125rem;          Link note size */
+  /* --mwnf-link-list-note-color: #555555;           Link note color */
+  /* --mwnf-link-list-empty-padding: 1rem;           Empty state padding */
+  /* --mwnf-link-list-empty-size: 0.875rem;          Empty state size */
+  /* --mwnf-link-list-empty-color: #555555;          Empty state color */
+  /* --mwnf-text-page-gap: 1.5rem;                   Gap between heading and body */
+  /* --mwnf-text-page-back-size: 0.8125rem;          Back link size */
+  /* --mwnf-text-page-heading-size: 1.75rem;         Page heading size */
+  /* --mwnf-text-page-heading-color: inherit;        Page heading color */
+
   /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView ---------- */
   /* Only the arrangement: the parts a view is made of carry the tokens above,
      and a website themes a composed page by theming its parts. */

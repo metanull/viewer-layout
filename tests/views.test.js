@@ -4,7 +4,7 @@ import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@metanull/viewer-core/i18n'
 import { loadEntities, useDataPackage } from '@metanull/viewer-core'
-import { CatalogueResultsView, HomeView, RecordView } from '../src/views/index.js'
+import { CatalogueResultsView, HomeView, RecordView, LinkListView, TextPageView } from '../src/views/index.js'
 import { layoutTexts } from './helpers.js'
 
 // The composed views render a real page out of the fixture package behind
@@ -14,6 +14,8 @@ import { layoutTexts } from './helpers.js'
 const texts = {
   ...layoutTexts,
   'core.action.viewDetails': 'View details',
+  'core.action.back': 'Back',
+  'core.action.empty': 'Nothing to show.',
   'core.status.loading': 'Loading…',
   'catalogue.facet.any': 'Any',
   'catalogue.facet.country': 'Country',
@@ -39,6 +41,9 @@ const texts = {
   'site.home.catalogue': 'Catalogue',
   'site.home.catalogueText': 'Every object.',
   'site.home.onDisplay': 'On display',
+  'site.further.reading': 'Further reading',
+  'site.about.heading': 'About',
+  'site.about.body': 'Information about this collection.',
 }
 
 const COUNTRY_NAMES = { 'c-eg': 'Egypt', 'c-sy': 'Syria' }
@@ -309,12 +314,89 @@ describe('RecordView', () => {
   })
 })
 
+// LinkListView: groups of categorized links
+describe('LinkListView', () => {
+  it('renders title, grouped links with notes, and back link', async () => {
+    const { wrapper } = await mountView(LinkListView, {
+      props: {
+        spec: {
+          title: 'site.further.reading',
+          groups: [
+            {
+              heading: 'catalogue.facet.country',
+              links: [
+                { label: 'Egypt', href: '#/country/c-eg', note: 'Lower Nile' },
+                { label: 'Syria', href: '#/country/c-sy' },
+              ],
+            },
+          ],
+          back: { label: 'record.action.backToResults', href: '#/results' },
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-link-list__title').text()).toBe('Further reading')
+    expect(wrapper.find('.mwnf-link-list__heading').text()).toBe('Country')
+    const links = wrapper.findAll('.mwnf-link-list__link')
+    expect(links).toHaveLength(2)
+    expect(links[0].text()).toBe('Egypt')
+    expect(links[0].attributes('href')).toBe('#/country/c-eg')
+    expect(wrapper.find('.mwnf-link-list__note').text()).toBe('Lower Nile')
+    expect(wrapper.find('.mwnf-link-list__back').text()).toContain('Back to results')
+  })
+
+  it('filters out groups with no links and shows empty state', async () => {
+    const { wrapper } = await mountView(LinkListView, {
+      props: {
+        spec: {
+          title: 'site.further.reading',
+          groups: [{ heading: 'catalogue.facet.country', links: [] }],
+          empty: 'core.action.empty',
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-link-list__empty').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-link-list__groups').exists()).toBe(false)
+  })
+})
+
+// TextPageView: heading and markdown body with prose styling
+describe('TextPageView', () => {
+  it('renders heading, prose body with entry name, and back link', async () => {
+    const { wrapper } = await mountView(TextPageView, {
+      props: {
+        spec: {
+          heading: 'site.about.heading',
+          body: 'site.about.body',
+          back: { label: 'record.action.backToResults', href: '#/' },
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-text-page__heading').text()).toBe('About')
+    // Body text is fetched from catalogue
+    expect(wrapper.find('.mwnf-prose').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-text-page__back').text()).toContain('Back to results')
+  })
+
+  it('renders nothing without a heading and supports back: true for history back', async () => {
+    const { wrapper } = await mountView(TextPageView, {
+      props: {
+        spec: {
+          body: 'site.about.body',
+          back: true,
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-text-page__heading').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-text-page__back').exists()).toBe(true)
+  })
+})
+
 // The views are a promise to the websites' configurations: what is exported
 // from `/views` is what `config.views` names.
 describe('the views entry point', () => {
-  it('exports the three composed views and no shell', async () => {
+  it('exports the five views and no shell', async () => {
     const entry = await import('../src/views/index.js')
-    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'HomeView', 'RecordView'])
+    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'HomeView', 'LinkListView', 'RecordView', 'TextPageView'])
     vi.restoreAllMocks()
   })
 })
