@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.1
+
+- Fix: `TimelineResultsView` now passes the plain helpers context to `event()`, matching the other two callers (`collections` and `options`).
+
 ## 2.9.0
 
 Wave I of epic #1692 (composed views and content components): `TimelineEventList` and `TimelineResultsView`, `PartnerListView`, `SearchFormView`, `GlossaryTool`, `DynastyPopout` and `DynastyList`, and the five promoted partner components. Additive; every export of 2.8.0 is unchanged.

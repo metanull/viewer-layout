@@ -1395,6 +1395,32 @@ describe('TimelineResultsView', () => {
     expect(wrapper.find('.mwnf-timeline__rows').exists()).toBe(false)
     expect(wrapper.find('.own-after').exists()).toBe(true)
   })
+
+  it('event() receives the plain context — t function and years object — not the helpers ref', async () => {
+    const receivedCtx = {}
+    const customEventFn = (event, ctx) => {
+      // Capture the context for assertions
+      receivedCtx.ctx = ctx
+      return {
+        id: event.id,
+        date: 'test',
+        caption: '',
+        description: '',
+      }
+    }
+    const { wrapper } = await mountView(TimelineResultsView, {
+      props: { spec: { ...countrySpec, event: customEventFn } },
+      route: '/timeline/results',
+    })
+    await settle(() => wrapper.findAll('.mwnf-timeline__row').length > 0)
+    // The context should have t as a function
+    expect(typeof receivedCtx.ctx.t).toBe('function')
+    // The context should have years with min and max
+    expect(receivedCtx.ctx.years).toHaveProperty('min')
+    expect(receivedCtx.ctx.years).toHaveProperty('max')
+    expect(typeof receivedCtx.ctx.years.min).toBe('number')
+    expect(typeof receivedCtx.ctx.years.max).toBe('number')
+  })
 })
 
 describe('the views entry point', () => {
