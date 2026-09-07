@@ -24,7 +24,8 @@ const groups = computed(() => {
 
 const title = computed(() => (props.spec.title ? t(props.spec.title) : ''))
 const backLabel = computed(() => (props.spec.back?.label ? t(props.spec.back.label) : ''))
-const emptyMessage = computed(() => t(props.spec.empty ?? 'core.action.empty'))
+// Default empty message if spec.empty is not provided; use a key that exists in viewer-i18n.
+const emptyMessage = computed(() => t(props.spec.empty ?? 'catalogue.results.noResults'))
 </script>
 
 <template>
