@@ -2,7 +2,9 @@
 
 ## 2.9.0
 
-- `TimelineEventList` and `TimelineResultsView` (#37): the seven sites'
+Wave I of epic #1692 (composed views and content components): `TimelineEventList` and `TimelineResultsView`, `PartnerListView`, `SearchFormView`, `GlossaryTool`, `DynastyPopout` and `DynastyList`, and the five promoted partner components. Additive; every export of 2.8.0 is unchanged.
+
+- `TimelineEventList` and `TimelineResultsView` (#54): the seven sites'
   hand-written Timeline pages — none importing `FacetSelect`/`FilterPanel`,
   each with its own query mirroring and its own rows — as one engine over
   viewer-core's `useTimelineEvents`. `TimelineResultsView`'s spec covers all
@@ -18,8 +20,7 @@
   controls accept an optional `options` prop: an array or function yielding
   `[{ value, label }]` buckets (century strings like "1500–1599" for DXA
   sites); without it, a free-year number input.
-
-- `PartnerListView`: the partner list as a spec over viewer-core's
+- `PartnerListView` (#55): the partner list as a spec over viewer-core's
   `groupByCountry`/`partnerHierarchy` — islamicart's and sharinghistory's
   country accordion with main/associated tiers, and the DXA family's open
   groups with no tiers and an A-Z/Z-A toggle, one declaration apart
@@ -27,10 +28,8 @@
   partner under its own parent instead of the flat tier column, for a family
   that wants legacy's original nesting back. Slots `before`, `group-heading`,
   `row`, `after`.
-
-- `SearchFormView`, over `FilterPanel`/`FacetSelect` and viewer-core's `useFacets`, `centuryPresets`, `yearBuckets` and `useSearchLanguage`: legacy's three search entrances — `Database`'s keyword rows, `CollectionSearch`'s facet column, `PcEntrance`'s one-filter-at-a-time radio — as one spec, over `mode: 'rows' | 'facets' | 'radio'` (metanull/viewer-layout#39)
-
-- `GlossaryTool`: the search box four item sheets and a theme page each wrote
+- `SearchFormView` (#56), over `FilterPanel`/`FacetSelect` and viewer-core's `useFacets`, `centuryPresets`, `yearBuckets` and `useSearchLanguage`: legacy's three search entrances — `Database`'s keyword rows, `CollectionSearch`'s facet column, `PcEntrance`'s one-filter-at-a-time radio — as one spec, over `mode: 'rows' | 'facets' | 'radio'`.
+- `GlossaryTool` (#57): the search box four item sheets and a theme page each wrote
   for themselves, over viewer-core's `searchGlossary` — an input, the hit
   list, the chosen definition as Markdown, collapsed behind a native
   `<details>` toggle (keyboard-usable for free, as `SectionCards`'
@@ -38,9 +37,8 @@
   lines, one dynasty's name, also known as, area, AH/AD dates and history,
   the same toggle; islamicart's dynasty cards and its dynasty sheet fold
   into the same shape (decision D5). `DynastyList` renders one popout per
-  dynasty of a record, `RelatedRecords`'s shape (metanull/viewer-layout#40).
-
-- Five components promoted from the DXA and exhibition sites to the shared package:
+  dynasty of a record, `RelatedRecords`'s shape.
+- Five components promoted from the DXA and exhibition sites to the shared package (#58):
   - `PartnerMap` — an OpenStreetMap embed for a partner's location, centred and zoomed from
     the record's coordinates; the title and "map of X" label are catalogue entries.
   - `FeaturedPartners` — a carousel of featured partner records, one showing at a time,
