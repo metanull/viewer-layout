@@ -1,4 +1,5 @@
 <script setup>
+import { mdInline } from '@metanull/viewer-core'
 import SmartLink from './SmartLink.vue'
 
 // A landing page's grid of section cards: each names a section of the
@@ -7,10 +8,12 @@ import SmartLink from './SmartLink.vue'
 // and 'accordion' with collapsible sections.
 defineProps({
   // { title, description, action, to?, href?, image?, alt?, number?, children? }
-  // — `description` and `action` are texts the website already resolved; `to` a
-  // route location, `href` an address; `image` the card's image URL (optional);
-  // `alt` the image alt text; `number` formatted by the caller (Roman or decimal);
-  // `children` (accordion only) subsections with their own `to`/`href`.
+  // — `title`/`description` are Markdown, rendered inline (no block elements,
+  // through `mdInline`); `action` is a text the website already resolved; `to`
+  // a route location, `href` an address; `image` the card's image URL
+  // (optional); `alt` the image alt text; `number` formatted by the caller
+  // (Roman or decimal); `children` (accordion only) subsections with their
+  // own `to`/`href`.
   cards: { type: Array, default: () => [] },
   variant: { type: String, default: 'cards', validate: (v) => ['cards', 'rows', 'covers', 'accordion'].includes(v) },
 })
@@ -22,8 +25,8 @@ defineProps({
       <!-- Default 'cards' variant: title, description, action link -->
       <template v-if="variant === 'cards'">
         <SmartLink class="mwnf-cards__link" :to="card.to" :href="card.href">
-          <span class="mwnf-cards__title">{{ card.title }}</span>
-          <span v-if="card.description" class="mwnf-cards__text">{{ card.description }}</span>
+          <span class="mwnf-cards__title" v-html="mdInline(card.title)"></span>
+          <span v-if="card.description" class="mwnf-cards__text" v-html="mdInline(card.description)"></span>
           <span v-if="card.action" class="mwnf-cards__action">{{ card.action }} →</span>
         </SmartLink>
       </template>
@@ -36,8 +39,8 @@ defineProps({
           </div>
           <div class="mwnf-cards__content">
             <span v-if="card.number" class="mwnf-cards__number">{{ card.number }}</span>
-            <span class="mwnf-cards__title">{{ card.title }}</span>
-            <span v-if="card.description" class="mwnf-cards__text">{{ card.description }}</span>
+            <span class="mwnf-cards__title" v-html="mdInline(card.title)"></span>
+            <span v-if="card.description" class="mwnf-cards__text" v-html="mdInline(card.description)"></span>
           </div>
         </SmartLink>
       </template>
@@ -49,7 +52,7 @@ defineProps({
             <img class="mwnf-cards__image" :src="card.image" :alt="card.alt || ''" />
           </div>
           <span v-if="card.number" class="mwnf-cards__number">{{ card.number }}</span>
-          <span class="mwnf-cards__title">{{ card.title }}</span>
+          <span class="mwnf-cards__title" v-html="mdInline(card.title)"></span>
         </SmartLink>
       </template>
 
@@ -58,7 +61,7 @@ defineProps({
         <details class="mwnf-cards__details">
           <summary class="mwnf-cards__summary">
             <span v-if="card.number" class="mwnf-cards__number">{{ card.number }}</span>
-            <span class="mwnf-cards__title">{{ card.title }}</span>
+            <span class="mwnf-cards__title" v-html="mdInline(card.title)"></span>
           </summary>
           <ul v-if="card.children?.length" class="mwnf-cards__children">
             <li v-for="child in card.children" :key="child.href ?? child.title" class="mwnf-cards__child">

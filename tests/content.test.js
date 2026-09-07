@@ -46,6 +46,17 @@ describe('SectionCards', () => {
     expect(wrapper.text()).toContain('Search →')
   })
 
+  it('renders title and description as inline Markdown, not plain text', () => {
+    const wrapper = mount(SectionCards, {
+      props: { cards: [{ title: 'The *Dynasty* Gallery', description: 'Every **object** on display', href: '#/gallery' }] },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-cards__title').html()).toContain('<em>Dynasty</em>')
+    expect(wrapper.find('.mwnf-cards__text').html()).toContain('<strong>object</strong>')
+    // Inline rendering, not block: no wrapping <p>.
+    expect(wrapper.find('.mwnf-cards__text').html()).not.toContain('<p>')
+  })
+
   it('renders nothing for no card', () => {
     expect(mount(SectionCards, globalWithI18n()).html()).not.toContain('mwnf-cards')
   })
