@@ -49,6 +49,62 @@ describe('SectionCards', () => {
   it('renders nothing for no card', () => {
     expect(mount(SectionCards, globalWithI18n()).html()).not.toContain('mwnf-cards')
   })
+
+  it('renders cards in rows variant with image and number', () => {
+    const wrapper = mount(SectionCards, {
+      props: {
+        variant: 'rows',
+        cards: [{ title: 'Item One', number: 'I', image: 'one.jpg', alt: 'First', href: '#/1' }],
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-cards--rows').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-cards__image').attributes('src')).toBe('one.jpg')
+    expect(wrapper.find('.mwnf-cards__image').attributes('alt')).toBe('First')
+    expect(wrapper.text()).toContain('I')
+    expect(wrapper.text()).toContain('Item One')
+  })
+
+  it('renders cards in covers variant with image overlay and number', () => {
+    const wrapper = mount(SectionCards, {
+      props: {
+        variant: 'covers',
+        cards: [{ title: 'Dynasty Two', number: 'II', image: 'two.jpg', alt: 'Second', href: '#/2' }],
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-cards--covers').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-cards__image').attributes('src')).toBe('two.jpg')
+    expect(wrapper.text()).toContain('II')
+    expect(wrapper.text()).toContain('Dynasty Two')
+  })
+
+  it('renders accordion variant with collapsible details and child links', async () => {
+    const wrapper = mount(SectionCards, {
+      props: {
+        variant: 'accordion',
+        cards: [
+          {
+            title: 'Section A',
+            number: 'I',
+            children: [
+              { title: 'Sub One', href: '#/a1' },
+              { title: 'Sub Two', href: '#/a2' },
+            ],
+          },
+        ],
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-cards--accordion').exists()).toBe(true)
+    expect(wrapper.find('details').exists()).toBe(true)
+    expect(wrapper.text()).toContain('Section A')
+    expect(wrapper.text()).toContain('I')
+    const children = wrapper.findAll('.mwnf-cards__child-link')
+    expect(children).toHaveLength(2)
+    expect(children[0].attributes('href')).toBe('#/a1')
+    expect(children[0].text()).toBe('Sub One')
+  })
 })
 
 describe('FeaturedRecord', () => {

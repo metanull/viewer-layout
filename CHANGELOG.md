@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.6.0
+
+- `SectionCards`: new `variant` prop (`'cards' | 'rows' | 'covers' | 'accordion'`)
+  selects the presentation of the cards. The default `'cards'` is unchanged.
+  `'rows'` renders cards in a flex layout with an image on the left, text on
+  the right, and the image fades in on hover. `'covers'` displays each card as
+  a cropped image with the title and number as text overlay. `'accordion'`
+  creates collapsible sections, each with optional `children` subsections; the
+  `number` (formatted by the caller as Roman or decimal) precedes the title.
+  Tokens documented in `tokens.reference.css`.
+
 ## 2.5.0
 
 Two more control kinds `CatalogueResultsView` asked for. Additive.

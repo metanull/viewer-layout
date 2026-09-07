@@ -170,6 +170,25 @@
   /* --mwnf-card-text-color: #555555;                Card text color */
   /* --mwnf-card-action-weight: 600;                 Weight of the action line */
   /* --mwnf-card-action-color: #1c1c1c;              Color of the action line (cards and featured record) */
+  /* --mwnf-card-number-size: 0.875rem;              Number (Roman/decimal) size */
+  /* --mwnf-card-number-weight: 600;                 Number weight */
+  /* --mwnf-card-number-color: #555555;              Number color */
+  /* --mwnf-card-image-background: #dddddd;          Behind card images when absent */
+  /* --mwnf-card-row-image-width: 12.5rem;           Row variant image width */
+  /* --mwnf-card-row-image-height: 10rem;            Row variant image height */
+  /* --mwnf-card-row-image-transition: 0.3s ease;    Row variant image fade-in duration */
+  /* --mwnf-card-covers-columns: 3;                  Covers variant cards per row */
+  /* --mwnf-card-covers-padding: 1rem;               Covers variant card padding */
+  /* --mwnf-card-covers-text-color: #ffffff;         Covers variant text color */
+  /* --mwnf-card-covers-text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5); Text shadow on cover images */
+  /* --mwnf-card-cover-height: 15rem;                Covers variant card height */
+  /* --mwnf-card-cover-title-size: 1.125rem;         Covers variant title size */
+  /* --mwnf-card-accordion-transition: 0.2s ease;    Accordion variant transition duration */
+  /* --mwnf-card-accordion-marker-width: 1rem;       Accordion variant marker width */
+  /* --mwnf-card-accordion-padding: 1rem;            Accordion variant subsection padding */
+  /* --mwnf-card-accordion-child-gap: 0.5rem;        Accordion variant gap between subsections */
+  /* --mwnf-card-accordion-child-padding: 0.5rem 0;  Accordion variant subsection padding */
+  /* --mwnf-card-accordion-child-border: 1px solid #dddddd; Border above accordion subsections */
 
   /* ---------- Content: FeaturedRecord ---------- */
   /* --mwnf-featured-heading-size: 1rem;             Heading over the spotlight */
