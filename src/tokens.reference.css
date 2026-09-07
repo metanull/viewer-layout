@@ -382,7 +382,7 @@
   /* --mwnf-text-page-heading-size: 1.75rem;         Page heading size */
   /* --mwnf-text-page-heading-color: inherit;        Page heading color */
 
-  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView, EssayView ---------- */
+  /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView, EssayView, SearchFormView ---------- */
   /* Only the arrangement: the parts a view is made of carry the tokens above,
      and a website themes a composed page by theming its parts. */
   /* --mwnf-view-gap: 1rem;                          Between the parts of a page, and between the results and the aside */
@@ -507,4 +507,10 @@
   /* --mwnf-back-link-button-padding: 0.375rem 0.75rem; Back link button padding */
   /* --mwnf-back-link-size: 0.875rem;                  Back link text size */
   /* --mwnf-back-link-line-height: 1;                  Back link line height */
+
+  /* ---------- Content: SearchFormView ---------- */
+  /* --mwnf-search-form-row-gap: 0.5rem;             Gap between a row's own parts, and between facet columns */
+  /* --mwnf-search-form-label-width: 8rem;           Width of a row's own label, or a radio's own choice */
+  /* --mwnf-search-form-operator-width: 4.5rem;      Width of the AND/OR select, and of a radio's year input */
+  /* --mwnf-search-form-field-width: 12rem;          Width of the field select */
 }

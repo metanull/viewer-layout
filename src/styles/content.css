@@ -1223,7 +1223,8 @@
 
 .mwnf-home,
 .mwnf-catalogue,
-.mwnf-record {
+.mwnf-record,
+.mwnf-search-form {
   display: flex;
   flex-direction: column;
   gap: var(--mwnf-view-gap, 1rem);
@@ -1850,4 +1851,74 @@
 
 .mwnf-back-link__button:hover {
   text-decoration: underline;
+}
+
+.mwnf-search-form__row {
+  display: flex;
+  align-items: center;
+  gap: var(--mwnf-search-form-row-gap, 0.5rem);
+}
+
+.mwnf-search-form__row-label {
+  flex: 0 0 var(--mwnf-search-form-label-width, 8rem);
+  font-size: var(--mwnf-filter-label-size, 0.8125rem);
+  color: var(--mwnf-filter-label-color, #555555);
+}
+
+.mwnf-search-form__operator {
+  flex: 0 0 auto;
+  width: var(--mwnf-search-form-operator-width, 4.5rem);
+}
+
+.mwnf-search-form__field {
+  flex: 0 0 auto;
+  width: var(--mwnf-search-form-field-width, 12rem);
+}
+
+.mwnf-search-form__keyword {
+  flex: 1 1 auto;
+  padding: var(--mwnf-filter-control-padding, 0.25rem 0.375rem);
+  border: var(--mwnf-filter-control-border, 1px solid #dddddd);
+  border-radius: var(--mwnf-radius, 0.25rem);
+  background-color: var(--mwnf-filter-control-background, #ffffff);
+  color: var(--mwnf-filter-control-text, #1c1c1c);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.mwnf-search-form__dates {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mwnf-search-form-row-gap, 0.5rem);
+}
+
+.mwnf-search-form__radio-row {
+  display: flex;
+  align-items: center;
+  gap: var(--mwnf-search-form-row-gap, 0.5rem);
+}
+
+.mwnf-search-form__radio-choice {
+  display: flex;
+  align-items: center;
+  gap: var(--mwnf-facet-gap, 0.25rem);
+  flex: 0 0 var(--mwnf-search-form-label-width, 8rem);
+  font-size: var(--mwnf-filter-label-size, 0.8125rem);
+  color: var(--mwnf-filter-label-color, #555555);
+}
+
+.mwnf-search-form__year {
+  width: var(--mwnf-search-form-operator-width, 4.5rem);
+  padding: var(--mwnf-filter-control-padding, 0.25rem 0.375rem);
+  border: var(--mwnf-filter-control-border, 1px solid #dddddd);
+  border-radius: var(--mwnf-radius, 0.25rem);
+  background-color: var(--mwnf-filter-control-background, #ffffff);
+  color: var(--mwnf-filter-control-text, #1c1c1c);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.mwnf-search-form__how-to {
+  margin: 0;
+  font-size: var(--mwnf-view-back-size, 0.8125rem);
 }

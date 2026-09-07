@@ -6,7 +6,7 @@
 
 - _(pending: `PartnerListView` — metanull/viewer-layout#38)_
 
-- _(pending: `SearchFormView` — metanull/viewer-layout#39)_
+- `SearchFormView`, over `FilterPanel`/`FacetSelect` and viewer-core's `useFacets`, `centuryPresets`, `yearBuckets` and `useSearchLanguage`: legacy's three search entrances — `Database`'s keyword rows, `CollectionSearch`'s facet column, `PcEntrance`'s one-filter-at-a-time radio — as one spec, over `mode: 'rows' | 'facets' | 'radio'` (metanull/viewer-layout#39)
 
 - _(pending: `GlossaryTool`, `DynastyPopout`, `DynastyList` — metanull/viewer-layout#40)_
 
