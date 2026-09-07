@@ -426,4 +426,85 @@
   /* --mwnf-view-essay-variant-gap: 0.3125rem;       Gap between variant thumbnails */
   /* --mwnf-view-essay-variant-border: 2px solid transparent; Variant thumbnail border */
   /* --mwnf-view-essay-variant-active-border: #1c1c1c; The selected variant's border color */
+
+  /* ---------- Content: PartnerMap ---------- */
+  /* --mwnf-partner-map-padding: 1.25rem 0;            Vertical padding */
+  /* --mwnf-partner-map-title-size: 1rem;              Title size */
+  /* --mwnf-partner-map-title-color: inherit;          Title color */
+  /* --mwnf-partner-map-title-gap: 0.375rem;           Gap between title and map */
+  /* --mwnf-partner-map-height: 20rem;                 Map embed height */
+  /* --mwnf-partner-map-border: 1px solid #dddddd;     Map border */
+  /* --mwnf-partner-map-link-gap: 0.375rem;            Gap before the full-map link */
+  /* --mwnf-partner-map-link-size: 0.875rem;           Full-map link text size */
+
+  /* ---------- Content: FeaturedPartners ---------- */
+  /* --mwnf-featured-partners-padding: 1.25rem 0;      Vertical padding */
+  /* --mwnf-featured-partners-background: transparent; Background color */
+  /* --mwnf-featured-partners-heading-size: 1.5rem;    Heading size */
+  /* --mwnf-featured-partners-heading-color: inherit;  Heading color */
+  /* --mwnf-featured-partners-heading-gap: 1rem;       Gap after heading */
+  /* --mwnf-featured-partners-carousel-min-height: 16rem; Minimum carousel height */
+  /* --mwnf-featured-partners-gap: 1.5rem;             Gap between image and text */
+  /* --mwnf-featured-partners-image-width: 20rem;      Partner image width */
+  /* --mwnf-featured-partners-image-height: 15rem;     Partner image height */
+  /* --mwnf-featured-partners-body-gap: 0.625rem;      Gap between text elements */
+  /* --mwnf-featured-partners-name-size: 1.25rem;      Partner name size */
+  /* --mwnf-featured-partners-name-color: inherit;     Partner name color */
+  /* --mwnf-featured-partners-location-size: 0.875rem; Location text size */
+  /* --mwnf-featured-partners-description-size: 0.95rem; Description text size */
+  /* --mwnf-featured-partners-description-color: inherit; Description text color */
+  /* --mwnf-featured-partners-bullet-gap: 0.5rem;      Gap between carousel bullets */
+  /* --mwnf-featured-partners-controls-padding: 0.875rem; Padding above controls */
+  /* --mwnf-featured-partners-bullet-size: 0.75rem;    Carousel bullet size */
+  /* --mwnf-featured-partners-bullet-bg: #dddddd;      Inactive bullet color */
+  /* --mwnf-featured-partners-bullet-transition: 0.2s ease; Bullet transition */
+  /* --mwnf-featured-partners-bullet-radius: 50%;      Bullet border radius */
+  /* --mwnf-featured-partners-bullet-active-bg: #1c1c1c; Active bullet color */
+
+  /* ---------- Content: SiblingGalleries ---------- */
+  /* --mwnf-sibling-galleries-padding: 1.5rem 0;       Vertical padding */
+  /* --mwnf-sibling-galleries-galleries-bg: transparent; Galleries block background */
+  /* --mwnf-sibling-galleries-museums-bg: #ffffff;     Museums block background */
+  /* --mwnf-sibling-galleries-header-gap: 1rem;        Gap in the heading row */
+  /* --mwnf-sibling-galleries-heading-size: 1.375rem;  Heading text size */
+  /* --mwnf-sibling-galleries-heading-color: inherit;  Heading text color */
+  /* --mwnf-sibling-galleries-see-more-size: 0.875rem; "See more" link size */
+  /* --mwnf-sibling-galleries-see-more-color: #555555; "See more" link color */
+  /* --mwnf-sibling-galleries-columns: 4;              Galleries per row */
+  /* --mwnf-sibling-galleries-gap: 0.75rem;            Gap between gallery tiles */
+  /* --mwnf-sibling-galleries-image-height: 9.375rem;  Gallery image height */
+  /* --mwnf-sibling-galleries-image-bg: #dddddd;       Gallery image placeholder */
+  /* --mwnf-sibling-galleries-empty-bg: repeating-linear-gradient(…); Empty gallery pattern */
+  /* --mwnf-sibling-galleries-image-gap: 0.375rem;     Gap between image and name */
+  /* --mwnf-sibling-galleries-name-size: 0.875rem;     Gallery name size */
+  /* --mwnf-sibling-galleries-name-color: inherit;     Gallery name color */
+  /* --mwnf-sibling-galleries-museums-columns: 3;      Museums per row */
+  /* --mwnf-sibling-galleries-museums-gap: 0.75rem;    Gap between museum tiles */
+  /* --mwnf-sibling-galleries-museum-text-size: 2.125rem; Museum initials size */
+  /* --mwnf-museum-bg: #1c1c1c;                        Museum tile background */
+  /* --mwnf-museum-text: #ffffff;                      Museum tile text color */
+
+  /* ---------- Content: PopupLogo ---------- */
+  /* --mwnf-popup-logo-width: min(40rem, 92vw);        Popup width */
+  /* --mwnf-popup-logo-max-height: 80vh;               Popup max height */
+  /* --mwnf-popup-logo-padding: 2.5rem 1.875rem 1.875rem; Popup padding */
+  /* --mwnf-popup-logo-bg: #ffffff;                    Popup background */
+  /* --mwnf-popup-logo-color: inherit;                 Popup text color */
+  /* --mwnf-popup-logo-border: 5px solid #1c1c1c;      Popup border */
+  /* --mwnf-popup-logo-shadow: 0 4px 20px 4px rgba(0,0,0,0.1); Popup shadow */
+  /* --mwnf-popup-logo-animation: none;                Popup animation */
+  /* --mwnf-popup-logo-close-top: 0.5rem;              Close button top offset */
+  /* --mwnf-popup-logo-close-right: 0.75rem;           Close button right offset */
+  /* --mwnf-popup-logo-close-size: 1.25rem;            Close button size */
+  /* --mwnf-popup-logo-close-color: inherit;           Close button color */
+  /* --mwnf-popup-logo-close-hover-color: #555555;     Close button hover color */
+  /* --mwnf-popup-logo-close-line-height: 1;           Close button line height */
+  /* --mwnf-popup-logo-content-size: 1rem;             Content text size */
+  /* --mwnf-popup-logo-paragraph-gap: 0.5rem;          Gap between paragraphs */
+
+  /* ---------- Content: BackLink ---------- */
+  /* --mwnf-back-link-padding: 0.625rem 0;             Back link vertical padding */
+  /* --mwnf-back-link-button-padding: 0.375rem 0.75rem; Back link button padding */
+  /* --mwnf-back-link-size: 0.875rem;                  Back link text size */
+  /* --mwnf-back-link-line-height: 1;                  Back link line height */
 }

@@ -4,12 +4,16 @@ import { describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import {
+  BackLink,
   FacetSelect,
+  FeaturedPartners,
   FeaturedRecord,
   FilterPanel,
   GlossaryPopover,
   MediaGallery,
   Pagination,
+  PartnerMap,
+  PopupLogo,
   RecordCredits,
   RecordGrid,
   RecordLanguages,
@@ -19,6 +23,7 @@ import {
   ResultsSummary,
   SectionCards,
   SheetSection,
+  SiblingGalleries,
 } from '../src/content/index.js'
 import { globalWithI18n } from './helpers.js'
 
@@ -392,5 +397,202 @@ describe('GlossaryPopover', () => {
     expect(mount(GlossaryPopover, globalWithI18n()).find('aside').exists()).toBe(false)
     const wrapper = mount(GlossaryPopover, { props: { term: { word: 'x' }, html: '<p>Rendered <em>text</em></p>' }, ...globalWithI18n() })
     expect(wrapper.find('.mwnf-popover__definition').html()).toContain('<em>text</em>')
+  })
+})
+
+describe('PartnerMap', () => {
+  it('renders the map with title, iframe and link when coordinates are present', () => {
+    const wrapper = mount(PartnerMap, {
+      props: {
+        latitude: 48.8566,
+        longitude: 2.3522,
+        zoom: 15,
+        label: 'Louvre Museum',
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-partner-map').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-partner-map__embed').attributes('src')).toContain('openstreetmap.org')
+    // The title uses the translation function, so we check for the label or the key
+    const title = wrapper.find('.mwnf-partner-map__embed').attributes('title')
+    expect(title === 'partner.mapOf' || title.includes('Louvre')).toBe(true)
+    expect(wrapper.find('.mwnf-partner-map__link a').attributes('href')).toContain('openstreetmap.org')
+  })
+
+  it('renders nothing when coordinates are missing', () => {
+    const wrapper = mount(PartnerMap, { props: { latitude: null, longitude: null }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-partner-map').exists()).toBe(false)
+  })
+
+  it('builds correct OSM URLs from zoom level', () => {
+    const wrapper = mount(PartnerMap, {
+      props: { latitude: 51.5074, longitude: -0.1278, zoom: 10 },
+      ...globalWithI18n(),
+    })
+    const iframe = wrapper.find('.mwnf-partner-map__embed')
+    expect(iframe.attributes('src')).toContain('bbox=')
+    expect(iframe.attributes('src')).toContain('marker=51.5074%2C-0.1278')
+  })
+})
+
+describe('FeaturedPartners', () => {
+  it('renders the carousel with records and bullet controls', async () => {
+    const records = [
+      { id: 'p1', name: 'Partner One', logo: 'logo1.jpg', country: 'France', city: 'Paris', description: 'A museum', route: { name: 'partner', params: { id: 'p1' } } },
+      { id: 'p2', name: 'Partner Two', logo: 'logo2.jpg', country: 'Egypt', city: 'Cairo', description: 'Another museum', route: { name: 'partner', params: { id: 'p2' } } },
+    ]
+    const wrapper = mount(FeaturedPartners, {
+      props: { records },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-featured-partners__heading').exists()).toBe(true)
+    expect(wrapper.findAll('.mwnf-featured-partners__bullet')).toHaveLength(2)
+    expect(wrapper.find('.mwnf-featured-partners__name').text()).toBe('Partner One')
+  })
+
+  it('rotates through partners when bullet is clicked', async () => {
+    const records = [
+      { id: 'p1', name: 'Partner One', logo: 'logo1.jpg', country: 'France', city: 'Paris', description: 'A', route: {} },
+      { id: 'p2', name: 'Partner Two', logo: 'logo2.jpg', country: 'Egypt', city: 'Cairo', description: 'B', route: {} },
+    ]
+    const wrapper = mount(FeaturedPartners, {
+      props: { records },
+      ...globalWithI18n(),
+    })
+    // Check that the active bullet is the first one
+    expect(wrapper.findAll('.mwnf-featured-partners__bullet')[0].classes()).toContain('mwnf-featured-partners__bullet--active')
+    // Click the second bullet
+    await wrapper.findAll('.mwnf-featured-partners__bullet')[1].trigger('click')
+    await nextTick()
+    // Verify the second bullet is now active
+    expect(wrapper.findAll('.mwnf-featured-partners__bullet')[1].classes()).toContain('mwnf-featured-partners__bullet--active')
+  })
+
+  it('renders nothing when no records', () => {
+    const wrapper = mount(FeaturedPartners, { props: { records: [] }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-featured-partners').exists()).toBe(false)
+  })
+})
+
+describe('SiblingGalleries', () => {
+  it('renders galleries and museums blocks when data is present', () => {
+    const galleries = [
+      { id: 'g1', name: 'Gallery One', image: 'g1.jpg', route: { name: 'gallery', params: { id: 'g1' } } },
+    ]
+    const museums = [
+      { name: 'Islamic Art', to: 'https://example.com/islamic' },
+    ]
+    const wrapper = mount(SiblingGalleries, {
+      props: { galleries, museums },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-sibling-galleries__gallery').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-sibling-galleries__museum').exists()).toBe(true)
+  })
+
+  it('renders galleries without links when route is absent', () => {
+    const galleries = [
+      { id: 'g1', name: 'Unresolved', route: null },
+    ]
+    const wrapper = mount(SiblingGalleries, {
+      props: { galleries },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-sibling-galleries__gallery--no-link').exists()).toBe(true)
+  })
+
+  it('renders empty placeholder for galleries without images', () => {
+    const galleries = [
+      { id: 'g1', name: 'No Image Gallery', image: null, route: {} },
+    ]
+    const wrapper = mount(SiblingGalleries, {
+      props: { galleries },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-sibling-galleries__image--empty').exists()).toBe(true)
+  })
+})
+
+describe('PopupLogo', () => {
+  it('renders a dismissible popup with markdown content', async () => {
+    const wrapper = mount(PopupLogo, {
+      props: {
+        content: 'Visit our **sponsor**',
+        enabled: true,
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-popup-logo').exists()).toBe(true)
+    expect(wrapper.find('.mwnf-popup-logo__content').html()).toContain('<strong>sponsor</strong>')
+  })
+
+  it('renders nothing when disabled', () => {
+    const wrapper = mount(PopupLogo, {
+      props: { content: 'Content', enabled: false },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-popup-logo').exists()).toBe(false)
+  })
+
+  it('renders nothing when dismissed', async () => {
+    const wrapper = mount(PopupLogo, {
+      props: { content: 'Content', enabled: true },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-popup-logo').exists()).toBe(true)
+    await wrapper.find('.mwnf-popup-logo__close').trigger('click')
+    expect(wrapper.find('.mwnf-popup-logo').exists()).toBe(false)
+  })
+
+  it('renders raw HTML when rawHtml prop is true', () => {
+    const wrapper = mount(PopupLogo, {
+      props: {
+        content: '<p>Raw <em>HTML</em></p>',
+        enabled: true,
+        rawHtml: true,
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-popup-logo__content').html()).toContain('<em>HTML</em>')
+  })
+})
+
+describe('BackLink', () => {
+  it('renders a button that calls router.back() when history is available', async () => {
+    // Simulate browser history length > 1
+    Object.defineProperty(window.history, 'length', {
+      value: 2,
+      configurable: true,
+    })
+    const wrapper = mount(BackLink, {
+      props: { to: '#/fallback' },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('button').exists()).toBe(true)
+    expect(wrapper.find('button').text()).toContain('back')
+  })
+
+  it('renders a link with fallback route when history is not available', () => {
+    Object.defineProperty(window.history, 'length', {
+      value: 1,
+      configurable: true,
+    })
+    const wrapper = mount(BackLink, {
+      props: { to: { name: 'home' } },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('a').exists()).toBe(true)
+  })
+
+  it('uses custom label entry when provided', () => {
+    Object.defineProperty(window.history, 'length', {
+      value: 1,
+      configurable: true,
+    })
+    const wrapper = mount(BackLink, {
+      props: { label: 'back.label', to: '#/' },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.text()).toContain('back')
   })
 })
