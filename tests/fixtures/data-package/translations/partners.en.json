@@ -1,0 +1,8 @@
+{
+  "p1": { "name": "Zed Museum", "city": "Cairo" },
+  "p7": { "name": "Alpha Museum", "city": "Giza" },
+  "p2": { "name": "Attached Gallery", "city": "Cairo" },
+  "p3": { "name": "Damascus Museum", "city": "Damascus" },
+  "p4": { "name": "Aleppo Annex", "city": "Aleppo" },
+  "p5": { "name": "Homs Collection", "city": "Homs" }
+}
