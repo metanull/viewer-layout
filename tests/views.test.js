@@ -25,6 +25,7 @@ const texts = {
   'catalogue.facet.epm': 'European partners',
   'catalogue.filter.heading': 'Filter',
   'catalogue.results.itemsFound': 'Items found',
+  'catalogue.results.noResults': 'No results',
   'catalogue.results.noResultsFilter': 'No items match the selected filter.',
   'record.action.backToResults': 'Back to results',
   'record.citation.in': 'in',
