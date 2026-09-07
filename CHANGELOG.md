@@ -19,7 +19,14 @@
   `[{ value, label }]` buckets (century strings like "1500–1599" for DXA
   sites); without it, a free-year number input.
 
-- _(pending: `PartnerListView` — metanull/viewer-layout#38)_
+- `PartnerListView`: the partner list as a spec over viewer-core's
+  `groupByCountry`/`partnerHierarchy` — islamicart's and sharinghistory's
+  country accordion with main/associated tiers, and the DXA family's open
+  groups with no tiers and an A-Z/Z-A toggle, one declaration apart
+  (`group.tier`, `variant`, `orderToggle`). `nested` renders an associated
+  partner under its own parent instead of the flat tier column, for a family
+  that wants legacy's original nesting back. Slots `before`, `group-heading`,
+  `row`, `after`.
 
 - `SearchFormView`, over `FilterPanel`/`FacetSelect` and viewer-core's `useFacets`, `centuryPresets`, `yearBuckets` and `useSearchLanguage`: legacy's three search entrances — `Database`'s keyword rows, `CollectionSearch`'s facet column, `PcEntrance`'s one-filter-at-a-time radio — as one spec, over `mode: 'rows' | 'facets' | 'radio'` (metanull/viewer-layout#39)
 

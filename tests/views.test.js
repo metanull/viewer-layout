@@ -5,7 +5,7 @@ import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@metanull/viewer-core/i18n'
 import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@metanull/viewer-core'
 import {
-  CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
+  CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
 } from '../src/views/index.js'
 import { layoutTexts } from './helpers.js'
 
@@ -79,9 +79,15 @@ const texts = {
   'timeline.results.noResults': 'No results. Please use the drop-down fields above to start a new search.',
   'catalogue.era.ad': 'AD',
   'catalogue.era.bc': 'BC',
+  'partner.list.associated': 'Associated Partners',
+  'partner.list.partnersFound': 'Partners found',
+  'partner.list.sortAscending': 'Sort A-Z',
+  'partner.list.sortDescending': 'Sort Z-A',
+  'partner.item.objectsInSite': 'object(s) in this site',
 }
 
 const COUNTRY_NAMES = { 'c-eg': 'Egypt', 'c-sy': 'Syria' }
+const countryOrOther = (id) => COUNTRY_NAMES[id] ?? 'Other'
 
 async function settle(predicate, tries = 40) {
   for (let i = 0; i < tries && !predicate(); i++) await new Promise((r) => setTimeout(r, 5))
@@ -103,6 +109,8 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
       { path: '/timeline', name: 'timeline-entrance', component: { template: '<p>timeline entrance</p>' } },
       { path: '/timeline/results', name: 'timeline-results', component: { template: '<p>timeline results</p>' } },
       { path: '/gallery', name: 'timeline-gallery', component: { template: '<p>gallery</p>' } },
+      { path: '/partners', name: 'partners', component: { template: '<p>partners</p>' } },
+      { path: '/partner/:id', name: 'partner', component: { template: '<p>partner</p>' } },
     ],
   })
   // The view reads its filters from the URL, so the URL is in place first —
@@ -116,12 +124,13 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
 // What a website's router does before any of these views exists: the
 // entities the routes declare, and English, which every list reads.
 beforeAll(async () => {
-  await loadEntities(['objects', 'glossary', 'collections', 'timelines', 'timeline_events'])
+  await loadEntities(['objects', 'glossary', 'collections', 'timelines', 'timeline_events', 'partners'])
   const pkg = useDataPackage()
   await pkg.loadTranslations('objects', 'en')
   await pkg.loadTranslations('glossary', 'en')
   await pkg.loadTranslations('collections', 'en')
   await pkg.loadTranslations('timeline_events', 'en')
+  await pkg.loadTranslations('partners', 'en')
 })
 
 describe('HomeView', () => {
@@ -906,6 +915,223 @@ describe('EssayView', () => {
   })
 })
 
+// PartnerListView: islamicart's/sharinghistory's country accordion with
+// main/associated tiers, and the DXA family's plain country groups with an
+// A-Z toggle, both over the fixture's `partners` entity (see
+// tests/fixtures/data-package/partners.json): p1 "Zed Museum" and p7 "Alpha
+// Museum" are Egyptian main partners, p2 "Attached Gallery" is associated to
+// p1; p3 "Damascus Museum" is a Syrian main partner, p4 "Aleppo Annex" is
+// associated to it, p5 "Homs Collection" is associated to a parent id the
+// fixture does not carry; p6 "International Foundation" carries no country
+// and no translation, so its row falls back to `internal_name`.
+describe('PartnerListView', () => {
+  it('groups by country into tiers, sorted by name; the country order and item counts are the caller\'s', async () => {
+    const { wrapper } = await mountView(PartnerListView, {
+      props: {
+        spec: {
+          entity: 'partners',
+          group: { tier: 'level', order: 'country' },
+          label: countryOrOther,
+          route: 'partner',
+          count: true,
+        },
+      },
+      route: '/partners',
+    })
+    await settle(() => wrapper.findAll('.mwnf-partner-list__group').length > 0)
+
+    expect(wrapper.find('.mwnf-partner-list__count').text()).toBe('Partners found: 7')
+
+    const groups = wrapper.findAll('.mwnf-partner-list__group')
+    expect(groups.map((g) => g.find('.mwnf-partner-list__group-title').text())).toEqual(['Egypt', 'Other', 'Syria'])
+    // Every group is a collapsible, expanded <details> - the accordion variant.
+    expect(groups.every((g) => g.element.tagName === 'DETAILS' && g.attributes('open') !== undefined)).toBe(true)
+
+    const egypt = groups[0]
+    expect(egypt.findAll('.mwnf-partner-list__tier')[0].findAll('.mwnf-partner-list__name').map((n) => n.text())).toEqual([
+      'Alpha Museum, Giza',
+      'Zed Museum, Cairo',
+    ])
+    expect(egypt.find('.mwnf-partner-list__tier--associated .mwnf-partner-list__tier-label').text()).toBe('Associated Partners')
+    expect(egypt.find('.mwnf-partner-list__tier--associated .mwnf-partner-list__name').text()).toBe('Attached Gallery, Cairo')
+    // p1 carries a logo; the alt text is the plain name, not the HTML.
+    expect(egypt.find('.mwnf-partner-list__logo').attributes('src')).toBe('p1-logo.png')
+    expect(egypt.find('.mwnf-partner-list__logo').attributes('alt')).toBe('Zed Museum')
+    // p1's own item_count (12) prints against the shared entry; p7's (0) prints nothing.
+    expect(egypt.findAll('.mwnf-partner-list__meta').map((m) => m.text())).toEqual(['12 object(s) in this site'])
+    // Links go through the row's own route.
+    const link = egypt.findAll('.mwnf-partner-list__name')[1]
+    expect(link.attributes('href')).toBe('/partner/p1')
+
+    // No translation at all: falls back to internal_name, and to no country.
+    const other = groups[1]
+    expect(other.find('.mwnf-partner-list__name').text()).toBe('International Foundation')
+    expect(other.find('.mwnf-partner-list__tier--associated').exists()).toBe(false)
+
+    const syria = groups[2]
+    expect(syria.findAll('.mwnf-partner-list__tier--associated .mwnf-partner-list__name').map((n) => n.text())).toEqual([
+      'Aleppo Annex, Aleppo',
+      'Homs Collection, Homs',
+    ])
+  })
+
+  it('nested: true moves an associated partner under its own parent (partnerHierarchy); one with no match in the group stays flat', async () => {
+    const { wrapper } = await mountView(PartnerListView, {
+      props: {
+        spec: {
+          entity: 'partners',
+          group: { tier: 'level', order: 'country' },
+          label: countryOrOther,
+          route: 'partner',
+          nested: true,
+        },
+      },
+      route: '/partners',
+    })
+    await settle(() => wrapper.findAll('.mwnf-partner-list__group').length > 0)
+
+    const groups = wrapper.findAll('.mwnf-partner-list__group')
+    const egypt = groups[0]
+    // p2 is parented to p1 ("Zed Museum"): nested under it, not in the flat column.
+    expect(egypt.find('.mwnf-partner-list__tier--associated').exists()).toBe(false)
+    const zed = egypt.findAll('.mwnf-partner-list__row-block')[1]
+    expect(zed.find('.mwnf-partner-list__name').text()).toBe('Zed Museum, Cairo')
+    expect(zed.find('.mwnf-partner-list__children .mwnf-partner-list__name').text()).toBe('Attached Gallery, Cairo')
+
+    const syria = groups[2]
+    // p5's parent_id ("px-missing") is not in the fixture: it keeps its place
+    // in the flat column rather than being dropped.
+    expect(syria.find('.mwnf-partner-list__tier--associated').exists()).toBe(true)
+    expect(syria.find('.mwnf-partner-list__tier--associated .mwnf-partner-list__name').text()).toBe('Homs Collection, Homs')
+    const damascus = syria.findAll('.mwnf-partner-list__row-block')[0]
+    expect(damascus.find('.mwnf-partner-list__children .mwnf-partner-list__name').text()).toBe('Aleppo Annex, Aleppo')
+  })
+
+  it('the open, untiered A-Z list (the DXA shape): no tiers, a variant with no accordion, and an order toggle mirrored in the query', async () => {
+    const spec = {
+      entity: 'partners',
+      group: { tier: false, order: 'country' },
+      label: countryOrOther,
+      route: 'partner',
+      orderToggle: true,
+      variant: 'open',
+    }
+    const { wrapper, router } = await mountView(PartnerListView, { props: { spec }, route: '/partners' })
+    await settle(() => wrapper.findAll('.mwnf-partner-list__group').length > 0)
+
+    const groups = wrapper.findAll('.mwnf-partner-list__group')
+    expect(groups.every((g) => g.element.tagName === 'SECTION')).toBe(true)
+    expect(groups.map((g) => g.find('.mwnf-partner-list__group-title').text())).toEqual(['Egypt', 'Other', 'Syria'])
+    // No tier at all: every partner - main and what would be associated - is one list.
+    expect(wrapper.findAll('.mwnf-partner-list__tier--associated')).toHaveLength(0)
+    expect(groups[0].findAll('.mwnf-partner-list__name').map((n) => n.text())).toEqual([
+      'Alpha Museum, Giza',
+      'Attached Gallery, Cairo',
+      'Zed Museum, Cairo',
+    ])
+
+    // The label names the action the click performs (as legacy's own button
+    // does), not the current direction: ascending by default, so a click
+    // switches to Z-A.
+    const toggle = wrapper.find('.mwnf-partner-list__toggle-button')
+    expect(toggle.text()).toBe('Sort Z-A')
+    await toggle.trigger('click')
+    await settle(() => router.currentRoute.value.query.order === 'desc')
+    expect(wrapper.find('.mwnf-partner-list__toggle-button').text()).toBe('Sort A-Z')
+    expect(wrapper.findAll('.mwnf-partner-list__group-title').map((g) => g.text())).toEqual(['Syria', 'Other', 'Egypt'])
+  })
+
+  it("group.order: 'name' groups everything into one flat, alphabetical list with no country heading", async () => {
+    const { wrapper } = await mountView(PartnerListView, {
+      props: {
+        spec: {
+          entity: 'partners',
+          group: { tier: false, order: 'name' },
+          route: 'partner',
+          orderToggle: true,
+        },
+      },
+      route: '/partners?order=desc',
+    })
+    await settle(() => wrapper.findAll('.mwnf-partner-list__name').length > 0)
+
+    expect(wrapper.findAll('.mwnf-partner-list__group')).toHaveLength(1)
+    expect(wrapper.find('.mwnf-partner-list__group-title').exists()).toBe(false)
+    expect(wrapper.findAll('.mwnf-partner-list__name').map((n) => n.text())).toEqual([
+      'Zed Museum, Cairo',
+      'International Foundation',
+      'Homs Collection, Homs',
+      'Damascus Museum, Damascus',
+      'Attached Gallery, Cairo',
+      'Alpha Museum, Giza',
+      'Aleppo Annex, Aleppo',
+    ])
+  })
+
+  it('shows the empty state when scope leaves nothing, and the caller can name its own entry', async () => {
+    const { wrapper } = await mountView(PartnerListView, {
+      props: {
+        spec: {
+          entity: 'partners',
+          scope: (partner) => partner.project_ids?.includes('nope'),
+          empty: 'core.action.empty',
+        },
+      },
+      route: '/partners',
+    })
+    await settle(() => wrapper.find('.mwnf-partner-list__empty').exists())
+    expect(wrapper.find('.mwnf-partner-list__empty').text()).toBe('Nothing to show.')
+    expect(wrapper.find('.mwnf-partner-list__groups').exists()).toBe(false)
+  })
+
+  it('scope is a plain predicate (a site\'s own axis, whatever it reads it from), and record/route are the caller\'s to build', async () => {
+    const { wrapper } = await mountView(PartnerListView, {
+      props: {
+        spec: {
+          entity: 'partners',
+          scope: (partner) => partner.project_ids?.includes('EPM'),
+          group: { tier: 'level', order: 'country' },
+          label: countryOrOther,
+          record: (partner, ctx) => ({ name: ctx.renderInline(`Museum: ${ctx.tr(partner.id).name ?? partner.internal_name}`), route: { name: 'partner', params: { id: partner.id }, query: { lang: 'fr' } } }),
+        },
+      },
+      route: '/partners',
+    })
+    await settle(() => wrapper.findAll('.mwnf-partner-list__name').length > 0)
+    // Only the EPM partners (Syria's) match the scope.
+    expect(wrapper.findAll('.mwnf-partner-list__group-title').map((g) => g.text())).toEqual(['Syria'])
+    expect(wrapper.find('.mwnf-partner-list__name').text()).toBe('Museum: Damascus Museum')
+    expect(wrapper.find('.mwnf-partner-list__name').attributes('href')).toBe('/partner/p3?lang=fr')
+  })
+
+  it('hands #before/#group-heading/#row/#after slots the group, partner and row, replacing the default markup', async () => {
+    const { wrapper } = await mountView(PartnerListView, {
+      props: {
+        spec: {
+          entity: 'partners',
+          scope: (partner) => partner.id === 'p1' || partner.id === 'p2',
+          group: { tier: 'level', order: 'country' },
+          label: countryOrOther,
+          route: 'partner',
+        },
+      },
+      route: '/partners',
+      slots: {
+        before: '<p class="own-before">Before the groups</p>',
+        'group-heading': '<template #group-heading="{ group }"><h2 class="own-heading">{{ group.label }}</h2></template>',
+        row: '<template #row="{ partner, row }"><p class="own-row">{{ partner.id }}: {{ row.name }}</p></template>',
+        after: '<p class="own-after">After the groups</p>',
+      },
+    })
+    await settle(() => wrapper.findAll('.own-row').length > 0)
+    expect(wrapper.find('.own-before').exists()).toBe(true)
+    expect(wrapper.find('.own-heading').text()).toBe('Egypt')
+    expect(wrapper.find('.mwnf-partner-list__group-title').exists()).toBe(false)
+    expect(wrapper.findAll('.own-row').map((r) => r.text())).toEqual(['p1: Zed Museum', 'p2: Attached Gallery'])
+    expect(wrapper.find('.own-after').exists()).toBe(true)
+  })
+})
+
 // The views are a promise to the websites' configurations: what is exported
 // from `/views` is what `config.views` names.
 describe('TimelineResultsView', () => {
@@ -1172,10 +1398,10 @@ describe('TimelineResultsView', () => {
 })
 
 describe('the views entry point', () => {
-  it('exports the seven views and no shell', async () => {
+  it('exports the nine views and no shell', async () => {
     const entry = await import('../src/views/index.js')
     expect(Object.keys(entry).sort()).toEqual([
-      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
+      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'PartnerListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
     ])
     vi.restoreAllMocks()
   })

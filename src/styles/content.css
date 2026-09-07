@@ -2169,3 +2169,153 @@
   font-weight: var(--mwnf-weight-heading, 700);
   color: var(--mwnf-timeline-gallery-color, inherit);
 }
+
+/* ── PartnerListView ────────────────────────────────────────────────────── */
+/* The partner list: a country accordion with main/associated tiers
+   (islamicart, sharinghistory), or plain open groups with an A-Z toggle and
+   no tiers (the DXA family) — one shape, `variant` and `group.tier` are what
+   a website turns on. */
+
+.mwnf-partner-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-partner-list-gap, 1.5rem);
+}
+
+.mwnf-partner-list__title {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-partner-list-title-size, 1.5rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-partner-list-title-color, inherit);
+}
+
+.mwnf-partner-list__count {
+  font-size: var(--mwnf-partner-list-count-size, 0.8125rem);
+  color: var(--mwnf-color-muted, #555555);
+}
+
+.mwnf-partner-list__toggle-button {
+  border: var(--mwnf-partner-list-toggle-border, 1px solid currentColor);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: var(--mwnf-partner-list-toggle-size, 0.8125rem);
+  padding: var(--mwnf-partner-list-toggle-padding, 0.375rem 0.75rem);
+  border-radius: var(--mwnf-radius, 0.25rem);
+  cursor: pointer;
+}
+
+.mwnf-partner-list__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-partner-list-group-gap, 1rem);
+}
+
+.mwnf-partner-list__group {
+  border-bottom: var(--mwnf-partner-list-group-border, 1px solid #dddddd);
+  padding-bottom: var(--mwnf-partner-list-group-gap, 1rem);
+}
+
+.mwnf-partner-list__group:last-child {
+  border-bottom: none;
+}
+
+.mwnf-partner-list__group-heading {
+  cursor: pointer;
+  list-style: none;
+}
+
+.mwnf-partner-list__group-heading::-webkit-details-marker {
+  display: none;
+}
+
+.mwnf-partner-list__group-title {
+  display: inline-block;
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-partner-list-group-title-size, 1.125rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-partner-list-group-title-color, inherit);
+}
+
+/* The accordion's own disclosure triangle - a <section> (variant: 'open')
+   carries no <summary>, so it never matches this. */
+summary.mwnf-partner-list__group-heading .mwnf-partner-list__group-title::before {
+  content: var(--mwnf-partner-list-group-marker-closed, '▸ ');
+  color: var(--mwnf-color-accent, #1c1c1c);
+}
+
+details[open] > summary.mwnf-partner-list__group-heading .mwnf-partner-list__group-title::before {
+  content: var(--mwnf-partner-list-group-marker-open, '▾ ');
+}
+
+.mwnf-partner-list__tier {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-partner-list-row-gap, 0.5rem);
+  padding-top: var(--mwnf-partner-list-tier-gap, 0.5rem);
+}
+
+.mwnf-partner-list__tier--associated {
+  margin-top: var(--mwnf-partner-list-tier-gap, 0.5rem);
+  padding-top: var(--mwnf-partner-list-tier-gap, 0.5rem);
+  border-top: var(--mwnf-partner-list-tier-border, 1px dashed #dddddd);
+}
+
+.mwnf-partner-list__tier-label {
+  margin: 0;
+  font-size: var(--mwnf-partner-list-tier-label-size, 0.75rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--mwnf-color-muted, #555555);
+}
+
+.mwnf-partner-list__row-block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-partner-list-row-gap, 0.5rem);
+}
+
+.mwnf-partner-list__row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--mwnf-partner-list-row-inline-gap, 0.5rem);
+}
+
+.mwnf-partner-list__logo {
+  max-width: var(--mwnf-partner-list-logo-width, 6rem);
+  max-height: var(--mwnf-partner-list-logo-height, 3rem);
+  object-fit: contain;
+}
+
+.mwnf-partner-list__name {
+  color: var(--mwnf-color-accent, #1c1c1c);
+  text-decoration: none;
+  font-weight: var(--mwnf-partner-list-name-weight, 500);
+}
+
+.mwnf-partner-list__name:hover {
+  text-decoration: underline;
+}
+
+.mwnf-partner-list__meta {
+  font-size: var(--mwnf-partner-list-meta-size, 0.8125rem);
+  color: var(--mwnf-color-muted, #555555);
+}
+
+.mwnf-partner-list__children {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-partner-list-row-gap, 0.5rem);
+  margin-inline-start: var(--mwnf-partner-list-children-indent, 1.5rem);
+}
+
+.mwnf-partner-list__empty {
+  padding: var(--mwnf-partner-list-empty-padding, 1rem);
+  font-size: var(--mwnf-partner-list-empty-size, 0.875rem);
+  color: var(--mwnf-partner-list-empty-color, #555555);
+  text-align: center;
+}

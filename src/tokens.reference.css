@@ -422,6 +422,34 @@
   /* --mwnf-timeline-action-size: 0.8125rem;         Per-event action link size */
   /* --mwnf-timeline-action-color: inherit;          Per-event action link color */
 
+  /* ---------- Content: PartnerListView ---------- */
+  /* --mwnf-partner-list-gap: 1.5rem;                Gap between the title, the toggle and the groups */
+  /* --mwnf-partner-list-title-size: 1.5rem;         Page title size */
+  /* --mwnf-partner-list-title-color: inherit;       Page title color */
+  /* --mwnf-partner-list-count-size: 0.8125rem;      "Partners found: N" size */
+  /* --mwnf-partner-list-toggle-border: 1px solid currentColor; The A-Z / Z-A button's border */
+  /* --mwnf-partner-list-toggle-size: 0.8125rem;     Its text size */
+  /* --mwnf-partner-list-toggle-padding: 0.375rem 0.75rem; Its padding */
+  /* --mwnf-partner-list-group-gap: 1rem;            Gap between country groups */
+  /* --mwnf-partner-list-group-border: 1px solid #dddddd; Divider between groups */
+  /* --mwnf-partner-list-group-title-size: 1.125rem; A group's own country heading size */
+  /* --mwnf-partner-list-group-title-color: inherit; Its color */
+  /* --mwnf-partner-list-group-marker-closed: '▸ ';  The accordion's own disclosure triangle, collapsed */
+  /* --mwnf-partner-list-group-marker-open: '▾ ';    Its expanded form */
+  /* --mwnf-partner-list-tier-gap: 0.5rem;           Space above a tier, and above the associated column */
+  /* --mwnf-partner-list-tier-border: 1px dashed #dddddd; Line above the associated column */
+  /* --mwnf-partner-list-tier-label-size: 0.75rem;   "Associated Partners" size */
+  /* --mwnf-partner-list-row-gap: 0.5rem;            Gap between rows, and between a row and its nested children */
+  /* --mwnf-partner-list-row-inline-gap: 0.5rem;     Gap between a row's own logo, name and count */
+  /* --mwnf-partner-list-logo-width: 6rem;           Row logo max width */
+  /* --mwnf-partner-list-logo-height: 3rem;          Row logo max height */
+  /* --mwnf-partner-list-name-weight: 500;           Row name font weight */
+  /* --mwnf-partner-list-meta-size: 0.8125rem;       The item-count line's size */
+  /* --mwnf-partner-list-children-indent: 1.5rem;    Indent of a nested (`nested: true`) associated row */
+  /* --mwnf-partner-list-empty-padding: 1rem;        Empty state padding */
+  /* --mwnf-partner-list-empty-size: 0.875rem;       Empty state size */
+  /* --mwnf-partner-list-empty-color: #555555;       Empty state color */
+
   /* ---------- The composed views: HomeView, CatalogueResultsView, RecordView, EssayView, SearchFormView, TimelineResultsView ---------- */
   /* Only the arrangement: the parts a view is made of carry the tokens above,
      and a website themes a composed page by theming its parts. */
