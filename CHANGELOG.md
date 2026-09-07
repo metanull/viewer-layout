@@ -1,6 +1,36 @@
 # Changelog
 
-## 2.6.0
+## 2.7.0
+
+Four `EssayView` gaps found by its first site adoption (metanull/islamicart#57,
+over metanull/viewer-layout#34/#47's `EssayView`): the spec could not reach a
+nested translation field, `TextPageView`'s function body had no context to
+render a per-record text with, the item grid's caption carried no meta lines
+of its own, and a panel with alternate images had no notion of a selected
+*variant* — only a selected item, so a "detail" close-up swapped the picture
+without swapping its caption. Additive; every export of 2.6.0 is unchanged.
+
+- `EssayView`'s `quote`/`body` accept a dotted path (`'extra.intro_text'`)
+  into the node's translation, or a function `(ctx) => Markdown` of the base
+  context (`{ node, text, language, tree, t, tr }`), alongside the existing
+  flat field name.
+- `TextPageView`'s function `body` is now called with `{ t, tr, language }` —
+  the same shape `EssayView`'s spec functions read — instead of an empty
+  object, so a static page can render a per-record text; fixes a latent bug
+  where a function body threw (`md` was read off `useI18n()`, which never
+  carried it).
+- `EssayView`'s `items.meta(item, ctx) => [string]` and `items.badge(item,
+  ctx) => string` add caption lines and a badge to the item grid, the same
+  contract `RecordGrid` already renders.
+- `EssayView`'s `panel.variants(item, ctx)` now returns
+  `[{ id, image, alt, caption: { title, justification, fields } }]`: a full
+  caption per variant, not just an image. The view keeps a `selectedVariant`
+  (the item's own picture by default) and a thumbnail strip under the panel
+  to switch it, swapping the image, title, Markdown justification and fields
+  together; `panel.fields` stays as the fallback when a variant carries none
+  of its own. `selectedVariant`/`selectVariant` are exposed in every slot's
+  context alongside `selected`/`select`. `--mwnf-view-essay-variant-*`
+  tokens style the strip, in the reference file.
 
 `EssayView` (metanull/viewer-layout#34), the largest piece of the shared-pages
 epic: a narrative essay over one node of a collection tree, which seven

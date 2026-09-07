@@ -14,7 +14,8 @@
   },
   "page-a2": {
     "title": "Page A2",
-    "description": "The second page of theme A."
+    "description": "The second page of theme A.",
+    "extra": { "intro_text": "An introduction nested under extra." }
   },
   "page-a3": {
     "title": "Page 999"

@@ -395,6 +395,20 @@ describe('TextPageView', () => {
     expect(wrapper.find('.mwnf-text-page__heading').exists()).toBe(false)
     expect(wrapper.find('.mwnf-text-page__back').exists()).toBe(true)
   })
+
+  it('calls a function body with a real context — t, tr and language — so a per-record text can be rendered', async () => {
+    const { wrapper } = await mountView(TextPageView, {
+      props: {
+        spec: {
+          // `tr` reaches the same data package EssayView reads; `objects.en`
+          // is already loaded by `beforeAll` above.
+          body: (ctx) => `${ctx.t('site.about.heading')} in ${ctx.language}: ${ctx.tr('objects', 'o1').name}`,
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-prose').text()).toBe('About in en: Glazed bowl')
+    expect(wrapper.find('.mwnf-prose').html()).toContain('Glazed <em>bowl</em>')
+  })
 })
 
 describe('EssayView', () => {
@@ -489,15 +503,96 @@ describe('EssayView', () => {
     expect(wrapper.find('.mwnf-essay__nav').exists()).toBe(false)
   })
 
-  it('hands a slot the context — the node, the selected item and the items it was resolved from', async () => {
+  it('hands a slot the context — the node, the selected item, the items it was resolved from, and the selected variant', async () => {
     const { wrapper } = await mountView(EssayView, {
       props: { spec, id: 'page-a1' },
-      slots: { panel: '<template #panel="{ node, selected, items }"><p class="own-panel">{{ node.id }} / {{ selected.id }} / {{ items.length }}</p></template>' },
+      slots: {
+        panel:
+          '<template #panel="{ node, selected, items, selectedVariant }"><p class="own-panel">{{ node.id }} / {{ selected.id }} / {{ items.length }} / {{ selectedVariant.id }}</p></template>',
+      },
       route: '/theme/page-a1',
     })
     await settle(() => wrapper.find('.own-panel').exists())
-    expect(wrapper.find('.own-panel').text()).toBe('page-a1 / o1 / 1')
+    // No `panel.variants` in this spec: the item's own picture is the only
+    // variant, carrying the synthetic id the view gives it.
+    expect(wrapper.find('.own-panel').text()).toBe('page-a1 / o1 / 1 / __primary')
     expect(wrapper.find('.mwnf-essay__panel').exists()).toBe(false)
+  })
+
+  it('quote/body accept a dotted path into the translation, and a function of the base context — for a field a flat name cannot reach', async () => {
+    const { wrapper: pathWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false, quote: false, body: 'extra.intro_text' }, id: 'page-a2' },
+      route: '/theme/page-a2',
+    })
+    await settle(() => pathWrapper.find('.mwnf-essay__prose').exists())
+    expect(pathWrapper.find('.mwnf-essay__prose').text()).toBe('An introduction nested under extra.')
+
+    const { wrapper: fnWrapper } = await mountView(EssayView, {
+      props: {
+        spec: { ...spec, tabs: false, quote: (ctx) => `${ctx.language}!`, body: (ctx) => ctx.text.extra?.intro_text ?? '' },
+        id: 'page-a2',
+      },
+      route: '/theme/page-a2',
+    })
+    await settle(() => fnWrapper.find('.mwnf-essay__quote').exists())
+    expect(fnWrapper.find('.mwnf-essay__quote').text()).toBe('en!')
+    expect(fnWrapper.find('.mwnf-essay__prose').text()).toBe('An introduction nested under extra.')
+  })
+
+  it('adds meta lines and a badge to the item grid through items.meta/items.badge', async () => {
+    const { wrapper } = await mountView(EssayView, {
+      props: {
+        spec: { ...spec, tabs: false, panel: false, items: { ...spec.items, meta: (item) => [`Meta for ${item.id}`], badge: () => 'New' } },
+        id: 'page-a1',
+      },
+      route: '/theme/page-a1',
+    })
+    await settle(() => wrapper.find('.mwnf-grid__tile').exists())
+    expect(wrapper.find('.mwnf-grid__meta').text()).toBe('Meta for o1')
+    expect(wrapper.find('.mwnf-grid__badge').text()).toBe('New')
+  })
+
+  it('panel.variants can carry a caption: selecting a variant swaps the image, title, justification and fields together', async () => {
+    const variantSpec = {
+      ...spec,
+      tabs: false,
+      panel: {
+        variants: (item) =>
+          item.id === 'o1'
+            ? [
+                {
+                  id: 'detail-1',
+                  image: 'https://example.test/detail.jpg',
+                  alt: 'A close-up',
+                  caption: {
+                    title: 'A closer <em>detail</em>',
+                    justification: 'A closer look at *this* bowl.',
+                    fields: [{ label: 'sheet.field.location', value: 'Cairo, detail' }],
+                  },
+                },
+              ]
+            : [],
+      },
+    }
+    const { wrapper } = await mountView(EssayView, { props: { spec: variantSpec, id: 'page-a1' }, route: '/theme/page-a1' })
+    await settle(() => wrapper.find('.mwnf-essay__variants').exists())
+
+    // The item's own picture is variant zero — no caption of its own, so the
+    // panel starts on the item's default name and no field/justification row.
+    const variantButtons = wrapper.findAll('.mwnf-essay__variant')
+    expect(variantButtons).toHaveLength(2)
+    expect(wrapper.find('.mwnf-essay__panel-name').html()).toContain('Glazed <em>bowl</em>')
+    expect(wrapper.find('.mwnf-essay__panel-field').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-essay__panel-justification').exists()).toBe(false)
+
+    await variantButtons[1].trigger('click')
+
+    // Picking the detail variant swaps the title, the field (its label an
+    // entry name, resolved through `t`) and the Markdown justification —
+    // together, not just the image.
+    expect(wrapper.find('.mwnf-essay__panel-name').html()).toContain('A closer <em>detail</em>')
+    expect(wrapper.find('.mwnf-essay__panel-field').text()).toBe('LocationCairo, detail')
+    expect(wrapper.find('.mwnf-essay__panel-justification').html()).toContain('A closer look at <em>this</em> bowl.')
   })
 })
 
