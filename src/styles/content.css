@@ -451,6 +451,12 @@
   font-size: inherit;
 }
 
+/* A checkbox control sits beside its label, not above it. */
+.mwnf-facet--checkbox {
+  flex-direction: row;
+  align-items: center;
+}
+
 .mwnf-summary {
   display: flex;
   flex-wrap: wrap;

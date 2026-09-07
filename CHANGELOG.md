@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.5.0
+
+Two more control kinds `CatalogueResultsView` asked for. Additive.
+
+- `type: 'query'` — a text input bound to `filters[key]`, submitting on Enter
+  in `apply` mode and on change in `immediate` mode, the same as `'year'`:
+  the keyword-search results pages (three `DatabaseResults.vue`, four
+  `SearchResults.vue`) narrow on a term that is not a facet, and could not
+  become a spec without one.
+- `type: 'checkbox'` — a labelled checkbox writing `'1'` or `''` into
+  `filters[key]`: islamicart's Permanent Collection Explore page filters on
+  a boolean, which neither existing control kind expressed.
+
 ## 2.4.1
 
 What the DXA family's adoption asked for. Additive.

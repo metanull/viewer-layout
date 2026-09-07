@@ -24,6 +24,8 @@ import ResultsSummary from '../content/ResultsSummary.vue'
 //     controls: [                                      // the panel's controls, in order; texts are entry names
 //       { key: 'country', label: 'catalogue.facet.country', anyLabel: 'catalogue.facet.any' },
 //       { key: 'begin', type: 'year', label: 'catalogue.facet.fromYear' },
+//       { key: 'q', type: 'query', label: 'catalogue.facet.keyword', placeholder: 'catalogue.facet.keywordPlaceholder' },
+//       { key: 'epm', type: 'checkbox', label: 'catalogue.facet.epm' },
 //     ],
 //     filterMode: 'apply' | 'immediate',
 //     scope: (record, filters) => boolean,             // a site rule applied before anything else
@@ -197,6 +199,26 @@ const pagination = computed(() => ({ window: 5, jump: false, ends: true, ...(spe
             @input="filters[control.key] = $event.target.value"
             @change="mode === 'immediate' ? apply() : null"
           />
+        </label>
+        <label v-else-if="control.type === 'query'" class="mwnf-facet">
+          <span v-if="control.label" class="mwnf-facet__label">{{ t(control.label) }}</span>
+          <input
+            type="text"
+            class="mwnf-facet__select"
+            :value="filters[control.key]"
+            :placeholder="control.placeholder ? t(control.placeholder) : ''"
+            @input="filters[control.key] = $event.target.value"
+            @change="mode === 'immediate' ? apply() : null"
+          />
+        </label>
+        <label v-else-if="control.type === 'checkbox'" class="mwnf-facet mwnf-facet--checkbox">
+          <input
+            type="checkbox"
+            class="mwnf-facet__checkbox"
+            :checked="filters[control.key] === '1'"
+            @change="choose(control.key, $event.target.checked ? '1' : '')"
+          />
+          <span v-if="control.label" class="mwnf-facet__label">{{ t(control.label) }}</span>
         </label>
         <FacetSelect
           v-else
