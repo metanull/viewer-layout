@@ -179,6 +179,9 @@ the application registered, without any router coupling here.
 | `SiblingGalleries` | `galleries: [{ id, name, image?, route }]`, `museums: [{ name, to \| href, accent?, textColor? }]`, `galleriesHeadingEntry`, `seeMoreGalleriesEntry`, `seeMoreGalleriesHref`, `museumsHeadingEntry` | two blocks of links: sibling galleries (may be unresolved, rendering as non-clickable tiles) and MWNF virtual museums (text initials over a coloured background) |
 | `PopupLogo` | `content` (Markdown or raw HTML), `rawHtml` (false), `enabled` (true), `closeLabel` ('core.action.close') | a dismissible fixed modal for sponsor notices; renders content through `renderInline` by default (escaping, Markdown); when `rawHtml: true`, passes content as-is (for trusted HTML from the importer) |
 | `BackLink` | `label` ('core.action.back'), `to \| href` (fallback when history is unavailable) | a "back" link that calls `router.back()` when browser history is available (length > 1); falls back to the provided route |
+| `GlossaryTool` | `language`, `entity` ('glossary'), `labels` (entry-name overrides), `dir` | the search box four item sheets and a theme page each wrote for themselves: an input, the hits viewer-core's `searchGlossary` finds, the chosen definition as Markdown; a native `<details>` toggle |
+| `DynastyPopout` | `dynasty` (record: `from_ah`/`to_ah`/`from_ad`/`to_ad`), `text` (its translation: `name`, `also_known_as`, `area`, `history`), `dir` | one dynasty, collapsed behind a native `<details>` toggle: name, also known as, area, AH/AD dates, history as Markdown |
+| `DynastyList` | `heading`, `dynasties`, `tr` (dynasty → its translation), `dir` | one `DynastyPopout` per dynasty of a record, `RelatedRecords`'s shape |
 
 The record contract `RecordList`, `RecordGrid` and `RelatedRecords` share:
 `{ id, image?, imageAlt?, name (inline HTML), meta: [string], badge?, href? | to? }`.
@@ -187,7 +190,10 @@ The texts they read — `core.action.apply`, `.reset`, `.close`,
 `core.pagination.*`, `catalogue.pagination.*`, `record.action.*ShortDescription`,
 `record.citation.heading`, `record.glossary.heading`, `.close`,
 `record.media.photograph`, `record.sheet.credits`, `.languages` — are in
-every bundle of `@metanull/viewer-i18n` from 1.7.0. Every other text is a prop.
+every bundle of `@metanull/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
+`record.glossary.instructions`, `.definition` (1.7.0) and `record.glossary.tool`
+(2.3.0); `DynastyPopout` reads `record.dynasty.heading` (2.3.0) and
+`sheet.field.alsoKnownAs`, `.area`, `.history`. Every other text is a prop.
 
 ## Composed views
 

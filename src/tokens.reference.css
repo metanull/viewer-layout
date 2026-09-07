@@ -352,6 +352,27 @@
   /* --mwnf-popover-padding: 0.625rem 0.75rem;       Body padding */
   /* --mwnf-popover-term-size: 1rem;                 The term's size */
 
+  /* ---------- Content: GlossaryTool ---------- */
+  /* --mwnf-glossary-tool-gap: 0.5rem;               Gap between the panel's own rows */
+  /* --mwnf-glossary-tool-toggle-color: #1c1c1c;     The toggle line's color */
+  /* --mwnf-glossary-tool-instructions-color: #555555; Instructions text color */
+  /* --mwnf-glossary-tool-instructions-size: 0.8125rem; Instructions text size */
+  /* --mwnf-glossary-tool-input-padding: 0.375rem 0.5rem; Input padding */
+  /* --mwnf-glossary-tool-input-border: 1px solid #dddddd; Input border */
+  /* --mwnf-glossary-tool-hits-max-height: 11.25rem; Max height of the scrolling hit list */
+  /* --mwnf-glossary-tool-hits-border: 1px solid #dddddd; Hit list border */
+  /* --mwnf-glossary-tool-hit-padding: 0.25rem 0.5rem; Padding of one hit */
+  /* --mwnf-glossary-tool-hit-hover-background: #dddddd; Hovered/active hit background */
+  /* --mwnf-glossary-tool-definition-label-weight: 600; "Definition" label weight */
+
+  /* ---------- Content: DynastyPopout, DynastyList ---------- */
+  /* --mwnf-dynasty-list-gap: 0.75rem;               Gap between dynasty popouts */
+  /* --mwnf-dynasty-summary-weight: 700;             The dynasty name's weight, in the toggle line */
+  /* --mwnf-dynasty-eyebrow-size: 0.75rem;           The frame label ("Dynasties") size */
+  /* --mwnf-dynasty-eyebrow-color: #555555;          Its color */
+  /* --mwnf-dynasty-field-size: 0.875rem;            Also known as / area / dates size */
+  /* --mwnf-dynasty-field-color: inherit;            Their color */
+
   /* ---------- Content: Prose, LinkListView, TextPageView ---------- */
   /* --mwnf-prose-width: 42rem;                      Max width of readable text */
   /* --mwnf-prose-size: 0.9375rem;                   Body text size */
