@@ -1,5 +1,40 @@
 # Changelog
 
+## 2.8.0
+
+Five more gaps, found by `EssayView`, `LinkListView` and `SectionCards`'s
+next two site adoptions (metanull/sharinghistory#50, metanull/water-in-islam#42,
+both merged; metanull/islamicart#57, open) over metanull/viewer-layout#34/#47/#49.
+Additive; every export of 2.7.0 is unchanged.
+
+- `EssayView`'s `tabs` accepts `'children'` alongside the existing `true`/
+  `'siblings'` (unchanged, the node's own siblings): a theme page whose tab
+  strip is its chapters, not its neighboring themes.
+- `EssayView` now reads `spec.entity` — already a spec key, for the items
+  grid — as the tree's own translations entity when `spec.tree` carries none
+  of its own (`spec.tree.entity`/`.themes`), falling back to `'collections'`
+  as before. Fixes a pre-built tree (a site's own `useCollectionTree()`
+  result, handed to `EssayView` as `spec.tree`) silently reading the wrong
+  entity for every node's title/quote/body.
+- `EssayView`'s `numbering: 'roman' | 'decimal'` counts a node among its true
+  siblings — found through `tree.parents(id)` — instead of `tree.root`'s
+  children, which a themes-package tree (`root` is always `null`) has none
+  of; every top-level theme numbered "I" before this. A themes tree now
+  numbers its top-level themes I, II, III, same as any other.
+- `EssayView`'s `about(node)` may return `{ panel?, navigation? }` instead of
+  a plain boolean, keeping the named piece instead of dropping it; the
+  spec-wide `aboutKeeps: ['panel' | 'navigation']` does the same across every
+  about page in one spec. A plain `true`/`false` return is unchanged — both
+  still dropped.
+- `LinkListView`'s `label` and `note` render as inline Markdown (through
+  `mdInline`) instead of plain interpolated text — a bibliography entry's
+  italicised title survives instead of being stripped. New slots `before`,
+  `group` (given `{ group }`; the default renders the heading and its links —
+  replace it entirely for a citation list, which is not link-shaped) and
+  `after`.
+- `SectionCards`' `title` and `description` render as inline Markdown
+  (`mdInline`, no block elements) instead of plain text.
+
 ## 2.7.0
 
 Four `EssayView` gaps found by its first site adoption (metanull/islamicart#57,

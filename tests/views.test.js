@@ -1,9 +1,9 @@
 import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
-import { nextTick } from 'vue'
+import { nextTick, ref } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@metanull/viewer-core/i18n'
-import { loadEntities, useDataPackage } from '@metanull/viewer-core'
+import { collectionTreeFromThemes, loadEntities, useDataPackage } from '@metanull/viewer-core'
 import { CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, TextPageView } from '../src/views/index.js'
 import { layoutTexts } from './helpers.js'
 
@@ -363,6 +363,43 @@ describe('LinkListView', () => {
     expect(wrapper.find('.mwnf-link-list__empty').exists()).toBe(true)
     expect(wrapper.find('.mwnf-link-list__groups').exists()).toBe(false)
   })
+
+  it('renders label and note as Markdown — a citation entry keeps its emphasis, not stripped to plain text', async () => {
+    const { wrapper } = await mountView(LinkListView, {
+      props: {
+        spec: {
+          groups: [
+            {
+              heading: 'catalogue.facet.country',
+              links: [{ label: 'Blair, S., *Rivers of Paradise*', href: '#/bib/1', note: 'in **Egypt**' }],
+            },
+          ],
+        },
+      },
+    })
+    expect(wrapper.find('.mwnf-link-list__link').html()).toContain('Blair, S., <em>Rivers of Paradise</em>')
+    expect(wrapper.find('.mwnf-link-list__note').html()).toContain('in <strong>Egypt</strong>')
+  })
+
+  it('hands #before/#group/#after slots the groups, #group replacing the default heading/links markup', async () => {
+    const { wrapper } = await mountView(LinkListView, {
+      props: {
+        spec: {
+          title: 'site.further.reading',
+          groups: [{ heading: 'catalogue.facet.country', links: [{ label: 'Egypt', href: '#/country/c-eg' }] }],
+        },
+      },
+      slots: {
+        before: '<p class="own-before">Before the groups</p>',
+        group: '<template #group="{ group }"><p class="own-group">{{ group.heading }} x{{ group.links.length }}</p></template>',
+        after: '<p class="own-after">After the groups</p>',
+      },
+    })
+    expect(wrapper.find('.own-before').exists()).toBe(true)
+    expect(wrapper.find('.own-group').text()).toBe('catalogue.facet.country x1')
+    expect(wrapper.find('.mwnf-link-list__heading').exists()).toBe(false)
+    expect(wrapper.find('.own-after').exists()).toBe(true)
+  })
 })
 
 // TextPageView: heading and markdown body with prose styling
@@ -418,7 +455,12 @@ describe('EssayView', () => {
   // own type, the way sharinghistory's themes-and-chapters and DXA's
   // themes-and-subthemes both need.
   const spec = {
-    tree: { purpose: 'test-tree-root', childType: ['theme', 'page'] },
+    // `tree.entity: 'collections'` pins the tree's own translations entity
+    // explicitly — it would otherwise fall back to `spec.entity` ('objects',
+    // the items entity below), which is a different entity entirely; see
+    // the "reads spec.entity as the tree's translations entity" test below,
+    // which exercises that fallback deliberately, on a pre-built tree.
+    tree: { purpose: 'test-tree-root', childType: ['theme', 'page'], entity: 'collections' },
     entity: 'objects',
     route: 'theme',
     glossary: true,
@@ -593,6 +635,78 @@ describe('EssayView', () => {
     expect(wrapper.find('.mwnf-essay__panel-name').html()).toContain('A closer <em>detail</em>')
     expect(wrapper.find('.mwnf-essay__panel-field').text()).toBe('LocationCairo, detail')
     expect(wrapper.find('.mwnf-essay__panel-justification').html()).toContain('A closer look at <em>this</em> bowl.')
+  })
+
+  it("tabs: 'children' lists the node's own children; tabs: true (or 'siblings') keeps listing its siblings", async () => {
+    const { wrapper: childrenWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: 'children', navigation: false, breadcrumb: false }, id: 'theme-a' },
+      route: '/theme/theme-a',
+    })
+    await settle(() => childrenWrapper.findAll('.mwnf-essay__tab').length > 0)
+    // theme-a's chapters — page-a1/a2/a3 — not its sibling themes.
+    expect(childrenWrapper.findAll('.mwnf-essay__tab').map((tab) => tab.text())).toEqual(['Page A1', 'Page A2', 'Page 999'])
+
+    const { wrapper: siblingsWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: true, navigation: false, breadcrumb: false }, id: 'theme-a' },
+      route: '/theme/theme-a',
+    })
+    await settle(() => siblingsWrapper.findAll('.mwnf-essay__tab').length > 0)
+    expect(siblingsWrapper.findAll('.mwnf-essay__tab').map((tab) => tab.text())).toEqual(['Theme A', 'Theme B'])
+  })
+
+  it("numbers a themes-package tree's top-level nodes (numbering: 'roman'), and reads spec.entity as the tree's translations entity for a pre-built tree", async () => {
+    // A themes.json-shaped tree, built inline (`root` is null for this shape —
+    // see collectionTree.js): two top-level themes, no sub-themes needed for
+    // this test. Ids reuse the fixture's `things` entity on purpose — that
+    // entity's translations carry a `title`, unlike `collections`, so a
+    // themeSpec whose tree carries no `entity` of its own proves it is
+    // `spec.entity` ('things') resolving the title, not the hardcoded
+    // `'collections'` fallback (which has no entry for these ids and would
+    // fall back to the internal name instead).
+    // `EssayView` reads a pre-built tree's `root`/`byId` as refs (what
+    // `useCollectionTree()` returns); `collectionTreeFromThemes` itself is
+    // the pure, non-reactive indexer, so its static result is wrapped the
+    // same way a site's own `useCollectionTree({ source: 'themes', ... })`
+    // would be.
+    const plainTree = collectionTreeFromThemes([
+      { id: '1', display_order: 1, internal_name: 'First (fallback name)' },
+      { id: '2', display_order: 2, internal_name: 'Second (fallback name)' },
+    ])
+    const themesTree = { ...plainTree, root: ref(plainTree.root), byId: ref(plainTree.byId) }
+    const themeSpec = { tree: themesTree, entity: 'things', route: 'theme', numbering: 'roman', panel: false, navigation: false }
+
+    const { wrapper: firstWrapper } = await mountView(EssayView, { props: { spec: themeSpec, id: '1' }, route: '/theme/1' })
+    await settle(() => firstWrapper.find('h1').text().includes('First Thing'))
+    expect(firstWrapper.find('.mwnf-essay__number').text()).toBe('I')
+    expect(firstWrapper.find('h1').text()).toContain('First Thing (EN)')
+
+    const { wrapper: secondWrapper } = await mountView(EssayView, { props: { spec: themeSpec, id: '2' }, route: '/theme/2' })
+    await settle(() => secondWrapper.find('h1').text().includes('Second Thing'))
+    expect(secondWrapper.find('.mwnf-essay__number').text()).toBe('II')
+  })
+
+  it('about mode keeps the panel or the navigation when told to, instead of always dropping both', async () => {
+    // The function form returns `{ panel, navigation }` instead of a plain
+    // boolean: page-a1 keeps its picture panel (it has an item, o1) but
+    // still loses the navigation row.
+    const { wrapper: objectWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false, about: () => ({ panel: true, navigation: false }) }, id: 'page-a1' },
+      route: '/theme/page-a1',
+    })
+    await settle(() => objectWrapper.find('.mwnf-essay__quote').exists())
+    expect(objectWrapper.find('.mwnf-essay--about').exists()).toBe(true)
+    expect(objectWrapper.find('.mwnf-essay__panel').exists()).toBe(true)
+    expect(objectWrapper.find('.mwnf-essay__nav').exists()).toBe(false)
+
+    // `aboutKeeps` is the spec-wide equivalent, for a family whose about
+    // pages all keep the same piece — `about` stays a plain boolean.
+    const { wrapper: keepsWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false, about: () => true, aboutKeeps: ['panel'] }, id: 'page-a1' },
+      route: '/theme/page-a1',
+    })
+    await settle(() => keepsWrapper.find('.mwnf-essay__quote').exists())
+    expect(keepsWrapper.find('.mwnf-essay__panel').exists()).toBe(true)
+    expect(keepsWrapper.find('.mwnf-essay__nav').exists()).toBe(false)
   })
 })
 

@@ -23,7 +23,11 @@ import SmartLink from '../content/SmartLink.vue'
 //         | { purpose: 'exhibitions-root', childType?, entity?, order? }
 //         | { rootId, childType?, entity?, order? }
 //         | { themes: true | 'themes', childType? },             // a themes.json package
-//     entity: 'items',                       // the tree's items
+//     entity: 'items',                       // the tree's items — also the tree's OWN
+//                                             // translations entity when `tree` carries
+//                                             // none of its own (a pre-built tree, or a
+//                                             // declarative form with no `entity`/`themes`
+//                                             // of its own): falls back to 'collections'.
 //     route: 'theme' | (node, ctx) => (to | href),   // a node's own page
 //     heading: (ctx) => inline HTML,         // default: the node's own title
 //     placeholder: /^(Theme|Page) \d+$/,     // a synthesized title, treated as missing
@@ -44,9 +48,19 @@ import SmartLink from '../content/SmartLink.vue'
 //     } | false,
 //     navigation: 'tree' | 'siblings' | false,   // decision D2: 'tree' crosses a branch boundary, 'siblings' stays inside
 //     breadcrumb: true | false,
-//     tabs: true | false,                    // the strip of sibling pages
-//     about: (node) => boolean,              // a node rendered as an about page: essay only
-//     numbering: 'roman' | 'decimal' | false,
+//     tabs: true | 'siblings' | 'children',   // the strip: true/'siblings' — the node's own
+//                                              // siblings (default); 'children' — the node's
+//                                              // own children (a theme's chapters, say)
+//     about: (node) => boolean | { panel?: boolean, navigation?: boolean },
+//                                              // a node rendered as an about page: essay only,
+//                                              // no panel or navigation by default; an object
+//                                              // keeps the named piece instead of dropping it —
+//                                              // `aboutKeeps: ['panel']` does the same, spec-wide
+//     aboutKeeps: ['panel' | 'navigation'],   // spec-wide alternative to `about`'s object form
+//     numbering: 'roman' | 'decimal' | false, // counts a node among its true siblings — for a
+//                                              // themes-package tree (`root` is null), that's
+//                                              // every node whose own `tree.parents(id)` is
+//                                              // also empty, so a themes tree numbers I, II, III
 //     previous, next, backTo, inThisTheme, seeAll,  // entry names, overriding the defaults below
 //   }
 //
@@ -90,7 +104,13 @@ function themesEntity(value) {
 
 const entity = props.spec.entity ?? 'items'
 const treeSpec = props.spec.tree
-const treeEntity = treeSpec?.entity ?? (treeSpec?.themes ? themesEntity(treeSpec.themes) : 'collections')
+// The tree's own translations entity: `treeSpec.entity`/`.themes` when the
+// declarative form (or a pre-built tree the site tagged with `.entity`
+// itself) carries one; otherwise `spec.entity` — already a spec key, read
+// for the items grid above — since a site building its own tree already
+// knows this value and a pre-built `useCollectionTree()` result carries no
+// `entity` field of its own to read it back from; `'collections'` last.
+const treeEntity = treeSpec?.entity ?? (treeSpec?.themes ? themesEntity(treeSpec.themes) : (props.spec.entity ?? 'collections'))
 const tree = isBuiltTree(treeSpec)
   ? treeSpec
   : treeSpec?.themes
@@ -111,7 +131,14 @@ const parent = computed(() => tree.parents(props.id).at(-1) ?? null)
 const siblings = computed(() => {
   if (parent.value) return tree.children(parent.value.id)
   const root = tree.root.value
-  return root ? tree.children(root.id) : []
+  if (root) return tree.children(root.id)
+  // A themes-package tree (`collectionTreeFromThemes`) has no root record to
+  // list children of — `root` is documented as always null there, and a
+  // top-level theme's own `parents(id)` comes back empty too (its parent is
+  // a sentinel no real node carries). Its true siblings — the sentinel
+  // root's children — are found instead by scanning the flattened walk for
+  // every other node whose own ancestry is equally empty.
+  return tree.walk().filter((n) => tree.parents(n.id).length === 0)
 })
 const siblingIndex = computed(() => siblings.value.findIndex((n) => n.id === props.id))
 
@@ -212,7 +239,19 @@ const titleHtml = computed(() => {
 const quoteHtml = computed(() => (quoteValue.value ? renderInline(String(quoteValue.value), { glossary: glossaryList.value }) : ''))
 const bodyHtml = computed(() => (bodyValue.value ? renderBlock(String(bodyValue.value), { breaks: true, glossary: glossaryList.value }) : ''))
 
-const isAbout = computed(() => Boolean(node.value && spec.value.about?.(node.value)))
+// `about` (a function of the node) may return a plain boolean — the
+// original all-or-nothing about page, panel and navigation both dropped —
+// or `{ panel?, navigation? }`, keeping the named piece instead; `true`
+// still means "drop both", the object form's absent keys default to
+// `false` (dropped). `aboutKeeps` is the spec-wide equivalent, for a family
+// whose about pages all keep the same piece.
+const aboutResult = computed(() => (node.value ? (spec.value.about?.(node.value) ?? false) : false))
+const isAbout = computed(() => Boolean(aboutResult.value))
+function aboutKeeps(part) {
+  const result = aboutResult.value
+  if (result && typeof result === 'object') return Boolean(result[part])
+  return Boolean(spec.value.aboutKeeps?.includes(part))
+}
 
 // ── Numbering ─────────────────────────────────────────────────────────────
 
@@ -362,7 +401,15 @@ const gridRecords = computed(() =>
 // ── Breadcrumb, tabs, texts ───────────────────────────────────────────────
 
 const breadcrumbList = computed(() => (spec.value.breadcrumb && node.value ? tree.parents(props.id) : []))
-const tabNodes = computed(() => (spec.value.tabs ? siblings.value : []))
+// `tabs: true` (or `'siblings'`) keeps the original strip — the node's own
+// siblings; `'children'` lists the node's own children instead, for a page
+// whose tabs are its chapters, not its neighbors.
+const tabNodes = computed(() => {
+  const mode = spec.value.tabs
+  if (!mode) return []
+  if (mode === 'children') return node.value ? tree.children(node.value.id) : []
+  return siblings.value
+})
 
 const previousText = computed(() => spec.value.previous ?? 'exhibition.theme.previous')
 const nextText = computed(() => spec.value.next ?? 'exhibition.theme.next')
@@ -383,7 +430,13 @@ const ctx = computed(() => ({
   next: nextNode.value,
 }))
 
-const hasSide = computed(() => !isAbout.value && (hasPanel.value || itemRecords.value.length > 0 || Boolean(slots.aside)))
+const hasSide = computed(() => {
+  if (isAbout.value && !aboutKeeps('panel')) return false
+  return hasPanel.value || itemRecords.value.length > 0 || Boolean(slots.aside)
+})
+const showNavigation = computed(
+  () => (!isAbout.value || aboutKeeps('navigation')) && Boolean(navMode.value) && Boolean(previousNode.value || nextNode.value),
+)
 </script>
 
 <template>
@@ -428,7 +481,7 @@ const hasSide = computed(() => !isAbout.value && (hasPanel.value || itemRecords.
 
         <slot v-if="!isAbout" name="justifications" v-bind="ctx" />
 
-        <div v-if="!isAbout && navMode && (previousNode || nextNode)" class="mwnf-essay__nav">
+        <div v-if="showNavigation" class="mwnf-essay__nav">
           <slot name="navigation" v-bind="ctx">
             <SmartLink v-if="previousNode" :to="nodeTo(previousNode)" class="mwnf-essay__nav-link mwnf-essay__nav-link--previous">← {{ t(previousText) }}</SmartLink>
             <span v-else class="mwnf-essay__nav-spacer"></span>
