@@ -492,6 +492,18 @@ describe('TextPageView', () => {
     expect(wrapper.find('.mwnf-prose').text()).toBe('About in en: Glazed bowl')
     expect(wrapper.find('.mwnf-prose').html()).toContain('Glazed <em>bowl</em>')
   })
+
+  it('renders a string body through I18nText with the keypath prop', async () => {
+    const { wrapper } = await mountView(TextPageView, {
+      props: {
+        spec: {
+          body: 'site.about.body',
+        },
+      },
+    })
+    // The string body is resolved through I18nText using the keypath prop
+    expect(wrapper.find('.mwnf-prose').text()).toContain('Information about this collection.')
+  })
 })
 
 describe('SearchFormView', () => {

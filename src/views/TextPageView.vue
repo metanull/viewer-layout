@@ -62,7 +62,8 @@ const backLabel = computed(() => {
 
     <!-- Body: render entry name through I18nText or markdown through md() -->
     <div class="mwnf-prose">
-      <I18nText v-if="bodyIsEntry" :entry-name="bodyEntryName" />
+      <!-- I18nText's prop is keypath, the same as at every call site -->
+      <I18nText v-if="bodyIsEntry" :keypath="bodyEntryName" />
       <div v-else-if="bodyMarkdown" v-html="bodyMarkdown" />
     </div>
   </div>

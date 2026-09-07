@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.3
+
+- Fix: `TextPageView` now passes a string body to `I18nText` using its required `keypath` prop, not `entry-name`.
+
 ## 2.9.2
 
 - Fix: `TimelineResultsView`'s entrance now offers bucketed year selects with the full data range, not the rightly-empty entrance event list.
