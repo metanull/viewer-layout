@@ -4,7 +4,7 @@ import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@metanull/viewer-core/i18n'
 import { loadEntities, useDataPackage } from '@metanull/viewer-core'
-import { CatalogueResultsView, HomeView, RecordView, LinkListView, TextPageView } from '../src/views/index.js'
+import { CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, TextPageView } from '../src/views/index.js'
 import { layoutTexts } from './helpers.js'
 
 // The composed views render a real page out of the fixture package behind
@@ -29,6 +29,10 @@ const texts = {
   'record.action.backToResults': 'Back to results',
   'record.citation.in': 'in',
   'record.related.items': 'Related items',
+  'exhibition.theme.previous': 'Previous',
+  'exhibition.theme.next': 'Next',
+  'exhibition.theme.inThisTheme': 'In This Theme',
+  'exhibition.theme.seeAllInTheme': 'See all Items in this Theme',
   'sheet.field.description': 'Description',
   'sheet.field.location': 'Location',
   'sheet.field.name': 'Name',
@@ -62,6 +66,7 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
       { path: '/objects', name: 'objects-list', component: { template: '<p>list</p>' } },
       { path: '/objects/:id', name: 'objects-detail', component: { template: '<p>detail</p>' } },
       { path: '/item/:id', name: 'item', component: { template: '<p>item</p>' } },
+      { path: '/theme/:id', name: 'theme', component: { template: '<p>theme</p>' } },
     ],
   })
   // The view reads its filters from the URL, so the URL is in place first —
@@ -75,7 +80,7 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
 // What a website's router does before any of these views exists: the
 // entities the routes declare, and English, which every list reads.
 beforeAll(async () => {
-  await loadEntities(['objects', 'glossary'])
+  await loadEntities(['objects', 'glossary', 'collections'])
   const pkg = useDataPackage()
   await pkg.loadTranslations('objects', 'en')
   await pkg.loadTranslations('glossary', 'en')
@@ -391,12 +396,116 @@ describe('TextPageView', () => {
   })
 })
 
+describe('EssayView', () => {
+  // The fixture tree (`test-tree-root`): theme-a (page-a1[o1], page-a2[o2],
+  // page-a3[]) and theme-b (page-b1[o3]), with a third child (extra-a) that
+  // is not a theme — `childType: ['theme', 'page']` holds every level to its
+  // own type, the way sharinghistory's themes-and-chapters and DXA's
+  // themes-and-subthemes both need.
+  const spec = {
+    tree: { purpose: 'test-tree-root', childType: ['theme', 'page'] },
+    entity: 'objects',
+    route: 'theme',
+    glossary: true,
+    items: { route: 'objects-detail' },
+    panel: {},
+    navigation: 'tree',
+    breadcrumb: true,
+    tabs: true,
+  }
+
+  it('renders the essay — the breadcrumb, the tabs, the quote, the glossary in the body, and the selected item panel', async () => {
+    const { wrapper } = await mountView(EssayView, { props: { spec, id: 'page-a1' }, route: '/theme/page-a1' })
+    await settle(() => wrapper.find('.mwnf-essay__quote').exists())
+
+    expect(wrapper.find('h1').text()).toContain('Page A1')
+    expect(wrapper.find('.mwnf-essay__quote').text()).toBe('An opening page.')
+    // The description carries a glossary term with no `glossary_ids` column
+    // of its own to read: `glossaryTermsForText` scans the whole glossary.
+    expect(wrapper.find('.mwnf-essay__prose').html()).toContain('gloss-term')
+
+    const crumbs = wrapper.findAll('.mwnf-essay__breadcrumb-link').map((c) => c.text())
+    expect(crumbs).toEqual(['Test Tree Root', 'Theme A'])
+
+    // page-a3's English title is the importer's synthesized "Page 999" — real
+    // here, since this spec sets no `placeholder` rule to catch it.
+    const tabs = wrapper.findAll('.mwnf-essay__tab').map((tab) => tab.text())
+    expect(tabs).toEqual(['Page A1', 'Page A2', 'Page 999'])
+    expect(wrapper.find('.mwnf-essay__tab--active').text()).toBe('Page A1')
+
+    // The panel: page-a1's only item is o1, whose translation renders through
+    // the same Markdown pipeline as everywhere else.
+    expect(wrapper.find('.mwnf-essay__panel-name').html()).toContain('Glazed <em>bowl</em>')
+    expect(wrapper.find('.mwnf-essay__panel-link').attributes('href')).toBe('/objects/o1')
+  })
+
+  it("crosses a branch boundary in 'tree' navigation and stays inside the parent in 'siblings'", async () => {
+    const { wrapper: treeWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false }, id: 'page-a3' },
+      route: '/theme/page-a3',
+    })
+    await settle(() => treeWrapper.find('.mwnf-essay__nav').exists())
+    // theme-a's last page is followed by theme-b itself in the flattened
+    // walk — decision D2: the walk crosses the branch "for free".
+    expect(treeWrapper.find('.mwnf-essay__nav-link--next').attributes('href')).toBe('/theme/theme-b')
+
+    const { wrapper: siblingsWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false, navigation: 'siblings' }, id: 'page-a2' },
+      route: '/theme/page-a2',
+    })
+    await settle(() => siblingsWrapper.find('.mwnf-essay__nav').exists())
+    expect(siblingsWrapper.find('.mwnf-essay__nav-link--previous').attributes('href')).toBe('/theme/page-a1')
+    expect(siblingsWrapper.find('.mwnf-essay__nav-link--next').attributes('href')).toBe('/theme/page-a3')
+
+    const { wrapper: lastWrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false, navigation: 'siblings' }, id: 'page-a3' },
+      route: '/theme/page-a3',
+    })
+    await settle(() => lastWrapper.find('.mwnf-essay__nav').exists())
+    expect(lastWrapper.find('.mwnf-essay__nav-link--next').exists()).toBe(false)
+  })
+
+  it('falls back through the placeholder rule: a synthesized title in the record language, then English, then the internal name', async () => {
+    const { wrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, tabs: false, placeholder: /^(Theme|Page) \d+$/ }, id: 'page-a3' },
+      route: '/theme/page-a3',
+    })
+    // page-a3's only title, in English, is "Page 999" — synthesized, and
+    // matched by the placeholder rule in both the record language and its
+    // English fallback, so the heading falls back to the internal name.
+    await settle(() => wrapper.find('h1').text().includes('Page A3'))
+    expect(wrapper.find('h1').text()).toContain('Page A3 (unordered)')
+  })
+
+  it('renders essay only in about mode — no panel, no navigation', async () => {
+    const { wrapper } = await mountView(EssayView, {
+      props: { spec: { ...spec, about: (node) => node.type === 'theme' }, id: 'theme-a' },
+      route: '/theme/theme-a',
+    })
+    await settle(() => wrapper.find('.mwnf-essay__quote').exists())
+    expect(wrapper.find('h1').text()).toContain('Theme A')
+    expect(wrapper.find('.mwnf-essay__panel').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-essay__nav').exists()).toBe(false)
+  })
+
+  it('hands a slot the context — the node, the selected item and the items it was resolved from', async () => {
+    const { wrapper } = await mountView(EssayView, {
+      props: { spec, id: 'page-a1' },
+      slots: { panel: '<template #panel="{ node, selected, items }"><p class="own-panel">{{ node.id }} / {{ selected.id }} / {{ items.length }}</p></template>' },
+      route: '/theme/page-a1',
+    })
+    await settle(() => wrapper.find('.own-panel').exists())
+    expect(wrapper.find('.own-panel').text()).toBe('page-a1 / o1 / 1')
+    expect(wrapper.find('.mwnf-essay__panel').exists()).toBe(false)
+  })
+})
+
 // The views are a promise to the websites' configurations: what is exported
 // from `/views` is what `config.views` names.
 describe('the views entry point', () => {
   it('exports the five views and no shell', async () => {
     const entry = await import('../src/views/index.js')
-    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'HomeView', 'LinkListView', 'RecordView', 'TextPageView'])
+    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'RecordView', 'TextPageView'])
     vi.restoreAllMocks()
   })
 })

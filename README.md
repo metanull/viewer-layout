@@ -207,7 +207,7 @@ the view through `t`; a number is placed beside its text by the view, never
 inside it.
 
 ```js
-import { CatalogueResultsView, HomeView, RecordView, LinkListView, TextPageView } from '@metanull/viewer-layout/views'
+import { CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, TextPageView } from '@metanull/viewer-layout/views'
 
 export default {
   views: { home: HomeView },
@@ -229,11 +229,30 @@ export default {
 | `HomeView` | `config.home` or the same as props: `title`, `intro` (Markdown), `cards: [{ title, description, action, to \| href }]`, `featured: { entity, heading, action, route, eyebrow, meta, seed }` — the pick is `useFeaturedRecord` | `before`, default, `after` |
 | `CatalogueResultsView` | `spec`: `entity`, `keys`, `facets` (viewer-core's facet spec), `facetScope: 'all' \| 'matching'`, `controls: [{ key, type: 'select' \| 'year' \| 'query' \| 'checkbox', label, placeholder, anyLabel, hideEmpty }]`, `filterMode: 'apply' \| 'immediate'`, `scope(record, filters)`, `match(record, filters)`, `narrow(list, filters, helpers)` (a rule over the whole list — a keyword index, say), `dates: { mode, begin, end }`, `sort`, `pageSize`, `variant: 'list' \| 'grid'`, `record(record, helpers)`, `recordRoute`, `summary(context)`, `title`, `filterTitle`, `empty`, `actionLabel`, `pagination` | `before`, `filters`, `actions`, `aside`, `empty`, `after` — each given `{ filters, active, apply, reset, goToPage, matching, pageInfo, options }`, enough to compose the panel in the aside or a second pagination |
 | `RecordView` | `spec` and `id`: `entity`, `translations`, `attribution`, `fields` (viewer-core's `sheetRows` spec, or a function of the context), `sections`, `layout`, `shortDescription`, `media(record, ctx)`, `mediaVariant`, `credits`, `workingNumber`, `citation: { project, permalink, heading } \| false`, `related: { variant, heading, record, route } \| false`, `back: { label, to \| href }`, `title(ctx)` | `header`, `before-sheet`, `after-sheet`, `aside`, `related`, `after`, and one named after every `custom` or `link` row — each given `{ record, text, language, languages, select, dir, glossary, ready, attribution, t, tr }`; `related` also `records` (the rows) and `outside` (the related records the package does not carry) |
+| `EssayView` | `spec` and `id`: `tree` (a `useCollectionTree` result, or `{ purpose \| rootId, childType?, entity?, order? }` / `{ themes: true \| 'themes', childType? }` for the view to build one), `entity` (the tree's items), `route` (a node's own page: a route name or `(node, ctx) => to \| href`), `heading(ctx)`, `placeholder` (a regex a synthesized title matches, falling back to the English title, then the internal name), `quote` / `body` (fields of the node's translation, default `'quote'`/`'description'`, `false` to drop), `glossary`, `items: { of(node) => ids, caption(item, node, ctx) => override, route }`, `panel: { variants(item, ctx) => [...], fields(item, node, ctx) => [{ label, value }] } \| false`, `navigation: 'tree' \| 'siblings' \| false` (`tree` crosses a branch boundary, `siblings` stays inside the parent), `breadcrumb`, `tabs` (the strip of sibling pages), `about(node) => boolean` (essay only, no panel or navigation), `numbering: 'roman' \| 'decimal' \| false`; `previous`, `next`, `backTo`, `inThisTheme`, `seeAll` (entry names, defaulting to `exhibition.theme.previous`/`.next`/`.inThisTheme`/`.seeAllInTheme` and `record.action.backToResults`) | `header`, `before-body`, `after-body`, `panel`, `thumbnails`, `aside`, `justifications`, `navigation`, `after` — each given `{ node, text, language, tree, items, selected, select, breadcrumb, previous, next, t, tr }` |
 | `LinkListView` | `spec`: `title` (entry), `groups: [{ heading (entry), links: [{ label, href \| to, note? }] }] \| (ctx) => groups`, `back: { label, to \| href } \| false`, `empty` (entry) | none |
 | `TextPageView` | `spec`: `heading?` (entry), `body` (entry \| (ctx) => Markdown), `back: { label, to \| href } \| true \| false` | none |
 
 The tokens they read — `--mwnf-view-*` — arrange the parts; a website themes
 a composed page by theming the parts.
+
+### `EssayView` and the seven site pages
+
+`EssayView` is the shape behind islamicart's `ExhibitionTheme.vue` and
+`ArtIntroTheme.vue`, baroqueart's `ExhibitionTheme.vue`, sharinghistory's
+`ExhibitionTheme.vue`, `ExhibitionChapter.vue` and
+`HistoricalBackgroundCountry.vue`, and the DXA family's `Theme.vue` (over
+`themes.json`). No page is special-cased; each reaches the shape through the
+spec and the slots, not a branch in the view:
+
+| Page | What it declares |
+| --- | --- |
+| islamicart / baroqueart `ExhibitionTheme` | `navigation: 'siblings'` (legacy's Previous/Next-page row, not tabs), `panel.variants` for the "detail" image selector, `items.caption` for the caption override merged with the item's own translation |
+| islamicart `ArtIntroTheme` | the same, plus `tabs: true` (a fixed Monuments/Objects-style tab strip, specific to this theme) |
+| sharinghistory `ExhibitionTheme` | `tabs: true` over its chapters (a vertical list, themed through the tab tokens rather than a horizontal strip), no `panel.variants`, `breadcrumb: true` |
+| sharinghistory `ExhibitionChapter` | `navigation: 'siblings'` over the theme's chapters, `breadcrumb: true` (exhibition › theme), the `justifications` slot for the curator/partner pair the default panel does not carry, `after-body` for the see-also and further-reading blocks |
+| sharinghistory `HistoricalBackgroundCountry` | `items` with no `panel` (a plain `RecordGrid` of illustrating items, not a selector), `navigation: 'siblings'` over its pages; the bibliography and the maps are `after-body`/`after`, outside this view's declaration |
+| DXA `Theme` (`themes.json`) | `tree: { themes: true }`, `numbering: 'roman'`, `about(node)` for theme zero, `navigation: 'tree'` for the tour's Previous/Next (which crosses from a theme's last sub-theme into the next theme); the related-works toggle and the picture→parent indirection are specific to this family and stay in the `thumbnails` slot and `items.of`/`items.caption`, not in the view itself |
 
 ## Theming
 

@@ -2,6 +2,32 @@
 
 ## 2.6.0
 
+`EssayView` (metanull/viewer-layout#34), the largest piece of the shared-pages
+epic: a narrative essay over one node of a collection tree, which seven
+pages across four sites become — islamicart's `ExhibitionTheme` and
+`ArtIntroTheme`, baroqueart's `ExhibitionTheme`, sharinghistory's
+`ExhibitionTheme`, `ExhibitionChapter` and `HistoricalBackgroundCountry`,
+and the DXA family's `Theme`. Additive; every export of 2.5.0 is unchanged.
+
+- A fourth composed view, from `@metanull/viewer-layout/views`: `tree` (a
+  `useCollectionTree` result, built by the site, or a `{ purpose, childType }`
+  / `{ themes }` declaration the view builds one from), a quote and a prose
+  body with the glossary, a thumbnail-driven picture panel or a plain
+  `RecordGrid`, previous/next over the tree (`navigation: 'tree'` crosses a
+  branch boundary — decision D2 — `'siblings'` stays inside the parent), a
+  tab strip of sibling pages, a breadcrumb, an `about(node)` mode for a
+  tree's own introduction page, and roman/decimal numbering. Slots for what
+  is not shared by every page — `justifications` for sharinghistory's
+  curator/partner pair, `thumbnails` for the DXA related-works toggle — so
+  no page is special-cased in the view itself.
+- `--mwnf-view-essay-*` tokens for the essay's arrangement, in the reference
+  file; the two-column body, the aside width and the status/back tokens are
+  shared with `RecordView`'s.
+- Peer and dev dependency `@metanull/viewer-core` ^1.10.0: the view reads
+  1.10's `useCollectionTree` (`root`, `byId`, `children`, `parents`,
+  `breadcrumb`, `itemsUnder`, `containing`, `walk`, `previous`/`next`, the
+  `themes.json` adapter) and `glossaryTermsForText`, for a node with no
+  `glossary_ids` column of its own to read.
 - `SectionCards`: new `variant` prop (`'cards' | 'rows' | 'covers' | 'accordion'`)
   selects the presentation of the cards. The default `'cards'` is unchanged.
   `'rows'` renders cards in a flex layout with an image on the left, text on
