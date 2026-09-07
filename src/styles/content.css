@@ -1061,6 +1061,162 @@
   }
 }
 
+/* Prose — readable body text in essay pages and text views */
+
+.mwnf-prose {
+  max-width: var(--mwnf-prose-width, 42rem);
+  font-size: var(--mwnf-prose-size, 0.9375rem);
+  line-height: var(--mwnf-prose-line-height, 1.75);
+  color: var(--mwnf-prose-text-color, inherit);
+}
+
+.mwnf-prose p {
+  margin: 0 0 var(--mwnf-prose-paragraph-gap, 1rem);
+}
+
+.mwnf-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.mwnf-prose ul,
+.mwnf-prose ol {
+  margin: 0 0 var(--mwnf-prose-paragraph-gap, 1rem);
+  padding-inline-start: var(--mwnf-prose-list-indent, 1.5em);
+}
+
+.mwnf-prose li {
+  margin: 0 0 var(--mwnf-prose-list-item-gap, 0.5rem);
+}
+
+.mwnf-prose li:last-child {
+  margin-bottom: 0;
+}
+
+.mwnf-prose a {
+  color: var(--mwnf-color-accent, #1c1c1c);
+  text-decoration: underline;
+}
+
+.mwnf-prose a:hover {
+  color: var(--mwnf-prose-link-hover-color, #555555);
+}
+
+/* Link list (LinkListView) */
+
+.mwnf-link-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-link-list-gap, 1.5rem);
+}
+
+.mwnf-link-list__back {
+  font-size: var(--mwnf-link-list-back-size, 0.8125rem);
+}
+
+.mwnf-link-list__back a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mwnf-link-list__back a:hover {
+  color: var(--mwnf-color-accent, #1c1c1c);
+}
+
+.mwnf-link-list__title {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-link-list-title-size, 1.5rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-link-list-title-color, inherit);
+}
+
+.mwnf-link-list__groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-link-list-group-gap, 1.5rem);
+}
+
+.mwnf-link-list__group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-link-list-heading-gap, 0.75rem);
+}
+
+.mwnf-link-list__heading {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-link-list-heading-size, 1.125rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-link-list-heading-color, inherit);
+}
+
+.mwnf-link-list__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-link-list-item-gap, 0.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mwnf-link-list__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-link-list-note-gap, 0.25rem);
+}
+
+.mwnf-link-list__link {
+  color: var(--mwnf-color-accent, #1c1c1c);
+  text-decoration: none;
+  font-weight: var(--mwnf-link-list-link-weight, 500);
+}
+
+.mwnf-link-list__link:hover {
+  text-decoration: underline;
+}
+
+.mwnf-link-list__note {
+  font-size: var(--mwnf-link-list-note-size, 0.8125rem);
+  color: var(--mwnf-link-list-note-color, #555555);
+  font-style: italic;
+}
+
+.mwnf-link-list__empty {
+  padding: var(--mwnf-link-list-empty-padding, 1rem);
+  font-size: var(--mwnf-link-list-empty-size, 0.875rem);
+  color: var(--mwnf-link-list-empty-color, #555555);
+  text-align: center;
+}
+
+/* Text page (TextPageView) */
+
+.mwnf-text-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-text-page-gap, 1.5rem);
+}
+
+.mwnf-text-page__back {
+  font-size: var(--mwnf-text-page-back-size, 0.8125rem);
+}
+
+.mwnf-text-page__back a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.mwnf-text-page__back a:hover {
+  color: var(--mwnf-color-accent, #1c1c1c);
+}
+
+.mwnf-text-page__heading {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-text-page-heading-size, 1.75rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  color: var(--mwnf-text-page-heading-color, inherit);
+}
+
 /* ── The composed views ─────────────────────────────────────────────────── */
 /* Only the arrangement of the parts: what a view is made of carries its own
    tokens above. A website themes a composed page by theming its parts. */

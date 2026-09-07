@@ -10,6 +10,16 @@
   creates collapsible sections, each with optional `children` subsections; the
   `number` (formatted by the caller as Roman or decimal) precedes the title.
   Tokens documented in `tokens.reference.css`.
+- `.mwnf-prose` — readable text styling for essay pages: comfortable measure,
+  paragraph spacing, list and link styling all on documented tokens.
+- `LinkListView` (in `/views`): a page of categorized links. The spec declares
+  groups statically or computed dynamically, each with a heading and links that
+  may carry optional notes; an optional back link and title; groups with no links
+  are filtered out. Texts are entry names.
+- `TextPageView` (in `/views`): a simple page with optional heading and body text
+  (rendered as a Markdown entry or a function returning Markdown), styled through
+  `.mwnf-prose`. An optional back link that is true for history back, false for
+  hidden, or `{ label, to | href }`. Texts are entry names.
 
 ## 2.5.0
 

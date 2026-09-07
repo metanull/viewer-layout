@@ -186,7 +186,7 @@ every bundle of `@metanull/viewer-i18n` from 1.7.0. Every other text is a prop.
 
 ## Composed views
 
-Three whole pages, made of the content components on viewer-core's
+Five whole pages, made of the content components on viewer-core's
 composables and driven by a declaration the website writes instead of a
 page. They are exported from `@metanull/viewer-layout/views` — and only from
 there: they read the records and the engine from `@metanull/viewer-core`
@@ -207,7 +207,7 @@ the view through `t`; a number is placed beside its text by the view, never
 inside it.
 
 ```js
-import { CatalogueResultsView, HomeView, RecordView } from '@metanull/viewer-layout/views'
+import { CatalogueResultsView, HomeView, RecordView, LinkListView, TextPageView } from '@metanull/viewer-layout/views'
 
 export default {
   views: { home: HomeView },
@@ -229,6 +229,8 @@ export default {
 | `HomeView` | `config.home` or the same as props: `title`, `intro` (Markdown), `cards: [{ title, description, action, to \| href }]`, `featured: { entity, heading, action, route, eyebrow, meta, seed }` — the pick is `useFeaturedRecord` | `before`, default, `after` |
 | `CatalogueResultsView` | `spec`: `entity`, `keys`, `facets` (viewer-core's facet spec), `facetScope: 'all' \| 'matching'`, `controls: [{ key, type: 'select' \| 'year' \| 'query' \| 'checkbox', label, placeholder, anyLabel, hideEmpty }]`, `filterMode: 'apply' \| 'immediate'`, `scope(record, filters)`, `match(record, filters)`, `narrow(list, filters, helpers)` (a rule over the whole list — a keyword index, say), `dates: { mode, begin, end }`, `sort`, `pageSize`, `variant: 'list' \| 'grid'`, `record(record, helpers)`, `recordRoute`, `summary(context)`, `title`, `filterTitle`, `empty`, `actionLabel`, `pagination` | `before`, `filters`, `actions`, `aside`, `empty`, `after` — each given `{ filters, active, apply, reset, goToPage, matching, pageInfo, options }`, enough to compose the panel in the aside or a second pagination |
 | `RecordView` | `spec` and `id`: `entity`, `translations`, `attribution`, `fields` (viewer-core's `sheetRows` spec, or a function of the context), `sections`, `layout`, `shortDescription`, `media(record, ctx)`, `mediaVariant`, `credits`, `workingNumber`, `citation: { project, permalink, heading } \| false`, `related: { variant, heading, record, route } \| false`, `back: { label, to \| href }`, `title(ctx)` | `header`, `before-sheet`, `after-sheet`, `aside`, `related`, `after`, and one named after every `custom` or `link` row — each given `{ record, text, language, languages, select, dir, glossary, ready, attribution, t, tr }`; `related` also `records` (the rows) and `outside` (the related records the package does not carry) |
+| `LinkListView` | `spec`: `title` (entry), `groups: [{ heading (entry), links: [{ label, href \| to, note? }] }] \| (ctx) => groups`, `back: { label, to \| href } \| false`, `empty` (entry) | none |
+| `TextPageView` | `spec`: `heading?` (entry), `body` (entry \| (ctx) => Markdown), `back: { label, to \| href } \| true \| false` | none |
 
 The tokens they read — `--mwnf-view-*` — arrange the parts; a website themes
 a composed page by theming the parts.
