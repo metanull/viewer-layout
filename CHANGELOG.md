@@ -10,7 +10,18 @@
 
 - _(pending: `GlossaryTool`, `DynastyPopout`, `DynastyList` — metanull/viewer-layout#40)_
 
-- _(pending: `PartnerMap`, `FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `BackLink` promoted — metanull/viewer-layout#41)_
+- Five components promoted from the DXA and exhibition sites to the shared package:
+  - `PartnerMap` — an OpenStreetMap embed for a partner's location, centred and zoomed from
+    the record's coordinates; the title and "map of X" label are catalogue entries.
+  - `FeaturedPartners` — a carousel of featured partner records, one showing at a time,
+    rotated on a timer, with bullet controls.
+  - `SiblingGalleries` — two blocks of gallery tiles and MWNF virtual museum links; galleries
+    may be unresolved (no link); the site builds the arrays from its data and provides the
+    museums' labels and links.
+  - `PopupLogo` — a dismissible fixed modal for sponsor logos or notices, with Markdown
+    rendering by default or opt-in raw HTML.
+  - `BackLink` — a "back" navigation link that uses browser history when available, with a
+    fallback route.
 
 ## 2.8.0
 
