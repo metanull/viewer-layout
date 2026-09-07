@@ -422,4 +422,8 @@
   /* --mwnf-view-essay-thumbs-gap: 0.375rem;         Gap between thumbnails */
   /* --mwnf-view-essay-thumb-border: 2px solid transparent; Thumbnail border */
   /* --mwnf-view-essay-thumb-active-border: #1c1c1c; The selected thumbnail's border color */
+  /* --mwnf-view-essay-variant-columns: 5;           Variant strip columns, under the panel image */
+  /* --mwnf-view-essay-variant-gap: 0.3125rem;       Gap between variant thumbnails */
+  /* --mwnf-view-essay-variant-border: 2px solid transparent; Variant thumbnail border */
+  /* --mwnf-view-essay-variant-active-border: #1c1c1c; The selected variant's border color */
 }

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n, I18nText } from '@metanull/viewer-core'
+import { md, useDataPackage, useI18n, useLocale, I18nText } from '@metanull/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
 
 // A simple page with optional heading and body text (rendered as Markdown entry
@@ -11,18 +11,27 @@ const props = defineProps({
   spec: { type: Object, required: true },
 })
 
-const { t, md } = useI18n()
+const { t } = useI18n()
+const pkg = useDataPackage()
+const language = useLocale()
 
 const heading = computed(() => (props.spec.heading ? t(props.spec.heading) : ''))
 
-// Body: either an entry name (resolved through I18nText) or a function
-// returning Markdown string (rendered through md()).
+// Body: either an entry name (resolved through I18nText) or a function of a
+// real context — `{ t, tr, language }`, the same shape `EssayView`'s spec
+// functions read, so a page can render a per-record text (a website's own
+// entity, looked up through `tr`) rather than only a static catalogue entry.
 const bodyIsEntry = computed(() => typeof props.spec.body === 'string')
 const bodyEntryName = computed(() => bodyIsEntry.value ? props.spec.body : null)
+const bodyCtx = computed(() => ({
+  t,
+  tr: (name, recId) => pkg.tr(name, recId, language.value, 'en'),
+  language: language.value,
+}))
 const bodyMarkdown = computed(() => {
   if (bodyIsEntry.value) return null
   if (typeof props.spec.body === 'function') {
-    return md(props.spec.body({}))
+    return md(props.spec.body(bodyCtx.value))
   }
   return null
 })

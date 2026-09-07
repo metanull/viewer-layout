@@ -27,15 +27,21 @@ import SmartLink from '../content/SmartLink.vue'
 //     route: 'theme' | (node, ctx) => (to | href),   // a node's own page
 //     heading: (ctx) => inline HTML,         // default: the node's own title
 //     placeholder: /^(Theme|Page) \d+$/,     // a synthesized title, treated as missing
-//     quote: 'quote' | false,                // field of the node's translation
-//     body: 'description' | false,           // field of the node's translation
+//     quote: 'quote' | false,                // a field of the node's translation:
+//     body: 'description' | false,           // a name, a dotted path ('extra.intro_text'),
+//                                             // or a function (ctx) => Markdown
 //     glossary: true | false,                // highlight glossary terms in quote + body
 //     items: {
 //       of: (node) => [ids],                 // default: the node's own items/item_ids/pictures
 //       caption: (item, node, ctx) => ({ name?, image?, imageAlt? }),  // merged over the default
+//       meta: (item, ctx) => [string],       // the grid's caption lines, e.g. a date or a holder
+//       badge: (item, ctx) => string,        // the grid's badge
 //       route: 'item' | (item, ctx) => (to | href),
 //     },
-//     panel: { variants: (item, ctx) => [{ url, alt, caption }], fields: (item, node, ctx) => [{ label, value }] } | false,
+//     panel: {
+//       variants: (item, ctx) => [{ id, image, alt, caption: { title, justification, fields: [{ label, value }] } }],
+//       fields: (item, node, ctx) => [{ label, value }],   // fallback when a variant carries no fields of its own
+//     } | false,
 //     navigation: 'tree' | 'siblings' | false,   // decision D2: 'tree' crosses a branch boundary, 'siblings' stays inside
 //     breadcrumb: true | false,
 //     tabs: true | false,                    // the strip of sibling pages
@@ -50,17 +56,21 @@ import SmartLink from '../content/SmartLink.vue'
 // `exhibition.theme.seeAllInTheme`. Slots — `header`, `before-body`,
 // `after-body`, `panel`, `thumbnails`, `aside`, `justifications`,
 // `navigation`, `after` — each receive `{ node, text, language, tree, items,
-// selected, select, breadcrumb, previous, next, t, tr }`. A website whose
-// page is not this shape writes its own component on the same content
-// components.
+// selected, select, selectedVariant, selectVariant, breadcrumb, previous,
+// next, t, tr }`. A website whose page is not this shape writes its own
+// component on the same content components.
 //
 // Not every one of the seven pages fits the same slot: islamicart/baroqueart's
-// multi-image "detail" selector is `panel.variants`; sharinghistory's dual
-// curator/partner justifications are the `justifications` slot (the default
-// panel shows none); its chapters' see-also/further-reading blocks are
-// `after-body`; DXA's related-works toggle and its picture-to-parent
-// indirection are `items.of`/`items.caption` plus the `thumbnails` slot for
-// the toggle itself, which is unique to that family.
+// multi-image "detail" selector is `panel.variants` — each variant carries
+// its own image *and* caption (title, justification, fields), swapped
+// together when the visitor picks a thumbnail under the panel, `fields`
+// falling back to `panel.fields` when a variant carries none of its own;
+// sharinghistory's dual curator/partner justifications are the
+// `justifications` slot (the default panel shows none); its chapters'
+// see-also/further-reading blocks are `after-body`; DXA's related-works
+// toggle and its picture-to-parent indirection are `items.of`/`items.caption`
+// plus the `thumbnails` slot for the toggle itself, which is unique to that
+// family.
 
 const props = defineProps({
   spec: { type: Object, required: true },
@@ -168,12 +178,26 @@ const baseCtx = computed(() => ({
 
 // ── Quote, body and glossary ─────────────────────────────────────────────────
 
-const quoteField = computed(() => (spec.value.quote === false ? '' : spec.value.quote ?? 'quote'))
-const bodyField = computed(() => (spec.value.body === false ? '' : spec.value.body ?? 'description'))
+// `quote`/`body` name a field of the node's translation ('quote'), a dotted
+// path into it ('extra.intro_text', for a field the flat lookup below
+// cannot reach), or a function of the base context (a website composing its
+// own value, e.g. from a second translated entity) — always Markdown either
+// way, rendered exactly like a plain field name.
+function pathValue(source, path) {
+  return path.split('.').reduce((value, key) => (value == null ? undefined : value[key]), source)
+}
+function resolveTextSpec(fieldSpec, ctx) {
+  if (fieldSpec === false || fieldSpec == null) return ''
+  if (typeof fieldSpec === 'function') return fieldSpec(ctx) ?? ''
+  return pathValue(ctx.text, fieldSpec) ?? ''
+}
+
+const quoteValue = computed(() => resolveTextSpec(spec.value.quote ?? 'quote', baseCtx.value))
+const bodyValue = computed(() => resolveTextSpec(spec.value.body ?? 'description', baseCtx.value))
 
 const glossaryTerms = computed(() => {
   if (!spec.value.glossary || !node.value) return []
-  const parts = [quoteField.value && text.value[quoteField.value], bodyField.value && text.value[bodyField.value]].filter(Boolean)
+  const parts = [quoteValue.value, bodyValue.value].filter(Boolean)
   return glossaryTermsForText(parts.join('\n\n'), language.value)
 })
 const glossaryList = computed(() => glossaryEntries(glossaryTerms.value))
@@ -185,14 +209,8 @@ const titleHtml = computed(() => {
   if (spec.value.heading) return spec.value.heading(baseCtx.value)
   return renderInline(String(resolveTitle(node.value)), { glossary: glossaryList.value })
 })
-const quoteHtml = computed(() => {
-  const value = quoteField.value && text.value[quoteField.value]
-  return value ? renderInline(String(value), { glossary: glossaryList.value }) : ''
-})
-const bodyHtml = computed(() => {
-  const value = bodyField.value && text.value[bodyField.value]
-  return value ? renderBlock(String(value), { breaks: true, glossary: glossaryList.value }) : ''
-})
+const quoteHtml = computed(() => (quoteValue.value ? renderInline(String(quoteValue.value), { glossary: glossaryList.value }) : ''))
+const bodyHtml = computed(() => (bodyValue.value ? renderBlock(String(bodyValue.value), { breaks: true, glossary: glossaryList.value }) : ''))
 
 const isAbout = computed(() => Boolean(node.value && spec.value.about?.(node.value)))
 
@@ -277,24 +295,67 @@ const selectedCaption = computed(() => {
 
 const hasPanel = computed(() => Boolean(spec.value.panel))
 
-const panelImages = computed(() => {
+// A "variant" pairs one image with its own caption (title, justification,
+// fields) — islamicart/baroqueart's "detail" close-ups, which swap the whole
+// panel, not just the picture. The item's own image is always variant zero,
+// carrying no caption of its own (`fields: null` so the panel falls back to
+// `panel.fields`, `justification: ''` — the item's caption already covers
+// the name); `panel.variants` appends whatever else the site declares.
+const itemVariants = computed(() => {
   const item = selected.value
   if (!item) return []
   const caption = selectedCaption.value
-  const primary = item.images?.[0]?.url ? [{ url: item.images[0].url, alt: caption?.imageAlt ?? '' }] : []
-  const variants = spec.value.panel?.variants?.(item, baseCtx.value) ?? []
-  return [...primary, ...variants]
+  const primary = item.images?.[0]?.url
+    ? [{
+        id: '__primary',
+        image: item.images[0].url,
+        alt: caption?.imageAlt ?? '',
+        caption: { title: caption?.name ?? '', justification: '', fields: null },
+      }]
+    : []
+  const extra = spec.value.panel?.variants?.(item, baseCtx.value) ?? []
+  return [...primary, ...extra.map((variant, index) => ({ id: variant.id ?? `variant-${index}`, ...variant }))]
+})
+
+const selectedVariantId = ref(null)
+watch(itemVariants, (list) => {
+  if (!list.some((variant) => variant.id === selectedVariantId.value)) selectedVariantId.value = list[0]?.id ?? null
+}, { immediate: true })
+const selectedVariant = computed(() => itemVariants.value.find((variant) => variant.id === selectedVariantId.value) ?? itemVariants.value[0] ?? null)
+function selectVariant(variantId) {
+  selectedVariantId.value = variantId
+}
+
+const mediaImages = computed(() => {
+  const variant = selectedVariant.value
+  if (!variant?.image) return []
+  return [{ url: variant.image, alt: variant.alt ?? '' }]
 })
 const panelFields = computed(() => {
   const item = selected.value
   if (!item || !spec.value.panel?.fields) return []
   return spec.value.panel.fields(item, node.value, baseCtx.value) ?? []
 })
+// A variant's own fields (its `label` an entry name, resolved here — unlike
+// `panel.fields`' fallback rows, already resolved text by the same
+// convention as `items.caption`) win; `fields: null` (or no variant at all)
+// falls back to `panel.fields`.
+const panelDisplayFields = computed(() => {
+  const variantFields = selectedVariant.value?.caption?.fields
+  if (variantFields != null) return variantFields.map((field) => ({ label: field.label ? t(field.label) : '', value: field.value }))
+  return panelFields.value
+})
+const panelJustificationHtml = computed(() => {
+  const value = selectedVariant.value?.caption?.justification
+  return value ? renderInline(String(value)) : ''
+})
 
 const gridRecords = computed(() =>
   itemRecords.value.map((item) => {
     const caption = defaultItemCaption(item)
-    return { id: item.id, image: caption.image, imageAlt: caption.imageAlt, name: caption.name, meta: [], to: itemTo(item) }
+    const meta = spec.value.items?.meta?.(item, baseCtx.value) ?? []
+    const badge = spec.value.items?.badge?.(item, baseCtx.value) ?? ''
+    return { id: item.id, image: caption.image, imageAlt: caption.imageAlt, name: caption.name, meta, badge, to: itemTo(item) }
   }),
 )
 
@@ -315,6 +376,8 @@ const ctx = computed(() => ({
   ...baseCtx.value,
   items: itemRecords.value,
   selected: selected.value,
+  selectedVariant: selectedVariant.value,
+  selectVariant,
   breadcrumb: breadcrumbList.value,
   previous: previousNode.value,
   next: nextNode.value,
@@ -377,12 +440,26 @@ const hasSide = computed(() => !isAbout.value && (hasPanel.value || itemRecords.
       <div v-if="hasSide" class="mwnf-essay__side">
         <slot name="panel" v-bind="ctx">
           <div v-if="hasPanel && selectedCaption" class="mwnf-essay__panel">
-            <MediaGallery :images="panelImages" />
-            <h3 class="mwnf-essay__panel-name" v-html="selectedCaption.name"></h3>
-            <p v-for="(field, index) in panelFields" :key="index" class="mwnf-essay__panel-field">
+            <MediaGallery :images="mediaImages" />
+            <ul v-if="itemVariants.length > 1" class="mwnf-essay__variants">
+              <li v-for="variant in itemVariants" :key="variant.id">
+                <button
+                  type="button"
+                  class="mwnf-essay__variant"
+                  :class="{ 'mwnf-essay__variant--active': variant.id === selectedVariant?.id }"
+                  :aria-pressed="variant.id === selectedVariant?.id ? 'true' : 'false'"
+                  @click="selectVariant(variant.id)"
+                >
+                  <img v-if="variant.image" :src="variant.image" :alt="variant.alt ?? ''" loading="lazy" />
+                </button>
+              </li>
+            </ul>
+            <h3 class="mwnf-essay__panel-name" v-html="selectedVariant?.caption?.title || selectedCaption.name"></h3>
+            <p v-for="(field, index) in panelDisplayFields" :key="index" class="mwnf-essay__panel-field">
               <span v-if="field.label" class="mwnf-essay__panel-label">{{ field.label }}</span>
               <span v-html="field.value"></span>
             </p>
+            <p v-if="panelJustificationHtml" class="mwnf-essay__panel-justification mwnf-sheet__block" v-html="panelJustificationHtml"></p>
             <SmartLink v-if="itemTo(selected)" :to="itemTo(selected)" class="mwnf-essay__panel-link">{{ t(seeAllText) }} →</SmartLink>
           </div>
         </slot>
