@@ -1034,6 +1034,119 @@
   line-height: var(--mwnf-line-height, 1.6);
 }
 
+/* Glossary tool (GlossaryTool) */
+
+.mwnf-glossary-tool__toggle {
+  cursor: pointer;
+  color: var(--mwnf-glossary-tool-toggle-color, #1c1c1c);
+  font-weight: var(--mwnf-weight-heading, 700);
+}
+
+.mwnf-glossary-tool__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-glossary-tool-gap, 0.5rem);
+  margin-top: var(--mwnf-glossary-tool-gap, 0.5rem);
+}
+
+.mwnf-glossary-tool__heading {
+  margin: 0;
+  font-weight: var(--mwnf-weight-heading, 700);
+}
+
+.mwnf-glossary-tool__instructions {
+  margin: 0;
+  font-size: var(--mwnf-glossary-tool-instructions-size, 0.8125rem);
+  color: var(--mwnf-glossary-tool-instructions-color, #555555);
+}
+
+.mwnf-glossary-tool__input {
+  padding: var(--mwnf-glossary-tool-input-padding, 0.375rem 0.5rem);
+  border: var(--mwnf-glossary-tool-input-border, 1px solid #dddddd);
+  border-radius: var(--mwnf-radius, 0.25rem);
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.mwnf-glossary-tool__hits {
+  margin: 0;
+  padding: 0;
+  max-height: var(--mwnf-glossary-tool-hits-max-height, 11.25rem);
+  overflow: auto;
+  list-style: none;
+  border: var(--mwnf-glossary-tool-hits-border, 1px solid #dddddd);
+}
+
+.mwnf-glossary-tool__hit {
+  padding: var(--mwnf-glossary-tool-hit-padding, 0.25rem 0.5rem);
+  cursor: pointer;
+}
+
+.mwnf-glossary-tool__hit:hover,
+.mwnf-glossary-tool__hit--active {
+  background-color: var(--mwnf-glossary-tool-hit-hover-background, #dddddd);
+}
+
+.mwnf-glossary-tool__no-results {
+  margin: 0;
+  font-size: var(--mwnf-glossary-tool-instructions-size, 0.8125rem);
+  color: var(--mwnf-glossary-tool-instructions-color, #555555);
+}
+
+.mwnf-glossary-tool__definition-label {
+  margin: 0;
+  font-weight: var(--mwnf-glossary-tool-definition-label-weight, 600);
+}
+
+/* Dynasty popouts (DynastyPopout, DynastyList) */
+
+.mwnf-dynasty-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-dynasty-list-gap, 0.75rem);
+}
+
+.mwnf-dynasty-list__heading {
+  margin: 0;
+  font-family: var(--mwnf-font-heading, inherit);
+  font-size: var(--mwnf-sheet-heading-size, 0.8125rem);
+  font-weight: var(--mwnf-weight-heading, 700);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mwnf-sheet-heading-color, #555555);
+}
+
+.mwnf-dynasty__summary {
+  cursor: pointer;
+  font-weight: var(--mwnf-dynasty-summary-weight, 700);
+}
+
+.mwnf-dynasty__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mwnf-glossary-tool-gap, 0.5rem);
+  margin-top: var(--mwnf-glossary-tool-gap, 0.5rem);
+}
+
+.mwnf-dynasty__eyebrow {
+  margin: 0;
+  font-size: var(--mwnf-dynasty-eyebrow-size, 0.75rem);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--mwnf-dynasty-eyebrow-color, #555555);
+}
+
+.mwnf-dynasty__field,
+.mwnf-dynasty__dates {
+  margin: 0;
+  font-size: var(--mwnf-dynasty-field-size, 0.875rem);
+  color: var(--mwnf-dynasty-field-color, inherit);
+}
+
+.mwnf-dynasty__label {
+  font-weight: var(--mwnf-sheet-label-weight, 600);
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .mwnf-grid__card,
   .mwnf-popover {

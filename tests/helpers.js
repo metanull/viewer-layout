@@ -27,9 +27,17 @@ export const layoutTexts = {
   'record.citation.heading': 'Citation',
   'record.glossary.close': 'Close',
   'record.glossary.heading': 'Glossary',
+  'record.glossary.tool': 'Glossary tool',
+  'record.glossary.instructions': 'Enter the first letter(s) of the term you are looking for, then choose one of the options in the list.',
+  'record.glossary.definition': 'Definition',
+  'record.dynasty.heading': 'Dynasties',
   'record.media.photograph': 'Photograph',
   'record.sheet.credits': 'Credits',
   'record.sheet.languages': 'Languages',
+  // viewer-i18n's `sheet` namespace, read by DynastyPopout.
+  'sheet.field.alsoKnownAs': 'Also known as',
+  'sheet.field.area': 'Area',
+  'sheet.field.history': 'History',
 }
 
 export function globalWithI18n(options = {}) {

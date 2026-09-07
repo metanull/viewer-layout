@@ -1,15 +1,19 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
+import { loadEntities, useDataPackage } from '@metanull/viewer-core'
 import {
   BackLink,
+  DynastyList,
+  DynastyPopout,
   FacetSelect,
   FeaturedPartners,
   FeaturedRecord,
   FilterPanel,
   GlossaryPopover,
+  GlossaryTool,
   MediaGallery,
   Pagination,
   PartnerMap,
@@ -594,5 +598,95 @@ describe('BackLink', () => {
       ...globalWithI18n(),
     })
     expect(wrapper.text()).toContain('back')
+  })
+})
+
+describe('GlossaryTool', () => {
+  // The fixture glossary behind `@inventory-data` (tests/fixtures/data-package):
+  // g1 "kufic"/"kufic script" → "An angular Arabic script.", g2
+  // "glaze"/"glazed" → "A vitreous coating." — the same package the composed
+  // views' tests load, so a term search here exercises the real
+  // `searchGlossary` rather than a stand-in for it.
+  beforeAll(async () => {
+    await loadEntities(['glossary'])
+    await useDataPackage().loadTranslations('glossary', 'en')
+  })
+
+  it('finds a term as the visitor types and shows its definition', async () => {
+    const wrapper = mount(GlossaryTool, { props: { language: 'en' }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-glossary-tool__toggle').text()).toBe('Glossary tool')
+    await wrapper.find('.mwnf-glossary-tool__input').setValue('kuf')
+    const hits = wrapper.findAll('.mwnf-glossary-tool__hit')
+    expect(hits.map((hit) => hit.text())).toEqual(['kufic'])
+    await hits[0].trigger('click')
+    expect(wrapper.find('.mwnf-glossary-tool__hits').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-glossary-tool__definition-label').text()).toBe('Definition')
+    expect(wrapper.find('.mwnf-glossary-tool__definition').text()).toContain('An angular Arabic script.')
+  })
+
+  it('is keyboard-usable: arrow to a hit, Enter chooses it', async () => {
+    const wrapper = mount(GlossaryTool, { props: { language: 'en' }, ...globalWithI18n() })
+    const input = wrapper.find('.mwnf-glossary-tool__input')
+    await input.setValue('gla')
+    await input.trigger('keydown', { key: 'ArrowDown' })
+    await input.trigger('keydown', { key: 'Enter' })
+    expect(wrapper.find('.mwnf-glossary-tool__definition').text()).toContain('A vitreous coating.')
+  })
+
+  it('shows no hit list and no definition for a term the glossary does not have', async () => {
+    const wrapper = mount(GlossaryTool, { props: { language: 'en' }, ...globalWithI18n() })
+    await wrapper.find('.mwnf-glossary-tool__input').setValue('zzz')
+    expect(wrapper.find('.mwnf-glossary-tool__hits').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-glossary-tool__definition').exists()).toBe(false)
+  })
+})
+
+describe('DynastyPopout', () => {
+  const dynasty = { id: 'd1', from_ah: 358, to_ah: 567, from_ad: 969, to_ad: 1171 }
+  const text = { name: 'Fatimid', also_known_as: 'Fatimids', area: 'Egypt, North Africa', history: 'A Shia caliphate.' }
+
+  it('opens and shows every field', async () => {
+    const wrapper = mount(DynastyPopout, { props: { dynasty, text }, attachTo: document.body, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-dynasty__summary').text()).toBe('Fatimid')
+    wrapper.find('details').element.open = true
+    await nextTick()
+    expect(wrapper.find('.mwnf-dynasty__eyebrow').text()).toBe('Dynasties')
+    const body = wrapper.text().replace(/\s+/g, ' ')
+    expect(body).toContain('Also known as: Fatimids')
+    expect(body).toContain('Area: Egypt, North Africa')
+    expect(body).toContain('AH 358–567 / AD 969–1171')
+    expect(body).toContain('History')
+    expect(wrapper.find('.mwnf-dynasty__history').text()).toContain('A Shia caliphate.')
+    wrapper.unmount()
+  })
+
+  it('falls back to the id when untranslated, and omits what the record has none of', () => {
+    const wrapper = mount(DynastyPopout, { props: { dynasty: { id: 'd2' } }, ...globalWithI18n() })
+    expect(wrapper.find('.mwnf-dynasty__summary').text()).toBe('d2')
+    expect(wrapper.find('.mwnf-dynasty__dates').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-dynasty__field').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-dynasty__history').exists()).toBe(false)
+  })
+})
+
+describe('DynastyList', () => {
+  const dynasties = [
+    { id: 'd1', from_ad: 969, to_ad: 1171 },
+    { id: 'd2', from_ad: 750, to_ad: 1258 },
+  ]
+  const translations = { d1: { name: 'Fatimid' }, d2: { name: 'Abbasid' } }
+
+  it('renders one popout per dynasty of the record', () => {
+    const wrapper = mount(DynastyList, {
+      props: { heading: 'Dynasties', dynasties, tr: (dynasty) => translations[dynasty.id] },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.mwnf-dynasty-list__heading').text()).toBe('Dynasties')
+    expect(wrapper.findAllComponents(DynastyPopout)).toHaveLength(2)
+    expect(wrapper.findAll('.mwnf-dynasty__summary').map((summary) => summary.text())).toEqual(['Fatimid', 'Abbasid'])
+  })
+
+  it('renders nothing without dynasties', () => {
+    expect(mount(DynastyList, { props: { dynasties: [] }, ...globalWithI18n() }).find('section').exists()).toBe(false)
   })
 })

@@ -8,7 +8,15 @@
 
 - _(pending: `SearchFormView` — metanull/viewer-layout#39)_
 
-- _(pending: `GlossaryTool`, `DynastyPopout`, `DynastyList` — metanull/viewer-layout#40)_
+- `GlossaryTool`: the search box four item sheets and a theme page each wrote
+  for themselves, over viewer-core's `searchGlossary` — an input, the hit
+  list, the chosen definition as Markdown, collapsed behind a native
+  `<details>` toggle (keyboard-usable for free, as `SectionCards`'
+  accordion variant already is). `DynastyPopout`: the other fifty repeated
+  lines, one dynasty's name, also known as, area, AH/AD dates and history,
+  the same toggle; islamicart's dynasty cards and its dynasty sheet fold
+  into the same shape (decision D5). `DynastyList` renders one popout per
+  dynasty of a record, `RelatedRecords`'s shape (metanull/viewer-layout#40).
 
 - Five components promoted from the DXA and exhibition sites to the shared package:
   - `PartnerMap` — an OpenStreetMap embed for a partner's location, centred and zoomed from
