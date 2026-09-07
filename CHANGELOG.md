@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.9.0
+
+- _(pending: `TimelineEventList`, `TimelineResultsView` — metanull/viewer-layout#37)_
+
+- _(pending: `PartnerListView` — metanull/viewer-layout#38)_
+
+- _(pending: `SearchFormView` — metanull/viewer-layout#39)_
+
+- _(pending: `GlossaryTool`, `DynastyPopout`, `DynastyList` — metanull/viewer-layout#40)_
+
+- _(pending: `PartnerMap`, `FeaturedPartners`, `SiblingGalleries`, `PopupLogo`, `BackLink` promoted — metanull/viewer-layout#41)_
+
 ## 2.8.0
 
 Five more gaps, found by `EssayView`, `LinkListView` and `SectionCards`'s
