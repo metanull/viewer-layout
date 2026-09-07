@@ -1071,6 +1071,84 @@ describe('TimelineResultsView', () => {
     })
   })
 
+  it('begin/end controls with options render a FacetSelect; without options, a number input', async () => {
+    // With options (array): renders as FacetSelect
+    const { wrapper: withOptions } = await mountView(TimelineResultsView, {
+      props: {
+        spec: {
+          ...countrySpec,
+          controls: [
+            { key: 'country' },
+            { key: 'begin', options: [{ value: '500', label: '500–599' }, { value: '1500', label: '1500–1599' }] },
+            { key: 'end', options: [{ value: '599', label: '500–599' }, { value: '1599', label: '1500–1599' }] },
+          ],
+        },
+      },
+      route: '/timeline/results',
+    })
+    await settle(() => withOptions.findAll('.mwnf-facet__select').length >= 3)
+    // All three controls render as FacetSelect
+    expect(withOptions.findAll('.mwnf-facet__select')).toHaveLength(3)
+    expect(withOptions.findAll('input[type="number"]')).toHaveLength(0)
+
+    // Without options: renders as number input
+    const { wrapper: withoutOptions } = await mountView(TimelineResultsView, {
+      props: { spec: countrySpec },
+      route: '/timeline/results',
+    })
+    await settle(() => withoutOptions.findAll('input[type="number"]').length > 0)
+    // Two number inputs for begin and end (plus the selects for country)
+    expect(withoutOptions.findAll('input[type="number"]')).toHaveLength(2)
+  })
+
+  it('begin/end controls write the chosen option value to the query', async () => {
+    const { wrapper, router } = await mountView(TimelineResultsView, {
+      props: {
+        spec: {
+          ...countrySpec,
+          controls: [
+            { key: 'country' },
+            { key: 'begin', options: [{ value: '500', label: '500–599' }, { value: '1500', label: '1500–1599' }] },
+            { key: 'end', options: [{ value: '599', label: '500–599' }, { value: '1599', label: '1500–1599' }] },
+          ],
+        },
+      },
+      route: '/timeline/results',
+    })
+    await settle(() => wrapper.findAll('.mwnf-facet__select').length >= 3)
+    const selects = wrapper.findAll('.mwnf-facet__select')
+    // First select is country, second is begin, third is end
+    await selects[1].setValue('1500')
+    await selects[2].setValue('1599')
+    await wrapper.find('form').trigger('submit')
+    await settle(() => router.currentRoute.value.query.begin === '1500')
+    expect(router.currentRoute.value.query).toMatchObject({ begin: '1500', end: '1599' })
+  })
+
+  it('begin/end controls accept options as a function receiving the helpers context', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, {
+      props: {
+        spec: {
+          ...countrySpec,
+          controls: [
+            { key: 'country' },
+            { key: 'begin', options: (ctx) => ctx.years.min ? [{ value: String(ctx.years.min), label: `From ${ctx.years.min}` }] : [] },
+            { key: 'end', options: (ctx) => ctx.years.max ? [{ value: String(ctx.years.max), label: `Until ${ctx.years.max}` }] : [] },
+          ],
+        },
+      },
+      route: '/timeline/results',
+    })
+    await settle(() => wrapper.findAll('.mwnf-facet__select').length >= 3)
+    // The options function receives the year range and builds options from it.
+    // Fixture years for country scope: 900 (min) to 1350 (max).
+    const selects = wrapper.findAll('.mwnf-facet__select')
+    const beginOptions = selects[1].findAll('option').map((o) => o.text())
+    const endOptions = selects[2].findAll('option').map((o) => o.text())
+    expect(beginOptions).toContain('From 900')
+    expect(endOptions).toContain('Until 1300')
+  })
+
   it('hands #summary, #cross-link, #event, #before and #after the shared context', async () => {
     const { wrapper } = await mountView(TimelineResultsView, {
       props: { spec: { ...countrySpec, gallery: { route: 'timeline-gallery', items: () => 1 } } },

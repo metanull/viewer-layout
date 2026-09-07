@@ -14,7 +14,10 @@
   over an item predicate the site supplies. `TimelineEventList` renders the
   per-event rows the results page and a slot both need — a date, a caption,
   a Markdown description, an image/item strip and per-event actions such as
-  the standalone sites' "View items from this period".
+  the standalone sites' "View items from this period". The `begin` and `end`
+  controls accept an optional `options` prop: an array or function yielding
+  `[{ value, label }]` buckets (century strings like "1500–1599" for DXA
+  sites); without it, a free-year number input.
 
 - _(pending: `PartnerListView` — metanull/viewer-layout#38)_
 
