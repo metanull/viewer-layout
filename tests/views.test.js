@@ -18,6 +18,9 @@ const texts = {
   'catalogue.facet.any': 'Any',
   'catalogue.facet.country': 'Country',
   'catalogue.facet.fromYear': 'From year',
+  'catalogue.facet.keyword': 'Keyword',
+  'catalogue.facet.keywordPlaceholder': 'Search…',
+  'catalogue.facet.epm': 'European partners',
   'catalogue.filter.heading': 'Filter',
   'catalogue.results.itemsFound': 'Items found',
   'catalogue.results.noResultsFilter': 'No items match the selected filter.',
@@ -165,6 +168,47 @@ describe('CatalogueResultsView', () => {
     })
     await settle(() => wrapper.findAll('.mwnf-list__row').length > 0)
     expect(wrapper.findAll('.mwnf-list__name').map((n) => n.text())).toEqual(['Mosque lamp'])
+  })
+
+  it('types into a query control and narrows through narrow when it is submitted', async () => {
+    const { wrapper, router } = await mountView(CatalogueResultsView, {
+      props: {
+        spec: {
+          entity: 'objects',
+          keys: ['q'],
+          controls: [{ key: 'q', type: 'query', label: 'catalogue.facet.keyword', placeholder: 'catalogue.facet.keywordPlaceholder' }],
+          narrow: (list, filters) => (filters.q ? list.filter((r) => r.id === 'o2') : list),
+          recordRoute: 'objects-detail',
+        },
+      },
+      route: '/objects',
+    })
+    await settle(() => wrapper.findAll('.mwnf-list__row').length > 0)
+    await wrapper.find('.mwnf-facet__select').setValue('lamp')
+    await wrapper.find('form').trigger('submit')
+    await settle(() => router.currentRoute.value.query.q === 'lamp')
+    expect(router.currentRoute.value.query.q).toBe('lamp')
+    await settle(() => wrapper.findAll('.mwnf-list__name').length === 1)
+    expect(wrapper.findAll('.mwnf-list__name').map((n) => n.text())).toEqual(['Mosque lamp'])
+  })
+
+  it('writes 1 to the URL when a checkbox control is checked in immediate mode', async () => {
+    const { wrapper, router } = await mountView(CatalogueResultsView, {
+      props: {
+        spec: {
+          entity: 'objects',
+          keys: ['epm'],
+          controls: [{ key: 'epm', type: 'checkbox', label: 'catalogue.facet.epm' }],
+          filterMode: 'immediate',
+          recordRoute: 'objects-detail',
+        },
+      },
+      route: '/objects',
+    })
+    await settle(() => wrapper.findAll('.mwnf-list__row').length > 0)
+    await wrapper.find('.mwnf-facet__checkbox').setValue(true)
+    await settle(() => router.currentRoute.value.query.epm === '1')
+    expect(router.currentRoute.value.query.epm).toBe('1')
   })
 
   it('renders the tiles when the spec says grid, and the empty text when nothing matches', async () => {
