@@ -3,6 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   eventDateLabel, renderBlock, renderInline, useI18n, useListQuery, usePagination, useTimelineEvents,
+  yearBucketsFromRange,
 } from '@metanull/viewer-core'
 import FacetSelect from '../content/FacetSelect.vue'
 import FilterPanel from '../content/FilterPanel.vue'
@@ -28,7 +29,11 @@ import TimelineEventList from '../content/TimelineEventList.vue'
 //     timelinesEntity: 'timelines',                   // data package file names, for a site that calls its own something else
 //     eventsEntity: 'timeline_events',
 //     keys,                                           // the URL's own filter keys; default: every control's key
-//     controls: [{ key: 'country' | 'collection' | 'begin' | 'end', label, placeholder, anyLabel, hideEmpty }],
+//     controls: [{ key: 'country' | 'collection' | 'begin' | 'end', label, placeholder, anyLabel, hideEmpty, options? }],
+//                // `options` on a 'begin' or 'end' control: an array [{ value, label }] or
+//                // a function (ctx) => [{ value, label }] receiving the same helpers as `collections`.
+//                // With options, the control renders a FacetSelect (bucketed years for DXA);
+//                // without, the number input (free years for standalone sites).
 //     pageSize: 15,
 //     entrance: false | true,                         // true: render the form alone; navigates to `route` on submit
 //     route: 'timeline-results',                       // the entrance's own target route (a name)
@@ -86,7 +91,11 @@ const timeline = useTimelineEvents({
 const controls = computed(() => spec.value.controls ?? [])
 const keys = computed(() => spec.value.keys ?? controls.value.map((control) => control.key))
 const hasControl = (key) => controls.value.some((control) => control.key === key)
-const helpers = { t, tr: props.spec.tr }
+const helpers = computed(() => ({
+  t,
+  tr: props.spec.tr,
+  years: { min: eventYearRange.value[0], max: eventYearRange.value[1] },
+}))
 
 // ── Filters ──────────────────────────────────────────────────────────────
 
@@ -140,6 +149,19 @@ const events = computed(() => {
   })
 })
 
+// Compute year range from loaded events for bucketed controls.
+const eventYearRange = computed(() => {
+  const allEvents = isEntrance.value ? [] : timeline.findEvents({
+    country: undefined,
+    collection: undefined,
+  })
+  const years = allEvents
+    .map((e) => e.year_from)
+    .filter((v) => Number.isFinite(v) && v !== 0)
+  if (!years.length) return [null, null]
+  return [Math.min(...years), Math.max(...years)]
+})
+
 const pageInfo = usePagination(events, {
   page: () => (listQuery ? listQuery.page.value : 1),
   size: () => spec.value.pageSize ?? 15,
@@ -165,7 +187,22 @@ const countryOptions = computed(() =>
     label: row.value === 'all' ? t('timeline.form.allCountries') : row.label,
   })),
 )
-const collectionOptions = computed(() => spec.value.collections?.(helpers) ?? [])
+const collectionOptions = computed(() => spec.value.collections?.(helpers.value) ?? [])
+
+// Compute begin/end control options for each control in the spec.
+const controlOptions = computed(() => {
+  const optionsByKey = {}
+  for (const control of controls.value) {
+    if ((control.key === 'begin' || control.key === 'end') && control.options) {
+      if (typeof control.options === 'function') {
+        optionsByKey[control.key] = control.options(helpers.value)
+      } else {
+        optionsByKey[control.key] = control.options
+      }
+    }
+  }
+  return optionsByKey
+})
 
 // ── The context every function and slot reads ───────────────────────────
 
@@ -264,6 +301,16 @@ function controlLabel(control, fallback) {
           :any-label="control.anyLabel ? t(control.anyLabel) : ''"
           :hide-empty="Boolean(control.hideEmpty)"
           @update:model-value="activeFilters.collection = $event"
+        />
+        <FacetSelect
+          v-else-if="(control.key === 'begin' || control.key === 'end') && controlOptions[control.key]"
+          :model-value="activeFilters[control.key]"
+          :label="controlLabel(control, control.key === 'begin' ? 'timeline.form.startDate' : 'timeline.form.endDate')"
+          :options="controlOptions[control.key]"
+          :placeholder="control.placeholder ? t(control.placeholder) : t(control.key === 'begin' ? 'timeline.form.fromYearHint' : 'timeline.form.toYearHint')"
+          :any-label="control.anyLabel ? t(control.anyLabel) : ''"
+          :hide-empty="Boolean(control.hideEmpty)"
+          @update:model-value="activeFilters[control.key] = $event"
         />
         <label v-else class="mwnf-facet">
           <span class="mwnf-facet__label">{{ controlLabel(control, control.key === 'begin' ? 'timeline.form.startDate' : 'timeline.form.endDate') }}</span>
