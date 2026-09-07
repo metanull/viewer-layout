@@ -32,6 +32,8 @@ without swapping its caption. Additive; every export of 2.6.0 is unchanged.
   context alongside `selected`/`select`. `--mwnf-view-essay-variant-*`
   tokens style the strip, in the reference file.
 
+## 2.6.0
+
 `EssayView` (metanull/viewer-layout#34), the largest piece of the shared-pages
 epic: a narrative essay over one node of a collection tree, which seven
 pages across four sites become — islamicart's `ExhibitionTheme` and
