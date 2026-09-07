@@ -28,6 +28,7 @@ import {
   SectionCards,
   SheetSection,
   SiblingGalleries,
+  TimelineEventList,
 } from '../src/content/index.js'
 import { globalWithI18n } from './helpers.js'
 
@@ -688,5 +689,71 @@ describe('DynastyList', () => {
 
   it('renders nothing without dynasties', () => {
     expect(mount(DynastyList, { props: { dynasties: [] }, ...globalWithI18n() }).find('section').exists()).toBe(false)
+  })
+})
+
+describe('TimelineEventList', () => {
+  const events = [
+    {
+      id: 'e1',
+      date: '900 AD – 950 AD',
+      caption: 'Egypt',
+      description: '<p>A <em>dynasty</em> rises.</p>',
+      media: [
+        { image: 'coin.jpg', alt: 'A coin' },
+        { image: 'bowl.jpg', alt: 'A bowl', href: '#/item/o1', caption: 'Glazed <em>bowl</em>' },
+      ],
+      actions: [{ label: 'View items from this period', href: '#/results?begin=900&end=950' }],
+    },
+    { id: 'e2', date: '1200 AD –', description: '<p>An ongoing period.</p>' },
+  ]
+
+  it('renders the date, the caption, the description as HTML, the media strip and the actions', () => {
+    const wrapper = mount(TimelineEventList, { props: { events }, ...globalWithI18n() })
+    expect(wrapper.findAll('.mwnf-timeline__row')).toHaveLength(2)
+    expect(wrapper.findAll('.mwnf-timeline__date').map((d) => d.text())).toEqual(['900 AD – 950 AD', '1200 AD –'])
+    expect(wrapper.find('.mwnf-timeline__caption').text()).toBe('Egypt')
+    expect(wrapper.find('.mwnf-timeline__description').html()).toContain('<em>dynasty</em>')
+
+    const media = wrapper.findAll('.mwnf-timeline__media-item')
+    expect(media).toHaveLength(2)
+    expect(media[0].find('img').attributes('alt')).toBe('A coin')
+    expect(media[1].attributes('href')).toBe('#/item/o1')
+    expect(media[1].find('.mwnf-timeline__media-caption').html()).toContain('<em>bowl</em>')
+
+    const action = wrapper.find('.mwnf-timeline__action')
+    expect(action.text()).toBe('View items from this period →')
+    expect(action.attributes('href')).toBe('#/results?begin=900&end=950')
+
+    // The second event carries none of caption/media/actions: none render for it.
+    const secondRow = wrapper.findAll('.mwnf-timeline__row')[1]
+    expect(secondRow.find('.mwnf-timeline__caption').exists()).toBe(false)
+    expect(secondRow.find('.mwnf-timeline__media').exists()).toBe(false)
+    expect(secondRow.find('.mwnf-timeline__actions').exists()).toBe(false)
+  })
+
+  it('hands the empty slot no events, and nothing without one', () => {
+    const withSlot = mount(TimelineEventList, { props: { events: [] }, slots: { empty: '<p class="none">Nothing</p>' }, ...globalWithI18n() })
+    expect(withSlot.find('.none').text()).toBe('Nothing')
+    expect(mount(TimelineEventList, { props: { events: [] }, ...globalWithI18n() }).find('.mwnf-timeline__empty').exists()).toBe(false)
+  })
+
+  it('hands #date, #caption, #media and #actions the event, replacing the default rendering', () => {
+    const wrapper = mount(TimelineEventList, {
+      props: { events: [events[0]] },
+      slots: {
+        date: '<template #date="{ event }"><span class="own-date">{{ event.date }}!</span></template>',
+        caption: '<template #caption="{ event }"><span class="own-caption">{{ event.caption }}?</span></template>',
+        media: '<template #media="{ event }"><span class="own-media">{{ event.media.length }} pictures</span></template>',
+        actions: '<template #actions="{ event }"><span class="own-actions">{{ event.actions.length }} links</span></template>',
+      },
+      ...globalWithI18n(),
+    })
+    expect(wrapper.find('.own-date').text()).toBe('900 AD – 950 AD!')
+    expect(wrapper.find('.own-caption').text()).toBe('Egypt?')
+    expect(wrapper.find('.own-media').text()).toBe('2 pictures')
+    expect(wrapper.find('.own-actions').text()).toBe('1 links')
+    expect(wrapper.find('.mwnf-timeline__media-item').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-timeline__action').exists()).toBe(false)
   })
 })

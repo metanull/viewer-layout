@@ -4,7 +4,9 @@ import { nextTick, ref } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { createI18n } from '@metanull/viewer-core/i18n'
 import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@metanull/viewer-core'
-import { CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, SearchFormView, TextPageView } from '../src/views/index.js'
+import {
+  CatalogueResultsView, EssayView, HomeView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
+} from '../src/views/index.js'
 import { layoutTexts } from './helpers.js'
 
 // The composed views render a real page out of the fixture package behind
@@ -63,6 +65,20 @@ const texts = {
   'site.further.reading': 'Further reading',
   'site.about.heading': 'About',
   'site.about.body': 'Information about this collection.',
+  'core.action.search': 'Search',
+  'timeline.form.allCountries': 'All Countries',
+  'timeline.form.selectCountry': 'Select a Country',
+  'timeline.form.startDate': 'Start Date',
+  'timeline.form.endDate': 'End Date',
+  'timeline.form.fromYearHint': 'e.g. 800',
+  'timeline.form.toYearHint': 'e.g. 1400',
+  'timeline.form.errorSelect': 'Please select a country, or a start and end date.',
+  'timeline.form.errorPeriod': 'Please select a valid time period (start must be before end).',
+  'timeline.nav.seeGallery': 'See Gallery',
+  'timeline.results.eventsFound': 'Events found',
+  'timeline.results.noResults': 'No results. Please use the drop-down fields above to start a new search.',
+  'catalogue.era.ad': 'AD',
+  'catalogue.era.bc': 'BC',
 }
 
 const COUNTRY_NAMES = { 'c-eg': 'Egypt', 'c-sy': 'Syria' }
@@ -84,6 +100,9 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
       { path: '/theme/:id', name: 'theme', component: { template: '<p>theme</p>' } },
       { path: '/search-results', name: 'search-results', component: { template: '<p>results</p>' } },
       { path: '/how-to-search', name: 'search-how-to', component: { template: '<p>how to</p>' } },
+      { path: '/timeline', name: 'timeline-entrance', component: { template: '<p>timeline entrance</p>' } },
+      { path: '/timeline/results', name: 'timeline-results', component: { template: '<p>timeline results</p>' } },
+      { path: '/gallery', name: 'timeline-gallery', component: { template: '<p>gallery</p>' } },
     ],
   })
   // The view reads its filters from the URL, so the URL is in place first —
@@ -97,10 +116,12 @@ async function mountView(component, { props = {}, slots = {}, route = '/' } = {}
 // What a website's router does before any of these views exists: the
 // entities the routes declare, and English, which every list reads.
 beforeAll(async () => {
-  await loadEntities(['objects', 'glossary', 'collections'])
+  await loadEntities(['objects', 'glossary', 'collections', 'timelines', 'timeline_events'])
   const pkg = useDataPackage()
   await pkg.loadTranslations('objects', 'en')
   await pkg.loadTranslations('glossary', 'en')
+  await pkg.loadTranslations('collections', 'en')
+  await pkg.loadTranslations('timeline_events', 'en')
 })
 
 describe('HomeView', () => {
@@ -887,10 +908,197 @@ describe('EssayView', () => {
 
 // The views are a promise to the websites' configurations: what is exported
 // from `/views` is what `config.views` names.
+describe('TimelineResultsView', () => {
+  // Fixture events (tests/fixtures/data-package/timeline_events.json):
+  // e1 tl-eg/c-eg 900–950, e2 tl-eg/c-eg 1200–open, e3 tl-sy/c-sy 1000–1100,
+  // e4 tl-theme-a/c-eg 1300–1350 (bound to the 'theme-a' collection),
+  // e5 tl-local (no country) 500–600, the narrative chronology's own event.
+  const trTimelineEvents = (id) => useDataPackage().tr('timeline_events', id, 'en')
+  const countrySpec = {
+    scope: 'country',
+    countryLabel: (id) => COUNTRY_NAMES[id] ?? id,
+    tr: trTimelineEvents,
+    controls: [
+      { key: 'country' },
+      { key: 'begin' },
+      { key: 'end' },
+    ],
+    pageSize: 2,
+  }
+
+  it('lists events chronologically, paged, with the summary and the country/date row', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, { props: { spec: countrySpec }, route: '/timeline/results' })
+    await settle(() => wrapper.findAll('.mwnf-timeline__row').length > 0)
+    // Local scope's e5 is excluded from the country merge; the rest sort by year_from.
+    const dates = wrapper.findAll('.mwnf-timeline__date').map((d) => d.text())
+    expect(dates).toEqual(['900 AD – 950 AD', '1000 AD – 1100 AD'])
+    expect(wrapper.findAll('.mwnf-timeline__caption').map((c) => c.text())).toEqual(['Egypt', 'Syria'])
+    expect(wrapper.find('.mwnf-timeline__description').html()).toContain('<em>dynasty</em>')
+    expect(wrapper.find('.mwnf-summary__count').text()).toBe('4')
+    expect(wrapper.find('.mwnf-pagination').exists()).toBe(true)
+  })
+
+  it('filters by country and period from the URL, under the overlap rule', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, {
+      props: { spec: countrySpec },
+      route: '/timeline/results?country=c-eg&begin=1000',
+    })
+    await settle(() => wrapper.findAll('.mwnf-timeline__row').length > 0)
+    // Egypt holds e1 (900–950, dropped: ends before 1000) and e2 (1200–open) and e4 (1300–1350).
+    expect(wrapper.findAll('.mwnf-timeline__date').map((d) => d.text())).toEqual(['1200 AD –', '1300 AD – 1350 AD'])
+  })
+
+  it('navigates a control choice through the panel, like the catalogue results view', async () => {
+    const { wrapper, router } = await mountView(TimelineResultsView, { props: { spec: countrySpec }, route: '/timeline/results' })
+    await settle(() => wrapper.findAll('.mwnf-timeline__row').length > 0)
+    await wrapper.find('.mwnf-facet__select').setValue('c-sy')
+    await wrapper.find('form').trigger('submit')
+    await settle(() => router.currentRoute.value.query.country === 'c-sy')
+    expect(router.currentRoute.value.query.country).toBe('c-sy')
+    await settle(() => wrapper.findAll('.mwnf-timeline__row').length === 1)
+    expect(wrapper.find('.mwnf-timeline__caption').text()).toBe('Syria')
+  })
+
+  it('shows the empty state when nothing matches, default or through the slot', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, {
+      props: { spec: countrySpec },
+      route: '/timeline/results?country=c-xx',
+    })
+    await settle(() => wrapper.text().includes('No results'))
+    expect(wrapper.find('.mwnf-timeline__rows').exists()).toBe(false)
+
+    const { wrapper: ownEmpty } = await mountView(TimelineResultsView, {
+      props: { spec: countrySpec },
+      slots: { empty: '<template #empty><p class="own-empty">Nothing here</p></template>' },
+      route: '/timeline/results?country=c-xx',
+    })
+    await settle(() => ownEmpty.find('.own-empty').exists())
+    expect(ownEmpty.find('.own-empty').text()).toBe('Nothing here')
+  })
+
+  it('shows the "See gallery" cross-link once the site says objects exist, and not otherwise', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, {
+      props: { spec: { ...countrySpec, gallery: { route: 'timeline-gallery', items: () => 3 } } },
+      route: '/timeline/results?country=c-eg',
+    })
+    await settle(() => wrapper.find('.mwnf-timeline__gallery').exists())
+    expect(wrapper.find('.mwnf-timeline__gallery').text()).toContain('See Gallery')
+    expect(wrapper.find('.mwnf-timeline__gallery').text()).toContain('3')
+    expect(wrapper.find('.mwnf-timeline__gallery').attributes('href')).toBe('/gallery?country=c-eg')
+
+    const { wrapper: hidden } = await mountView(TimelineResultsView, {
+      props: { spec: { ...countrySpec, gallery: { route: 'timeline-gallery', items: () => 0 } } },
+      route: '/timeline/results?country=c-eg',
+    })
+    await settle(() => hidden.findAll('.mwnf-timeline__row').length > 0)
+    expect(hidden.find('.mwnf-timeline__gallery').exists()).toBe(false)
+
+    const { wrapper: off } = await mountView(TimelineResultsView, { props: { spec: countrySpec }, route: '/timeline/results' })
+    await settle(() => off.findAll('.mwnf-timeline__row').length > 0)
+    expect(off.find('.mwnf-timeline__gallery').exists()).toBe(false)
+  })
+
+  it("filters Sharing History's collection axis, the Permanent Collection sentinel included", async () => {
+    const collectionSpec = {
+      scope: 'collection',
+      countryLabel: (id) => COUNTRY_NAMES[id] ?? id,
+      tr: trTimelineEvents,
+      collections: () => [
+        { value: '', label: 'All' },
+        { value: 'pc', label: 'Permanent Collection' },
+        { value: 'theme-a', label: 'Theme A' },
+      ],
+      controls: [{ key: 'collection', label: 'timeline.results.eventsFound' }],
+    }
+    const { wrapper: all } = await mountView(TimelineResultsView, { props: { spec: collectionSpec }, route: '/timeline/results' })
+    await settle(() => all.findAll('.mwnf-timeline__row').length > 0)
+    expect(all.findAll('.mwnf-timeline__row')).toHaveLength(4)
+
+    const { wrapper: pc } = await mountView(TimelineResultsView, {
+      props: { spec: collectionSpec },
+      route: '/timeline/results?collection=pc',
+    })
+    await settle(() => pc.findAll('.mwnf-timeline__row').length > 0)
+    expect(pc.findAll('.mwnf-timeline__row')).toHaveLength(3)
+
+    const { wrapper: themed } = await mountView(TimelineResultsView, {
+      props: { spec: collectionSpec },
+      route: '/timeline/results?collection=theme-a',
+    })
+    await settle(() => themed.findAll('.mwnf-timeline__row').length > 0)
+    expect(themed.findAll('.mwnf-timeline__row')).toHaveLength(1)
+    expect(themed.find('.mwnf-timeline__description').text()).toBe('A themed exhibition event.')
+  })
+
+  describe('entrance mode', () => {
+    const entranceSpec = {
+      scope: 'country',
+      countryLabel: (id) => COUNTRY_NAMES[id] ?? id,
+      tr: trTimelineEvents,
+      controls: [{ key: 'country' }, { key: 'begin' }, { key: 'end' }],
+      entrance: true,
+      route: 'timeline-results',
+    }
+
+    it('renders only the form, with no results and no pagination', async () => {
+      const { wrapper } = await mountView(TimelineResultsView, { props: { spec: entranceSpec }, route: '/timeline' })
+      expect(wrapper.find('.mwnf-timeline__filters').exists()).toBe(true)
+      expect(wrapper.find('.mwnf-timeline__rows').exists()).toBe(false)
+      expect(wrapper.find('.mwnf-pagination').exists()).toBe(false)
+      expect(wrapper.find('.mwnf-filter__button--apply').text()).toBe('Search')
+    })
+
+    it('rejects an empty search and an inverted period, without navigating', async () => {
+      const { wrapper, router } = await mountView(TimelineResultsView, { props: { spec: entranceSpec }, route: '/timeline' })
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.find('.mwnf-timeline__error').text()).toBe('Please select a country, or a start and end date.')
+      expect(router.currentRoute.value.name).toBe('timeline-entrance')
+
+      const numberInputs = wrapper.findAll('input[type="number"]')
+      await numberInputs[0].setValue('1400')
+      await numberInputs[1].setValue('900')
+      await wrapper.find('form').trigger('submit')
+      expect(wrapper.find('.mwnf-timeline__error').text()).toBe('Please select a valid time period (start must be before end).')
+      expect(router.currentRoute.value.name).toBe('timeline-entrance')
+    })
+
+    it('navigates to the target route with the query once the search is valid', async () => {
+      const { wrapper, router } = await mountView(TimelineResultsView, { props: { spec: entranceSpec }, route: '/timeline' })
+      await wrapper.find('.mwnf-facet__select').setValue('c-eg')
+      await wrapper.find('form').trigger('submit')
+      await settle(() => router.currentRoute.value.name === 'timeline-results')
+      expect(router.currentRoute.value.query).toEqual({ country: 'c-eg' })
+    })
+  })
+
+  it('hands #summary, #cross-link, #event, #before and #after the shared context', async () => {
+    const { wrapper } = await mountView(TimelineResultsView, {
+      props: { spec: { ...countrySpec, gallery: { route: 'timeline-gallery', items: () => 1 } } },
+      slots: {
+        before: '<p class="own-before">Before</p>',
+        summary: '<template #summary="{ pageInfo }"><p class="own-summary">{{ pageInfo.total }} found</p></template>',
+        'cross-link': '<template #cross-link="{ gallery }"><span class="own-cross-link">{{ gallery.count }} objects</span></template>',
+        event: '<template #event="{ events }"><ul class="own-events"><li v-for="e in events" :key="e.id">{{ e.date }}</li></ul></template>',
+        after: '<p class="own-after">After</p>',
+      },
+      route: '/timeline/results?country=c-eg',
+    })
+    await settle(() => wrapper.find('.own-events').exists())
+    expect(wrapper.find('.own-before').exists()).toBe(true)
+    expect(wrapper.find('.own-summary').text()).toBe('3 found')
+    expect(wrapper.find('.own-cross-link').text()).toBe('1 objects')
+    expect(wrapper.find('.own-events').findAll('li')).toHaveLength(3)
+    expect(wrapper.find('.mwnf-timeline__rows').exists()).toBe(false)
+    expect(wrapper.find('.own-after').exists()).toBe(true)
+  })
+})
+
 describe('the views entry point', () => {
-  it('exports the five views and no shell', async () => {
+  it('exports the seven views and no shell', async () => {
     const entry = await import('../src/views/index.js')
-    expect(Object.keys(entry).sort()).toEqual(['CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'RecordView', 'SearchFormView', 'TextPageView'])
+    expect(Object.keys(entry).sort()).toEqual([
+      'CatalogueResultsView', 'EssayView', 'HomeView', 'LinkListView', 'RecordView', 'SearchFormView', 'TextPageView', 'TimelineResultsView',
+    ])
     vi.restoreAllMocks()
   })
 })
