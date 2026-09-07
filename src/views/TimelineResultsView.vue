@@ -150,8 +150,10 @@ const events = computed(() => {
 })
 
 // Compute year range from loaded events for bucketed controls.
+// The range is the data's span, not the filtered event list: entrance's
+// rightly-empty list should not suppress the bucketed options.
 const eventYearRange = computed(() => {
-  const allEvents = isEntrance.value ? [] : timeline.findEvents({
+  const allEvents = timeline.findEvents({
     country: undefined,
     collection: undefined,
   })

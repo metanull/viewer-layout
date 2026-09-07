@@ -1295,6 +1295,31 @@ describe('TimelineResultsView', () => {
       await settle(() => router.currentRoute.value.name === 'timeline-results')
       expect(router.currentRoute.value.query).toEqual({ country: 'c-eg' })
     })
+
+    it('entrance offers bucketed year selects with the full data range, not the (empty) entrance list', async () => {
+      const { wrapper } = await mountView(TimelineResultsView, {
+        props: {
+          spec: {
+            ...entranceSpec,
+            controls: [
+              { key: 'country' },
+              { key: 'begin', options: (ctx) => Number.isFinite(ctx.years.min) ? [{ value: String(ctx.years.min), label: 'x' }] : [] },
+              { key: 'end' },
+            ],
+          },
+        },
+        route: '/timeline',
+      })
+      await settle(() => wrapper.findAll('.mwnf-facet__select').length >= 1)
+      // The `begin` control's options function receives the year range and renders it.
+      // Before the fix, ctx.years.min is null (entrance mode short-circuits the range),
+      // so the select has no options beyond the placeholder.
+      // After the fix, ctx.years.min is the data's span (900), so it renders the option.
+      const selects = wrapper.findAll('.mwnf-facet__select')
+      const beginSelect = selects[1]
+      const beginOptions = beginSelect.findAll('option')
+      expect(beginOptions.length).toBeGreaterThan(1)
+    })
   })
 
   it('begin/end controls with options render a FacetSelect; without options, a number input', async () => {
