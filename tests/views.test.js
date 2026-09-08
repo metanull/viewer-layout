@@ -942,8 +942,11 @@ describe('EssayView', () => {
     // `useCollectionTree()` returns); `collectionTreeFromThemes` itself is
     // the pure, non-reactive indexer, so its static result is wrapped the
     // same way a site's own `useCollectionTree({ source: 'themes', ... })`
-    // would be.
-    const plainTree = collectionTreeFromThemes([
+    // would be. `collectionTreeFromThemes` (viewer-core 1.12.0+) now names
+    // its own default entity ('themes') on the tree it returns, so its
+    // `entity` is dropped here to still stand for a tree genuinely carrying
+    // none of its own — a site's pre-1.12.0 build, say.
+    const { entity: _themesTreeEntity, ...plainTree } = collectionTreeFromThemes([
       { id: '1', display_order: 1, internal_name: 'First (fallback name)' },
       { id: '2', display_order: 2, internal_name: 'Second (fallback name)' },
     ])
