@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { flushPromises, mount } from '@vue/test-utils'
 import { createMemoryHistory, createRouter } from 'vue-router'
 import { SiteShell } from '../src/components/index.js'
-import { globalWithI18n, layoutTexts } from './helpers.js'
+import { globalWithI18n, layoutTexts, withSiteRights } from './helpers.js'
 
 const texts = {
   ...layoutTexts,
@@ -136,5 +136,27 @@ describe('SiteShell', () => {
     })
     expect(wrapper.find('.mwnf-banner__image').attributes('src')).toBe('own-banner.jpg')
     expect(wrapper.find('.mwnf-footer__text').text()).toBe('© Own footer')
+  })
+
+  it('renders no attribution in the footer without a rights-holder in the loaded package', async () => {
+    const wrapper = await mountShell({ props: { config: { navigation }, footerText: '© Own footer' } })
+    expect(wrapper.find('.mwnf-footer__attribution').exists()).toBe(false)
+    expect(wrapper.find('.mwnf-footer__text').text()).toBe('© Own footer')
+  })
+
+  it('renders the attribution and the terms-of-use link once the loaded package names a rights holder, footerText staying alongside', async () => {
+    const restore = withSiteRights()
+    try {
+      const wrapper = await mountShell({ props: { config: { navigation }, footerText: '© Own footer' } })
+      const attribution = wrapper.find('.mwnf-footer__attribution')
+      expect(attribution.find('.mwnf-footer__attribution-label').text()).toBe('Rights holder')
+      expect(attribution.text()).toContain('Images © Fixture Museum.')
+      const terms = attribution.find('.mwnf-footer__terms')
+      expect(terms.text()).toBe('Terms of use')
+      expect(terms.attributes('href')).toBe('https://example.org/terms')
+      expect(wrapper.find('.mwnf-footer__text').text()).toBe('© Own footer')
+    } finally {
+      restore()
+    }
   })
 })

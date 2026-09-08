@@ -766,3 +766,16 @@
 .mwnf-footer__text {
   margin: 0;
 }
+
+.mwnf-footer__attribution {
+  margin: 0;
+}
+
+.mwnf-footer__attribution-label {
+  font-weight: var(--mwnf-weight-heading, 700);
+  padding-inline-end: var(--mwnf-footer-attribution-gap, 0.25rem);
+}
+
+.mwnf-footer__terms {
+  color: var(--mwnf-footer-terms-color, inherit);
+}

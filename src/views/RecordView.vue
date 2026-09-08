@@ -1,8 +1,9 @@
 <script setup>
 import { computed, useSlots } from 'vue'
+import { useRoute } from 'vue-router'
 import {
   NotFoundView, byId, citation, entityRef, languageLabels, projectName, renderBlock, renderInline,
-  renderPlain, sheetRows, useDataPackage, useGlossaryPopup, useI18n, useRecordSheet, useRelatedRecords,
+  renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useRecordSheet, useRelatedRecords,
 } from '@metanull/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import MediaGallery from '../content/MediaGallery.vue'
@@ -12,6 +13,7 @@ import RecordSheet from '../content/RecordSheet.vue'
 import RelatedRecords from '../content/RelatedRecords.vue'
 import SheetSection from '../content/SheetSection.vue'
 import SmartLink from '../content/SmartLink.vue'
+import SourceCredit from '../content/SourceCredit.vue'
 
 // The record page, composed. The engine is viewer-core's — the record's
 // language and loads, the glossary terms and the click on one, the field
@@ -30,7 +32,7 @@ import SmartLink from '../content/SmartLink.vue'
 //     mediaVariant: '' | 'row',
 //     credits: [{ field: 'author', label: 'sheet.field.preparedBy' }, …],
 //     workingNumber: 'mwnf_reference',
-//     citation: { project: 'ISL' | (record, ctx) => string, permalink: true | false } | false,
+//     citation: { project: 'ISL' | (record, ctx) => string, permalink: true | false | string } | false,
 //     related: { variant: 'list' | 'grid', heading: 'record.related.items', record: (entry, ctx) => row } | false,
 //     back: { label: 'record.action.backToResults', to | href },
 //     title: (ctx) => inline HTML,                     // default: the record's name
@@ -38,13 +40,15 @@ import SmartLink from '../content/SmartLink.vue'
 //
 // `fields` and `sections` may be functions of the context (a monument and an
 // object read different fields on the standalone sites). Slots — `header`,
-// `before-sheet`, `after-sheet`, `aside`, `related`, `after` — receive the
-// context `{ record, text, language, languages, select, dir, glossary,
-// ready, attribution, t, tr }` (`languages` and `select` so a `header` of the
-// site's own can still offer the record's languages); `related` also receives
-// `records` (the rows the spec made) and `outside` (the related records the
-// package does not carry), so a website can surround the block with its own;
-// a slot named after a `custom` or `link` row's key reaches the sheet.
+// `before-sheet`, `after-sheet`, `aside`, `source`, `related`, `after` —
+// receive the context `{ record, text, language, languages, select, dir,
+// glossary, ready, attribution, t, tr }` (`languages` and `select` so a
+// `header` of the site's own can still offer the record's languages);
+// `related` also receives `records` (the rows the spec made) and `outside`
+// (the related records the package does not carry), so a website can
+// surround the block with its own; a slot named after a `custom` or `link`
+// row's key reaches the sheet. `source`, under the citation, defaults to
+// `SourceCredit` — nothing unless the website declares `site.origin`.
 // A website whose page is not this shape registers its own component instead.
 
 const props = defineProps({
@@ -57,6 +61,7 @@ const props = defineProps({
 const { t, locale } = useI18n()
 const pkg = useDataPackage()
 const slots = useSlots()
+const route = useRoute()
 
 const entity = props.spec.entity ?? props.entity
 const spec = computed(() => props.spec)
@@ -155,7 +160,16 @@ const citationText = computed(() => {
   const s = spec.value.citation
   if (!record.value || s === false) return ''
   const project = typeof s?.project === 'function' ? s.project(record.value, ctx.value) : projectName(s?.project ?? record.value.project_key, t)
-  const permalink = s?.permalink === false ? undefined : `${window.location.origin}${window.location.pathname}${window.location.hash}`
+  // `permalink: false` keeps disabling it; a string keeps winning; otherwise
+  // (unset, or `true`) the address is the site's own — `sourceUrl` reads the
+  // declared `site.origin`, so a site that has not declared one gets no
+  // address rather than a browser-local guess that resolves nowhere once
+  // copied out of the app.
+  const permalink = s?.permalink === false
+    ? undefined
+    : typeof s?.permalink === 'string'
+      ? s.permalink
+      : sourceUrl(route) ?? undefined
   return citation({
     author: text.value.author ?? attribution.value.author,
     name: text.value.name ?? record.value.internal_name ?? '',
@@ -188,7 +202,7 @@ function defaultRelated({ record: other, justification }) {
 }
 
 // The slots that reach the sheet: every slot that is not this view's own.
-const OWN_SLOTS = new Set(['header', 'before-sheet', 'after-sheet', 'aside', 'related', 'after', 'default'])
+const OWN_SLOTS = new Set(['header', 'before-sheet', 'after-sheet', 'aside', 'source', 'related', 'after', 'default'])
 const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.has(name)))
 </script>
 
@@ -232,6 +246,10 @@ const rowSlots = computed(() => Object.keys(slots).filter((name) => !OWN_SLOTS.h
           :citation="citationText"
           :citation-heading="spec.citation?.heading ? t(spec.citation.heading) : ''"
         />
+
+        <slot name="source" v-bind="ctx">
+          <SourceCredit />
+        </slot>
 
         <slot name="related" v-bind="{ ...ctx, records: relatedRows, outside: related.outside }">
           <RelatedRecords

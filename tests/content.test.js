@@ -3,6 +3,7 @@ import { resolve } from 'node:path'
 import { beforeAll, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
+import { createMemoryHistory, createRouter } from 'vue-router'
 import { loadEntities, useDataPackage } from '@metanull/viewer-core'
 import {
   BackLink,
@@ -28,9 +29,10 @@ import {
   SectionCards,
   SheetSection,
   SiblingGalleries,
+  SourceCredit,
   TimelineEventList,
 } from '../src/content/index.js'
-import { globalWithI18n } from './helpers.js'
+import { globalWithI18n, withSiteRights } from './helpers.js'
 
 const records = [
   { id: 'a', image: 'a.jpg', imageAlt: 'A', name: 'Glazed <em>bowl</em>', meta: ['Egypt', '900–950'], badge: 'object', href: '#/item/a' },
@@ -612,6 +614,37 @@ describe('BackLink', () => {
       ...globalWithI18n(),
     })
     expect(wrapper.text()).toContain('back')
+  })
+})
+
+describe('SourceCredit', () => {
+  async function mountAt(route = '/objects/o1') {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/objects/:id', name: 'objects-detail', component: { template: '<p>detail</p>' } }],
+    })
+    await router.push(route)
+    await router.isReady()
+    const { global } = globalWithI18n()
+    return mount(SourceCredit, { global: { ...global, plugins: [...global.plugins, router] } })
+  }
+
+  it('renders nothing when the site declares no origin', async () => {
+    const wrapper = await mountAt()
+    expect(wrapper.find('.mwnf-source-credit').exists()).toBe(false)
+  })
+
+  it('renders the labelled address once the site declares its origin', async () => {
+    const restore = withSiteRights()
+    try {
+      const wrapper = await mountAt('/objects/o1')
+      expect(wrapper.find('.mwnf-source-credit__label').text()).toBe('Source')
+      const link = wrapper.find('.mwnf-source-credit a')
+      expect(link.attributes('href')).toBe('https://example.org/#/objects/o1')
+      expect(link.text()).toBe('https://example.org/#/objects/o1')
+    } finally {
+      restore()
+    }
   })
 })
 

@@ -62,6 +62,13 @@ defineProps({
   // Footer
   footerText: { type: String, default: '' },
   footerLinks: { type: Array, default: () => [] },
+  // The rights-holder attribution — set only by `SiteShell` when the loaded
+  // package declares a rights block; `footerText` alone still renders the
+  // same as before either way.
+  footerAttributionLabel: { type: String, default: '' },
+  footerAttributionText: { type: String, default: '' },
+  footerTermsHref: { type: String, default: '' },
+  footerTermsLabel: { type: String, default: '' },
 })
 
 const emit = defineEmits(['update:language', 'search'])
@@ -133,7 +140,14 @@ const { t } = useI18n()
     <AppSponsors :title="sponsorsTitle" :sponsors="sponsors" :groups="sponsorGroups">
       <template v-if="$slots.sponsors" #default><slot name="sponsors" /></template>
     </AppSponsors>
-    <AppFooter :text="footerText" :links="footerLinks">
+    <AppFooter
+      :text="footerText"
+      :links="footerLinks"
+      :attribution-label="footerAttributionLabel"
+      :attribution-text="footerAttributionText"
+      :terms-href="footerTermsHref"
+      :terms-label="footerTermsLabel"
+    >
       <template v-if="$slots.footer" #default><slot name="footer" /></template>
     </AppFooter>
   </div>
