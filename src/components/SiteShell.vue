@@ -64,6 +64,14 @@
 // package's `manifest.rights`, so a package built before that block existed
 // leaves `footerText` as the only thing in the footer, same as today.
 import { computed } from 'vue'
+
+defineOptions({
+  // Disable automatic attribute fallthrough so the root's raw navigation
+  // attributes (config.navigation.headerLinks/footerLinks with entry name
+  // labels) don't reach PageShell untranslated; only our computed props
+  // (translated via t()) get through.
+  inheritAttrs: false,
+})
 import { useI18n, useSection, useSiteConfig, useSiteRights } from '@metanull/viewer-core'
 import { useRouter } from 'vue-router'
 import PageShell from '../PageShell.vue'
@@ -213,6 +221,9 @@ const shellProps = computed(() => {
 </script>
 
 <template>
+  <!-- Pass $attrs first, then computed props override them: the root spreads
+       config.navigation onto this component, and translated links must reach
+       PageShell, not raw entry names. Later bindings win in the merge. -->
   <PageShell v-bind="{ ...$attrs, ...shellProps }" @search="onSearch">
     <template v-if="$slots.header" #header><slot name="header" /></template>
     <template v-if="$slots.brand" #header-brand><slot name="brand" /></template>

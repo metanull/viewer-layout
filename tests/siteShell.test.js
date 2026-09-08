@@ -159,4 +159,34 @@ describe('SiteShell', () => {
       restore()
     }
   })
+
+  it('renders translated header and footer links even when the root spreads raw navigation attributes', async () => {
+    // The root spreads config.navigation fields as attributes; when headerLinks
+    // and footerLinks carry raw entry names (untranslated), the computed props
+    // must win and render translated text instead.
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', name: 'home', component: { template: '<p>home</p>' }, meta: { section: 'home' } },
+        { path: '/collection', name: 'collection', component: { template: '<p>collection</p>' }, meta: { section: 'collection' } },
+      ],
+    })
+    await router.push('/')
+    await router.isReady()
+    const { global } = globalWithI18n({ messages: { en: texts } })
+    const wrapper = mount(SiteShell, {
+      props: {
+        config: { navigation },
+      },
+      // Simulate the root spreading raw headerLinks and footerLinks attributes
+      attrs: {
+        headerLinks: ['site.nav.home'],
+        footerLinks: ['site.footer.about'],
+      },
+      global: { ...global, plugins: [...global.plugins, router] },
+    })
+    // The rendered links must show translated text, not the raw entry names
+    expect(wrapper.find('.mwnf-header__link').text()).toBe('Home')
+    expect(wrapper.find('.mwnf-footer__link').text()).toBe('About MWNF')
+  })
 })
