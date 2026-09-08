@@ -2,7 +2,7 @@
 
 ## 2.10.0
 
-- (J.1 — `SiteShell`, metanull/viewer-layout#42: replaced by that lane)
+- `SiteShell` (#42): a config-driven `PageShell` — `config.navigation`, `config.logos` and `config.banner` (through `useSiteConfig()`/`useSection()`) replace the menu, header/footer links, search submit, banner caption and section-title map, and the exhibitions' logo bucketing that seven site shells rebuilt by hand. Exported from `@metanull/viewer-layout/components`, not the package root, for the same reason the composed views are (it reads `@metanull/viewer-core` itself).
 
 - (J.2 — content classes, metanull/viewer-layout#43: replaced by that lane)
 

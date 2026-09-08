@@ -21,6 +21,7 @@
     ".": "./dist/index.js",
     "./content": "./dist/content.js",
     "./views": "./dist/views.js",
+    "./components": "./dist/components.js",
     "./style.css": "./dist/viewer-layout.css",
     "./tokens.reference.css": "./src/tokens.reference.css"
   },

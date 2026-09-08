@@ -103,6 +103,81 @@ new window. `nav-links` also takes `active: true`, marked with
 `aria-current="page"`. Links are plain `href`s: with viewer-core's hash
 router, `#/items` navigates without any router coupling here.
 
+## Site shell
+
+`SiteShell` composes `PageShell` from a website's `dataset.config.js`
+instead of a shell the site writes by hand — the menu, the header/footer
+link lists, the search submit, the banner caption and section-title map,
+and (an exhibition's) logos bucketed into header logos and sponsor groups.
+It reads `config.navigation`, `config.logos` and `config.banner` through
+`@metanull/viewer-core`'s `useSiteConfig()`, and the active section through
+its `useSection()`.
+
+It reads `@metanull/viewer-core` itself, the same reason the composed views
+do (see below): it is exported from `@metanull/viewer-layout/components`,
+not from the package root, and a website using it lists
+`@metanull/viewer-layout` next to `@metanull/viewer-core` in its Vitest
+`server.deps.inline`.
+
+```js
+import { SiteShell } from '@metanull/viewer-layout/components'
+```
+
+```vue
+<SiteShell footer-text="© MWNF 2004–2026">
+  <template #brand><span class="mark">MWNF</span></template>
+  <router-view />
+</SiteShell>
+```
+
+```js
+// dataset.config.js
+export default {
+  navigation: {
+    languages: ['en', 'fr'],
+    links: [
+      { section: 'home', label: 'core.nav.home', to: { name: 'home' } },
+      { section: 'collection', label: 'gallery.nav.collection', to: { name: 'collection' } },
+      { label: 'gallery.nav.myCollection', href: mwnfLinks.myCollection, external: true },
+    ],
+    headerLinks: [{ label: 'core.nav.home', to: { name: 'home' } }],
+    footerLinks: [{ label: 'gallery.footer.aboutMwnf', href: mwnfLinks.about, external: true }],
+    sectionTitles: { collection: 'gallery.section.collection', partners: 'gallery.section.partners' },
+    search: { route: 'search-results', key: 'q', placeholder: 'gallery.search.placeholder', submitLabel: 'catalogue.search.submit', empty: 'all-objects' },
+  },
+  banner: {
+    variant: ({ section }) => (section === 'home' ? 'strip' : 'section'),
+  },
+}
+```
+
+A field the config leaves out stays whatever the caller passed `PageShell`
+directly through `$attrs` — a page's own `banner-image`/`banner-caption`,
+say, which only the loaded record knows.
+
+| Part | Shape | Notes |
+| --- | --- | --- |
+| `config.navigation.links` | `[{ section, label, to \| href, external?, when? }]` | `label` is an entry name, resolved through `t()`; `to` a route name/location resolved through the router, `href` used as-is; the entry whose `section` equals `useSection()` gets `active: true`; `when(ctx)` (`ctx` is `{ section, locale }`) optionally hides the entry — one whose visibility depends on loaded data closes over its own composable's ref instead, as the DXA shells already did for "hasTimeline" |
+| `config.navigation.headerLinks` / `.footerLinks` | `[{ label, to \| href, external? }]` | no `when`, no `active` |
+| `config.navigation.sectionTitles` | `{ [section]: entryName }` | the banner title over a section page, when `config.banner.title` sets none |
+| `config.navigation.search` | `{ route, key, placeholder, submitLabel, empty }` | `key` defaults to `'q'`; a submit navigates to `route` with `{ [key]: term \|\| empty }` — `empty` is legacy's sentinel for a blank submit (`'all-objects'`) |
+| `config.logos` | `{ header(logo) => boolean, sponsorGroups(logos, t) => [{ title, sponsors }], headerTitle: entryName }` | a predicate and a mapper over the `logos` prop (below); `headerTitle` shows only once `header()` kept at least one |
+| `config.banner` | `{ variant, image, imageAlt, caption, captionLabel, title, subtitle, headline, enter, strapline }` | each value a string (an entry name, resolved through `t()`) or a function of `{ section, locale, t }`; optional field by field |
+
+The `logos` prop is the page's own data (an exhibition's logo list) — not
+something a static config can declare — already in `PageShell`'s logo
+shape (`{ image, alt, href? }`) plus whatever extra field (a legacy
+`category_id`, a `visible` flag) the site's own `header`/`sponsorGroups`
+bucket by; turning legacy's `image_url`/`labels` into that shape is the
+site's own job, the same as it already is for `AppSponsors`' shape.
+
+Slots: `#brand` is the header lockup — `PageShell`'s `#header-brand`, so the
+computed header links/search/logos still render beside it, unlike a full
+`#header` override; `#banner` replaces `AppBanner`'s content; `#notice`
+renders before the routed content, `#after-content` after it (a dismissible
+sponsor notice next to the router-view, say); `#header`, `#navigation`,
+`#hyperlinks`, `#sponsors`, `#footer` pass straight through to `PageShell`.
+
 ## Sections (standalone use)
 
 All sections are also exported individually.
