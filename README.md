@@ -196,6 +196,23 @@ every bundle of `@metanull/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
 (2.3.0); `DynastyPopout` reads `record.dynasty.heading` (2.3.0) and
 `sheet.field.alsoKnownAs`, `.area`, `.history`. Every other text is a prop.
 
+## Content classes
+
+Building blocks copied from the legacy sites' own `site.css` files, available as utility classes for websites to assemble search entrances, list pages and custom layouts:
+
+| Class | Purpose |
+|---|---|
+| `.mwnf-panel` | White content box; a container for grouped content with border and padding |
+| `.mwnf-heading` | Section heading with underline; variants `.mwnf-heading--page` (large page title, no underline) and `.mwnf-heading--label` (large label) |
+| `.mwnf-form-table` | Table layout for label/value pairs in search and filter forms; header cells left-aligned, data cells right-padded |
+| `.mwnf-button` | Styled button for primary actions; variant `.mwnf-button--secondary` for secondary/destructive actions |
+| `.mwnf-select` | Legacy-styled select element with fixed height and padding |
+| `.mwnf-back-bar` | Container for back-link buttons with standard padding and hover styling |
+| `.mwnf-chip` | Inline project/source chip; variants `.mwnf-chip--<family>` where family is one of `ISLandEPM`, `DBA`, `AWE`, `DCA`, `DGA`, `EXH`, or `Galleries`, each with its own project-colour token |
+| `.mwnf-popout` | Detail box for sheet data; used in record detail popups and panels |
+| `.mwnf-loader` | Loading/spinner message container with centered text and standard padding |
+| `.mwnf-link` | Link text colour for DXA sites; not a interactive element wrapper, a colour utility |
+
 ## Composed views
 
 Nine whole pages, made of the content components on viewer-core's

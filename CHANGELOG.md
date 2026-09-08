@@ -4,7 +4,7 @@
 
 - (J.1 — `SiteShell`, metanull/viewer-layout#42: replaced by that lane)
 
-- (J.2 — content classes, metanull/viewer-layout#43: replaced by that lane)
+- Content classes (#43): `.mwnf-panel`, `.mwnf-heading` with `--page` and `--label` variants, `.mwnf-form-table`, `.mwnf-button` / `--secondary`, `.mwnf-select`, `.mwnf-back-bar`, `.mwnf-chip` with `--<family>` variants reading project-colour tokens, `.mwnf-popout`, `.mwnf-loader` and `.mwnf-link` — shared utility classes extracted from the legacy sites' own CSS, behind a complete token set for customization per website.
 
 - (J.3 — `PartnerMap` defaults, metanull/viewer-layout#67: replaced by that lane)
 
