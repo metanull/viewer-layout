@@ -8,6 +8,7 @@ import GlossaryPopover from '../content/GlossaryPopover.vue'
 import MediaGallery from '../content/MediaGallery.vue'
 import RecordGrid from '../content/RecordGrid.vue'
 import SmartLink from '../content/SmartLink.vue'
+import SourceCredit from '../content/SourceCredit.vue'
 
 // The essay page, composed: seven sites' ExhibitionTheme / ArtIntroTheme /
 // ExhibitionChapter / HistoricalBackgroundCountry / DXA's Theme, each a
@@ -71,8 +72,11 @@ import SmartLink from '../content/SmartLink.vue'
 // `after-body`, `panel`, `thumbnails`, `aside`, `justifications`,
 // `navigation`, `after` — each receive `{ node, text, language, tree, items,
 // selected, select, selectedVariant, selectVariant, breadcrumb, previous,
-// next, t, tr }`. A website whose page is not this shape writes its own
-// component on the same content components.
+// next, t, tr }`. `after`'s default content is `SourceCredit` — nothing
+// unless the website declares `site.origin`; a website's own `#after`
+// content replaces it, the same rule every other slot here follows. A
+// website whose page is not this shape writes its own component on the same
+// content components.
 //
 // Not every one of the seven pages fits the same slot: islamicart/baroqueart's
 // multi-image "detail" selector is `panel.variants` — each variant carries
@@ -537,7 +541,9 @@ const showNavigation = computed(
       </div>
     </div>
 
-    <slot name="after" v-bind="ctx" />
+    <slot name="after" v-bind="ctx">
+      <SourceCredit />
+    </slot>
 
     <GlossaryPopover :term="active" :html="activeHtml" :dir="dir" @close="close" />
   </article>

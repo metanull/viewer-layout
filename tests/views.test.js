@@ -7,7 +7,7 @@ import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage 
 import {
   CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
 } from '../src/views/index.js'
-import { layoutTexts } from './helpers.js'
+import { layoutTexts, withSiteRights } from './helpers.js'
 
 // The composed views render a real page out of the fixture package behind
 // `@inventory-data`: an `objects` entity with dates, a country, tags and
@@ -363,6 +363,64 @@ describe('RecordView', () => {
     const { wrapper } = await mountView(RecordView, { props: { spec, id: 'nope' }, route: '/objects/nope' })
     await nextTick()
     expect(wrapper.find('.vc-not-found').exists()).toBe(true)
+  })
+
+  it('renders no source address or credit line without a declared site origin', async () => {
+    const { wrapper } = await mountView(RecordView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
+    await settle(() => wrapper.text().includes('Prepared by'))
+    expect(wrapper.find('.mwnf-credits__citation').text()).not.toContain('https://')
+    expect(wrapper.find('.mwnf-source-credit').exists()).toBe(false)
+  })
+
+  it("reads the citation's permalink and the source credit from the site's declared origin", async () => {
+    const restore = withSiteRights()
+    try {
+      const { wrapper } = await mountView(RecordView, { props: { spec, id: 'o1' }, route: '/objects/o1' })
+      await settle(() => wrapper.text().includes('Prepared by'))
+      expect(wrapper.find('.mwnf-credits__citation').text()).toContain('https://example.org/#/objects/o1')
+      const source = wrapper.find('.mwnf-source-credit')
+      expect(source.find('.mwnf-source-credit__label').text()).toBe('Source')
+      expect(source.find('a').attributes('href')).toBe('https://example.org/#/objects/o1')
+    } finally {
+      restore()
+    }
+  })
+
+  it("keeps an explicit citation.permalink string, and drops it entirely at 'false' — the site's origin never overrides either", async () => {
+    const restore = withSiteRights()
+    try {
+      const { wrapper: withString } = await mountView(RecordView, {
+        props: { spec: { ...spec, citation: { project: 'ISL', permalink: 'https://own.example/fixed' } }, id: 'o1' },
+        route: '/objects/o1',
+      })
+      await settle(() => withString.text().includes('Prepared by'))
+      expect(withString.find('.mwnf-credits__citation').text()).toContain('https://own.example/fixed')
+
+      const { wrapper: withFalse } = await mountView(RecordView, {
+        props: { spec: { ...spec, citation: { project: 'ISL', permalink: false } }, id: 'o1' },
+        route: '/objects/o1',
+      })
+      await settle(() => withFalse.text().includes('Prepared by'))
+      expect(withFalse.find('.mwnf-credits__citation').text()).not.toContain('https://')
+    } finally {
+      restore()
+    }
+  })
+
+  it('lets a #source slot of its own replace the default SourceCredit', async () => {
+    const restore = withSiteRights()
+    try {
+      const { wrapper } = await mountView(RecordView, {
+        props: { spec, id: 'o1' },
+        slots: { source: '<template #source><p class="own-source">mine</p></template>' },
+        route: '/objects/o1',
+      })
+      await settle(() => wrapper.text().includes('Prepared by'))
+      expect(wrapper.find('.own-source').text()).toBe('mine')
+      expect(wrapper.find('.mwnf-source-credit').exists()).toBe(false)
+    } finally {
+      restore()
+    }
   })
 })
 
@@ -924,6 +982,38 @@ describe('EssayView', () => {
     await settle(() => keepsWrapper.find('.mwnf-essay__quote').exists())
     expect(keepsWrapper.find('.mwnf-essay__panel').exists()).toBe(true)
     expect(keepsWrapper.find('.mwnf-essay__nav').exists()).toBe(false)
+  })
+
+  it('renders no source credit without a declared site origin, and the address once one is declared', async () => {
+    const { wrapper: withoutOrigin } = await mountView(EssayView, { props: { spec, id: 'page-a1' }, route: '/theme/page-a1' })
+    await settle(() => withoutOrigin.find('.mwnf-essay__quote').exists())
+    expect(withoutOrigin.find('.mwnf-source-credit').exists()).toBe(false)
+
+    const restore = withSiteRights()
+    try {
+      const { wrapper } = await mountView(EssayView, { props: { spec, id: 'page-a1' }, route: '/theme/page-a1' })
+      await settle(() => wrapper.find('.mwnf-source-credit').exists())
+      expect(wrapper.find('.mwnf-source-credit__label').text()).toBe('Source')
+      expect(wrapper.find('.mwnf-source-credit a').attributes('href')).toBe('https://example.org/#/theme/page-a1')
+    } finally {
+      restore()
+    }
+  })
+
+  it("lets an #after slot of its own replace the default SourceCredit", async () => {
+    const restore = withSiteRights()
+    try {
+      const { wrapper } = await mountView(EssayView, {
+        props: { spec, id: 'page-a1' },
+        slots: { after: '<template #after><p class="own-after">mine</p></template>' },
+        route: '/theme/page-a1',
+      })
+      await settle(() => wrapper.find('.own-after').exists())
+      expect(wrapper.find('.own-after').text()).toBe('mine')
+      expect(wrapper.find('.mwnf-source-credit').exists()).toBe(false)
+    } finally {
+      restore()
+    }
   })
 })
 

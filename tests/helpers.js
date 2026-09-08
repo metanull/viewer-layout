@@ -1,3 +1,4 @@
+import { useDataPackage, useSiteConfig } from '@metanull/viewer-core'
 import { createI18n } from '@metanull/viewer-core/i18n'
 
 // The layout has no texts of its own any more: every `layout.*` entry comes
@@ -25,6 +26,13 @@ export const layoutTexts = {
   'record.action.hideShortDescription': 'Hide short description',
   'record.action.viewShortDescription': 'View short description',
   'record.citation.heading': 'Citation',
+  // The source credit and the footer attribution (viewer-i18n 2.5.0's
+  // `record.source` namespace, and `core.footer.legalNotice` — the address
+  // `useSiteRights()`'s `termsUrl` falls back to without a rights block).
+  'record.source.label': 'Source',
+  'record.source.termsOfUse': 'Terms of use',
+  'record.source.rightsHolder': 'Rights holder',
+  'core.footer.legalNotice': 'Legal notice',
   'record.glossary.close': 'Close',
   'record.glossary.heading': 'Glossary',
   'record.glossary.tool': 'Glossary tool',
@@ -50,4 +58,29 @@ export function globalWithI18n(options = {}) {
     messages: { en: layoutTexts, ...options.messages },
   })
   return { global: { plugins: [i18n] } }
+}
+
+/**
+ * `site.origin` and the loaded fixture package's `manifest.rights` are the
+ * two facts `sourceUrl()`/`useSiteRights()` read — and both live in module
+ * state a whole test file shares (`useSiteConfig()`'s `current`,
+ * `useDataPackage()`'s `manifest`), the same fixture every other test in the
+ * file mounts against. Call this to set both for one test, and call the
+ * function it returns — in a `finally`, so a failed assertion still runs it
+ * — to put the fixture back the way every other test expects to find it.
+ */
+export function withSiteRights({
+  origin = 'https://example.org',
+  rights = { rights_holder: 'Fixture Museum', terms_url: 'https://example.org/terms', attribution: 'Images © Fixture Museum.' },
+} = {}) {
+  const config = useSiteConfig()
+  const pkg = useDataPackage()
+  const previousSite = config.site
+  const previousRights = pkg.manifest.rights
+  config.site = { ...(config.site ?? {}), origin }
+  pkg.manifest.rights = rights
+  return () => {
+    config.site = previousSite
+    pkg.manifest.rights = previousRights
+  }
 }

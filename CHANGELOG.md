@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.11.0
+
+Wave K of epic #1692 (metanull/viewer-layout#52): the source credit the MWNF notice asks for, composed from `@metanull/viewer-core` 1.13.0's `useSiteRights()`/`sourceUrl()` and `@metanull/viewer-i18n` 2.5.0's `record.source.*` entries. Additive; a site with no `site.origin` and a package with no `rights` block renders exactly as 2.10.0.
+
+- `SourceCredit` (`@metanull/viewer-layout/content`): the "Source: `<address>`" line, from `sourceUrl(route)` — nothing until the website declares `site.origin`. Rendered under `RecordView`'s citation and in `EssayView`'s `after` area by default, both overridable by a named slot (`source` on `RecordView`, `after` on `EssayView`).
+- `RecordView`'s citation permalink now reads `sourceUrl(currentRoute)` instead of composing one from `window.location` — the browser-local guess a copied-out citation could not resolve. `citation.permalink: false` keeps disabling it; an explicit string keeps winning.
+- `SiteShell`'s footer renders the rights holder's attribution and a `record.source.termsOfUse` link to `termsUrl` once the loaded package's `manifest.rights` names a holder (`useSiteRights()`); `footerText` stays, and a package with no `rights` block leaves the footer unchanged. Plumbed through `PageShell`'s new `footer-attribution-*`/`footer-terms-*` props and `AppFooter`'s matching ones, so a website driving `PageShell` directly can set the same attribution without `SiteShell`.
+- Raises the `@metanull/viewer-core` peer/dev dependency to `^1.13.0`.
+
 ## 2.10.0
 
 - `SiteShell` (#42): a config-driven `PageShell` — `config.navigation`, `config.logos` and `config.banner` (through `useSiteConfig()`/`useSection()`) replace the menu, header/footer links, search submit, banner caption and section-title map, and the exhibitions' logo bucketing that seven site shells rebuilt by hand. Exported from `@metanull/viewer-layout/components`, not the package root, for the same reason the composed views are (it reads `@metanull/viewer-core` itself).

@@ -5,10 +5,17 @@ const props = defineProps({
   text: { type: String, default: '' },
   /** [{ label, href, external? }] rendered beside the text. */
   links: { type: Array, default: () => [] },
+  // The rights-holder sentence — set only when the site declares `site.origin`
+  // and the package carries a `rights` block; empty otherwise, so `text`
+  // alone still renders exactly as before.
+  attributionLabel: { type: String, default: '' },
+  attributionText: { type: String, default: '' },
+  termsHref: { type: String, default: '' },
+  termsLabel: { type: String, default: '' },
 })
 
 const slots = useSlots()
-const visible = computed(() => Boolean(slots.default || props.text || props.links.length))
+const visible = computed(() => Boolean(slots.default || props.text || props.links.length || props.attributionText))
 </script>
 
 <template>
@@ -25,6 +32,11 @@ const visible = computed(() => Boolean(slots.default || props.text || props.link
         </li>
       </ul>
       <p v-if="text" class="mwnf-footer__text">{{ text }}</p>
+      <p v-if="attributionText" class="mwnf-footer__attribution">
+        <span v-if="attributionLabel" class="mwnf-footer__attribution-label">{{ attributionLabel }}</span>
+        {{ attributionText }}
+        <a v-if="termsHref" class="mwnf-footer__terms" :href="termsHref">{{ termsLabel }}</a>
+      </p>
     </slot>
   </footer>
 </template>

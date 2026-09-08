@@ -58,8 +58,13 @@
 // straight through to PageShell, guarded the same way PageShell itself
 // guards them, so an unused slot does not blank out its section's
 // props-driven content.
+//
+// The footer also carries the rights holder's attribution and a terms-of-use
+// link once `useSiteRights()` names a holder — read from the loaded
+// package's `manifest.rights`, so a package built before that block existed
+// leaves `footerText` as the only thing in the footer, same as today.
 import { computed } from 'vue'
-import { useI18n, useSection, useSiteConfig } from '@metanull/viewer-core'
+import { useI18n, useSection, useSiteConfig, useSiteRights } from '@metanull/viewer-core'
 import { useRouter } from 'vue-router'
 import PageShell from '../PageShell.vue'
 
@@ -82,6 +87,15 @@ const config = computed(() => ({ ...siteConfig, ...(props.config ?? {}) }))
 const nav = computed(() => config.value.navigation ?? {})
 const logosConfig = computed(() => config.value.logos ?? null)
 const bannerConfig = computed(() => config.value.banner ?? null)
+
+// ── Footer attribution: only once the loaded package names a rights holder,
+// so a package built before the block existed leaves the footer as it was ──
+
+const rights = useSiteRights()
+const footerAttribution = computed(() => {
+  if (!rights.holder) return null
+  return { label: t('record.source.rightsHolder'), text: rights.attribution ?? rights.holder, termsHref: rights.termsUrl, termsLabel: t('record.source.termsOfUse') }
+})
 
 // ── Links: `href` used as-is, `to` resolved through the router; a nav entry
 // also carries whether it is the current section's ─────────────────────────
@@ -188,6 +202,12 @@ const shellProps = computed(() => {
     if (headerLogosTitle.value) out.headerLogosTitle = headerLogosTitle.value
   }
   if (sponsorGroups.value) out.sponsorGroups = sponsorGroups.value
+  if (footerAttribution.value) {
+    out.footerAttributionLabel = footerAttribution.value.label
+    out.footerAttributionText = footerAttribution.value.text
+    out.footerTermsHref = footerAttribution.value.termsHref
+    out.footerTermsLabel = footerAttribution.value.termsLabel
+  }
   return out
 })
 </script>

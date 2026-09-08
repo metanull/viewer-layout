@@ -869,6 +869,22 @@
   color: var(--mwnf-sheet-heading-color, #555555);
 }
 
+/* Source credit (SourceCredit) */
+
+.mwnf-source-credit {
+  margin: var(--mwnf-space, 0.75rem) 0 0;
+  font-size: var(--mwnf-source-credit-size, 0.8125rem);
+  color: var(--mwnf-source-credit-color, #555555);
+}
+
+.mwnf-source-credit__label {
+  font-weight: var(--mwnf-sheet-label-weight, 600);
+}
+
+.mwnf-source-credit a {
+  color: var(--mwnf-source-credit-link-color, inherit);
+}
+
 /* Media (MediaGallery) */
 
 .mwnf-media--row {
