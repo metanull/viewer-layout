@@ -6,7 +6,7 @@
 
 - (J.2 — content classes, metanull/viewer-layout#43: replaced by that lane)
 
-- (J.3 — `PartnerMap` defaults, metanull/viewer-layout#67: replaced by that lane)
+- Fix: `PartnerMap`'s defaults now name entries the shared `partner` section carries: `mapTitleEntry: 'partner.map.map'`, `mapOfEntry: 'partner.map.mapOf'`, `openMapLinkEntry: 'partner.map.openInOpenStreetMap'` (viewer-i18n 2.4.0).
 
 ## 2.9.3
 

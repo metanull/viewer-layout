@@ -12,9 +12,10 @@ const props = defineProps({
   latitude: { type: Number, default: null },
   longitude: { type: Number, default: null },
   zoom: { type: Number, default: 15 },
-  mapTitleEntry: { type: String, default: 'partner.map' },
-  mapOfEntry: { type: String, default: 'partner.mapOf' },
-  openMapLinkEntry: { type: String, default: 'partner.action.openInOpenStreetMap' },
+  // The defaults below must be names the shared `partner` section carries.
+  mapTitleEntry: { type: String, default: 'partner.map.map' },
+  mapOfEntry: { type: String, default: 'partner.map.mapOf' },
+  openMapLinkEntry: { type: String, default: 'partner.map.openInOpenStreetMap' },
   label: { type: String, default: '' },
 })
 
