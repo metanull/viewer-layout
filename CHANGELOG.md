@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.11.1
+
+Fix: `SiteShell`'s header and footer links now render translated labels even when the root spreads raw navigation attributes (the `config.navigation` fields with entry name labels) from viewer-core's `AppRoot`. Disabled automatic attribute fallthrough via `defineOptions({ inheritAttrs: false })` and explicitly bind translated computed props so they reach `PageShell`, not the untranslated entry names.
+
 ## 2.11.0
 
 Wave K of epic #1692 (metanull/viewer-layout#52): the source credit the MWNF notice asks for, composed from `@metanull/viewer-core` 1.13.0's `useSiteRights()`/`sourceUrl()` and `@metanull/viewer-i18n` 2.5.0's `record.source.*` entries. Additive; a site with no `site.origin` and a package with no `rights` block renders exactly as 2.10.0.
