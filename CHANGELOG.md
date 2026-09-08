@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.10.0
+
+- (J.1 — `SiteShell`, metanull/viewer-layout#42: replaced by that lane)
+
+- (J.2 — content classes, metanull/viewer-layout#43: replaced by that lane)
+
+- (J.3 — `PartnerMap` defaults, metanull/viewer-layout#67: replaced by that lane)
+
 ## 2.9.3
 
 - Fix: `TextPageView` now passes a string body to `I18nText` using its required `keypath` prop, not `entry-name`.
