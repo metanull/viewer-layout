@@ -6,14 +6,18 @@ export default defineConfig({
   plugins: [vue()],
   build: {
     lib: {
-      // Three entry points: the whole package; the content components on
+      // Four entry points: the whole package; the content components on
       // their own, so a page that composes a list and a pagination does not
-      // carry the shell with them; and the composed views, which a website
-      // names in its configuration. What they share is emitted once.
+      // carry the shell with them; the composed views, which a website names
+      // in its configuration; and `SiteShell`, which — like the composed
+      // views — reads `@metanull/viewer-core` itself and so cannot be part
+      // of the package root (see `src/components/index.js`). What they
+      // share is emitted once.
       entry: {
         index: 'src/index.js',
         content: 'src/content/index.js',
         views: 'src/views/index.js',
+        components: 'src/components/index.js',
       },
       formats: ['es'],
       fileName: (format, name) => `${name}.js`,

@@ -2,7 +2,7 @@
 
 ## 2.10.0
 
-- (J.1 — `SiteShell`, metanull/viewer-layout#42: replaced by that lane)
+- `SiteShell` (#42): a config-driven `PageShell` — `config.navigation`, `config.logos` and `config.banner` (through `useSiteConfig()`/`useSection()`) replace the menu, header/footer links, search submit, banner caption and section-title map, and the exhibitions' logo bucketing that seven site shells rebuilt by hand. Exported from `@metanull/viewer-layout/components`, not the package root, for the same reason the composed views are (it reads `@metanull/viewer-core` itself).
 
 - Content classes (#43): `.mwnf-panel`, `.mwnf-heading` with `--page` and `--label` variants, `.mwnf-form-table`, `.mwnf-button` / `--secondary`, `.mwnf-select`, `.mwnf-back-bar`, `.mwnf-chip` with `--<family>` variants reading project-colour tokens, `.mwnf-popout`, `.mwnf-loader` and `.mwnf-link` — shared utility classes extracted from the legacy sites' own CSS, behind a complete token set for customization per website.
 
