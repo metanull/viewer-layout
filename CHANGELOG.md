@@ -6,7 +6,7 @@
 
 - Content classes (#43): `.mwnf-panel`, `.mwnf-heading` with `--page` and `--label` variants, `.mwnf-form-table`, `.mwnf-button` / `--secondary`, `.mwnf-select`, `.mwnf-back-bar`, `.mwnf-chip` with `--<family>` variants reading project-colour tokens, `.mwnf-popout`, `.mwnf-loader` and `.mwnf-link` — shared utility classes extracted from the legacy sites' own CSS, behind a complete token set for customization per website.
 
-- (J.3 — `PartnerMap` defaults, metanull/viewer-layout#67: replaced by that lane)
+- Fix: `PartnerMap`'s defaults now name entries the shared `partner` section carries: `mapTitleEntry: 'partner.map.map'`, `mapOfEntry: 'partner.map.mapOf'`, `openMapLinkEntry: 'partner.map.openInOpenStreetMap'` (viewer-i18n 2.4.0).
 
 ## 2.9.3
 

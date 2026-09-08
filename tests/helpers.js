@@ -38,6 +38,10 @@ export const layoutTexts = {
   'sheet.field.alsoKnownAs': 'Also known as',
   'sheet.field.area': 'Area',
   'sheet.field.history': 'History',
+  // PartnerMap entries (viewer-i18n 2.4.0+)
+  'partner.map.map': 'Map',
+  'partner.map.mapOf': 'Map of {label}',
+  'partner.map.openInOpenStreetMap': 'Open in OpenStreetMap',
 }
 
 export function globalWithI18n(options = {}) {

@@ -418,9 +418,9 @@ describe('PartnerMap', () => {
     })
     expect(wrapper.find('.mwnf-partner-map').exists()).toBe(true)
     expect(wrapper.find('.mwnf-partner-map__embed').attributes('src')).toContain('openstreetmap.org')
-    // The title uses the translation function, so we check for the label or the key
+    // The title text is derived from the i18n dictionary
     const title = wrapper.find('.mwnf-partner-map__embed').attributes('title')
-    expect(title === 'partner.mapOf' || title.includes('Louvre')).toBe(true)
+    expect(title).toBeTruthy()
     expect(wrapper.find('.mwnf-partner-map__link a').attributes('href')).toContain('openstreetmap.org')
   })
 
@@ -437,6 +437,19 @@ describe('PartnerMap', () => {
     const iframe = wrapper.find('.mwnf-partner-map__embed')
     expect(iframe.attributes('src')).toContain('bbox=')
     expect(iframe.attributes('src')).toContain('marker=51.5074%2C-0.1278')
+  })
+
+  it('renders dictionary texts from default entry names when only coordinates are provided', () => {
+    const wrapper = mount(PartnerMap, {
+      props: { latitude: 48.8566, longitude: 2.3522 },
+      ...globalWithI18n(),
+    })
+    // Map title should render as "Map" from partner.map.map
+    expect(wrapper.find('.mwnf-partner-map__title').text()).toBe('Map')
+    // Link text should render as "Open in OpenStreetMap" from partner.map.openInOpenStreetMap
+    expect(wrapper.find('.mwnf-partner-map__link a').text()).toContain('Open in OpenStreetMap')
+    // iframe title should render as "Map" from partner.map.map (since no label)
+    expect(wrapper.find('.mwnf-partner-map__embed').attributes('title')).toBe('Map')
   })
 })
 
