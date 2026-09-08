@@ -587,4 +587,91 @@
   /* --mwnf-timeline-error-color: #1c1c1c;           Its color */
   /* --mwnf-timeline-gallery-size: 0.875rem;         The "See gallery" cross-link size */
   /* --mwnf-timeline-gallery-color: inherit;         Its color */
+
+  /* ---------- Shared content blocks (legacy sites) ---------- */
+  /* --mwnf-panel-background: #ffffff;               Panel background color */
+  /* --mwnf-panel-border: 1px solid #dddddd;         Panel border */
+  /* --mwnf-panel-padding: 1.25rem;                  Panel padding */
+  /* --mwnf-panel-margin-bottom: 1rem;               Panel bottom margin */
+
+  /* --mwnf-heading-size: 1.125rem;                  Standard section heading size */
+  /* --mwnf-heading-weight: 400;                     Standard section heading weight */
+  /* --mwnf-heading-color: inherit;                  Standard section heading color */
+  /* --mwnf-heading-border: 2px solid #1c1c1c;       Standard section heading border */
+  /* --mwnf-heading-padding-bottom: 0.25rem;         Standard section heading padding below text */
+  /* --mwnf-heading-margin-bottom: 0.875rem;         Standard section heading bottom margin */
+  /* --mwnf-heading-page-size: 1.25rem;              Page heading variant size */
+  /* --mwnf-heading-page-weight: 700;                Page heading variant weight */
+  /* --mwnf-heading-page-color: inherit;             Page heading variant color */
+  /* --mwnf-heading-page-margin-bottom: 1.25rem;     Page heading variant bottom margin */
+  /* --mwnf-heading-label-size: 1.25rem;             Label heading variant size */
+  /* --mwnf-heading-label-weight: 700;               Label heading variant weight */
+  /* --mwnf-heading-label-color: inherit;            Label heading variant color */
+
+  /* --mwnf-form-table-size: 0.8125rem;              Form table base text size */
+  /* --mwnf-form-table-th-padding: 0.375rem 0.75rem 0.375rem 0; Form table header cell padding */
+  /* --mwnf-form-table-th-weight: 500;               Form table header cell weight */
+  /* --mwnf-form-table-th-size: 0.75rem;             Form table header cell text size */
+  /* --mwnf-form-table-th-color: #555555;            Form table header cell text color */
+  /* --mwnf-form-table-th-width: 10rem;              Form table header cell width */
+  /* --mwnf-form-table-td-padding: 0.375rem 0;       Form table data cell padding */
+
+  /* --mwnf-button-padding: 0.375rem 1.125rem;       Button padding */
+  /* --mwnf-button-background: #1c1c1c;              Button background color */
+  /* --mwnf-button-text: #ffffff;                    Button text color */
+  /* --mwnf-button-size: 0.8125rem;                  Button text size */
+  /* --mwnf-button-weight: 500;                      Button text weight */
+  /* --mwnf-button-radius: 0;                        Button corner radius */
+  /* --mwnf-button-letter-spacing: 0.02em;           Button letter spacing */
+  /* --mwnf-button-hover-background: #555555;        Button hover background color */
+  /* --mwnf-button-secondary-background: #999999;    Secondary button background color */
+  /* --mwnf-button-secondary-text: inherit;          Secondary button text color */
+  /* --mwnf-button-secondary-hover-background: #666666; Secondary button hover background color */
+
+  /* --mwnf-select-height: 2.1875rem;                Select element height */
+  /* --mwnf-select-max-width: 18.75rem;              Select element max width */
+  /* --mwnf-select-margin-top: 0.625rem;             Select element top margin */
+  /* --mwnf-select-padding: 0.3125rem;               Select element padding */
+  /* --mwnf-select-size: 0.875rem;                   Select element text size */
+  /* --mwnf-select-border: 1px solid #999999;        Select element border */
+  /* --mwnf-select-background: #ffffff;              Select element background color */
+  /* --mwnf-select-text: #1a1a1a;                    Select element text color */
+  /* --mwnf-select-radius: 0;                        Select element corner radius */
+  /* --mwnf-select-focus-outline: 1px solid #1c1c1c; Select element focus outline */
+
+  /* --mwnf-back-bar-padding: 0.75rem 1.25rem;       Back bar padding */
+  /* --mwnf-back-bar-background: transparent;        Back bar background color */
+  /* --mwnf-back-bar-text: inherit;                  Back bar text color */
+  /* --mwnf-back-bar-size: 0.9375rem;                Back bar text size */
+  /* --mwnf-back-bar-hover-text: inherit;            Back bar hover text color */
+
+  /* --mwnf-chip-padding: 0.0625rem 0.5rem;          Chip padding */
+  /* --mwnf-chip-size: 0.75rem;                      Chip text size */
+  /* --mwnf-chip-text: #ffffff;                      Chip text color */
+  /* --mwnf-chip-background: #1c1c1c;                Chip background color (default fallback) */
+  /* --mwnf-chip-radius: 0;                          Chip corner radius */
+  /* --mwnf-project-ISLandEPM: #ffcc00;               Discover Islamic Art / Exhibitions colours chip */
+  /* --mwnf-project-ISLandEPM-text: #222222;         Discover Islamic Art / Exhibitions chip text */
+  /* --mwnf-project-DBA: #001d66;                    Discover Baroque Art chip colour */
+  /* --mwnf-project-DBA-text: #ffffff;               Discover Baroque Art chip text */
+  /* --mwnf-project-AWE: #900000;                    Sharing History chip colour */
+  /* --mwnf-project-AWE-text: #ffffff;               Sharing History chip text */
+  /* --mwnf-project-DCA: #6b612b;                    Discover Carpets chip colour */
+  /* --mwnf-project-DCA-text: #ffffff;               Discover Carpets chip text */
+  /* --mwnf-project-DGA: #263238;                    Discover Galleries chip colour */
+  /* --mwnf-project-DGA-text: #ffffff;               Discover Galleries chip text */
+  /* --mwnf-project-EXH: #7f01d4;                    Exhibitions chip colour */
+  /* --mwnf-project-EXH-text: #ffffff;               Exhibitions chip text */
+  /* --mwnf-project-Galleries: #263238;              Galleries chip colour */
+  /* --mwnf-project-Galleries-text: #ffffff;         Galleries chip text */
+
+  /* --mwnf-popout-padding: 1rem;                    Popout box padding */
+  /* --mwnf-popout-background: #ffffff;              Popout box background color */
+  /* --mwnf-popout-border: 1px solid #dddddd;        Popout box border */
+
+  /* --mwnf-loader-padding: 2.5rem;                  Loader padding */
+  /* --mwnf-loader-text: #1c1c1c;                    Loader text color */
+  /* --mwnf-loader-size: 0.875rem;                   Loader text size */
+
+  /* --mwnf-link-text: #0000ff;                      Link text color */
 }
