@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import {
   NotFoundView, byId, citation, entityRef, languageLabels, projectName, renderBlock, renderInline,
   renderPlain, sheetRows, sourceUrl, useDataPackage, useGlossaryPopup, useI18n, useRecordSheet, useRelatedRecords,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import MediaGallery from '../content/MediaGallery.vue'
 import RecordCredits from '../content/RecordCredits.vue'

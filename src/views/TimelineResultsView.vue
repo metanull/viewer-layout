@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import {
   eventDateLabel, renderBlock, renderInline, useI18n, useListQuery, usePagination, useTimelineEvents,
   yearBucketsFromRange,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import FacetSelect from '../content/FacetSelect.vue'
 import FilterPanel from '../content/FilterPanel.vue'
 import Pagination from '../content/Pagination.vue'

@@ -1,6 +1,6 @@
 # Designer contract
 
-Who edits what in `@metanull/viewer-layout` and the websites built on it, and
+Who edits what in `@museumwnf/viewer-layout` and the websites built on it, and
 how a site reaches beyond what a prop or token already exposes. This is not a
 new mechanism — every rule below is the separation already present in the
 code; this page only writes it down. The full technical reference for every
@@ -62,7 +62,7 @@ chrome keys:
 - `theme/tokens.css` — the site's copy of `tokens.reference.css`, real
   values. Sibling of `src/` at the repo root (confirmed in
   `website-template`), loaded first in `main.js`, right after
-  `@metanull/viewer-layout/style.css`.
+  `@museumwnf/viewer-layout/style.css`.
 - `theme/overrides.css` — the free-form escape hatch, loaded immediately
   after `theme/tokens.css` and ahead of `src/styles/site.css`.
   `website-template` ships it as one comment: *"keep it empty until a need
@@ -70,7 +70,7 @@ chrome keys:
 - `src/styles/site.css` — the site's **own** content styles (the palette and
   building blocks its own `src/views/` reference), loaded last. Kept apart
   from `theme/tokens.css` on purpose: tokens are read by
-  `@metanull/viewer-layout`, this file only by the site's own views.
+  `@museumwnf/viewer-layout`, this file only by the site's own views.
 - `dataset.config.js`'s `navigation`, `logos` and `banner` keys, read by
   `SiteShell` — the menu, header/footer link lists, search submit, banner
   fields and image, and the page's own logo list bucketed into header logos
@@ -88,7 +88,7 @@ chrome keys:
 
 - The site's own `locales/<lang>.json` files. Local wins — the only merge
   rule: a site overloads any entry the shared dictionary carries.
-- The shared [`@metanull/viewer-i18n`](https://github.com/metanull/viewer-i18n)
+- The shared [`@museumwnf/viewer-i18n`](https://github.com/metanull/viewer-i18n)
   dictionary every site receives (`core`, `layout`, `record`, `catalogue`,
   `partner`, `timeline`, `exhibition`, … namespaces).
 
@@ -110,7 +110,7 @@ needs.
    [`slot-catalogue.md`](./slot-catalogue.md) for the full list, per view,
    with the slot props each one passes.
 4. **A site's own view.** No slot fits the page's shape. Import the content
-   components directly from `@metanull/viewer-layout/content` and write a
+   components directly from `@museumwnf/viewer-layout/content` and write a
    page on them, registered on the site's own route — the same pattern
    islamicart's `ArtIntroEntrance.vue` uses today (a plain local route and
    view importing `TextPageView`/`SectionCards`, no shared source touched).
@@ -124,7 +124,7 @@ Verified against `website-template`'s `main.js`, `theme/`, and
 
 - `theme/` sits at the repo root, sibling to `src/`, exactly as documented
   above.
-- `main.js`'s import order is `@metanull/viewer-layout/style.css` →
+- `main.js`'s import order is `@museumwnf/viewer-layout/style.css` →
   `../theme/tokens.css` → `../theme/overrides.css` → `./styles/site.css` —
   matching this contract exactly.
 - `dataset.config.js` declares `navigation.links`/`.languages` and leaves
@@ -132,7 +132,7 @@ Verified against `website-template`'s `main.js`, `theme/`, and
   only exercises part of `SiteShell`'s config contract; the rest is real and
   documented in `slot-catalogue.md`, just not demonstrated by the scaffold
   itself.
-- `src/SiteShell.vue` wraps `@metanull/viewer-layout/components`'s
+- `src/SiteShell.vue` wraps `@museumwnf/viewer-layout/components`'s
   `SiteShell`, fills `#brand` and a `footer-text`/`header-home` prop, and
   carries one small `<style scoped>` block for the brand lockup only — the
   role-3 exception noted above.

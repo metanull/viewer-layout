@@ -1,5 +1,5 @@
 /*
- * Structural styles for the content components of @metanull/viewer-layout —
+ * Structural styles for the content components of @museumwnf/viewer-layout —
  * what renders inside a page. Every visual value is read from a --mwnf-*
  * custom property with a neutral fallback, as in layout.css; see
  * tokens.reference.css for the complete list.

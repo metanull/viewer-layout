@@ -1,6 +1,6 @@
 <script setup>
 import { computed, useSlots } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 const props = defineProps({
   title: { type: String, default: '' },

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, useSlots } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 const props = defineProps({
   // Plain links: { label, href, active?, external? }. No router coupling —

@@ -4,7 +4,7 @@
 // header/footer link lists, search submit, banner caption and section-title
 // map; the exhibitions on top of that bucketed `exhibition.logos` into
 // header logos and sponsor groups. This reads it all from `useSiteConfig()`
-// and `useSection()` (both `@metanull/viewer-core`) instead.
+// and `useSection()` (both `@museumwnf/viewer-core`) instead.
 //
 // Config contract (also documented in the README's "Site shell" section):
 //
@@ -72,7 +72,7 @@ defineOptions({
   // (translated via t()) get through.
   inheritAttrs: false,
 })
-import { useI18n, useSection, useSiteConfig, useSiteRights } from '@metanull/viewer-core'
+import { useI18n, useSection, useSiteConfig, useSiteRights } from '@museumwnf/viewer-core'
 import { useRouter } from 'vue-router'
 import PageShell from '../PageShell.vue'
 

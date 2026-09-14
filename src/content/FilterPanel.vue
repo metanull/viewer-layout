@@ -1,5 +1,5 @@
 <script setup>
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The box the facet controls sit in. Two legacy shapes: the standalone
 // panel, where the visitor sets several controls and applies them with a

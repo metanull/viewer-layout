@@ -1,5 +1,5 @@
 /*
- * Structural styles for @metanull/viewer-layout.
+ * Structural styles for @museumwnf/viewer-layout.
  *
  * Every visual value is read from a --mwnf-* custom property so the website's
  * theme/tokens.css fully controls the identity. Fallbacks are neutral.

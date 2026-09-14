@@ -3,7 +3,7 @@ import { computed } from 'vue'
 import {
   dateRange, entityRef, renderInline, renderPlain, sortChronological, useDataPackage, useFacets, useI18n,
   useListQuery, usePagination,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import FacetSelect from '../content/FacetSelect.vue'
 import FilterPanel from '../content/FilterPanel.vue'
 import Pagination from '../content/Pagination.vue'

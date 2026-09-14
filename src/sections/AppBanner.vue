@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, useSlots } from 'vue'
-import { renderBlock } from '@metanull/viewer-core/i18n'
+import { renderBlock } from '@museumwnf/viewer-core/i18n'
 
 // The banner in the shapes the websites have: a plain image with a line under
 // it; a tall `strip` with the site's name over the image (a gallery's home);

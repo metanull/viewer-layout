@@ -1,8 +1,8 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { sourceUrl } from '@metanull/viewer-core'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { sourceUrl } from '@museumwnf/viewer-core'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The "Source: <address>" line the MWNF notice asks for, wherever a page
 // reads from a data package: under a record sheet's citation, and under an

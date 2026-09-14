@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.12.0
+
+Part of the M1 npmjs-publishing epic (metanull/inventory-app#1721). Requires
+`@museumwnf/viewer-core` 1.14.0 (the first version published to npmjs).
+
+### Changed
+
+- Package renamed `@metanull/viewer-layout` → `@museumwnf/viewer-layout` and
+  publishing moves to npmjs (`registry.npmjs.org`) via trusted publishing
+  (OIDC), replacing GitHub Packages for all future versions. The last
+  `@metanull/viewer-layout` version stays published, frozen, on GitHub
+  Packages. `peerDependencies`/`devDependencies` now point at
+  `@museumwnf/viewer-core ^1.14.0`. `publishConfig.registry` now points at
+  npmjs; `release.yml` passes `registry: npmjs` to
+  `package-release.yml@v1.6.0`.
+- Added a project `.npmrc` scoping `@museumwnf:registry` to npmjs. Without
+  it, `npm ci` in this repo's own CI would try to resolve
+  `@museumwnf/viewer-core` through `package-ci.yml`'s `@metanull`-scoped
+  GitHub Packages default and fail with a 404 — see the comment in `.npmrc`.
+- `ci.yml`'s `package-ci.yml` pin moves to `v1.6.1`, which alias-installs a
+  renaming PR's tarball under both the new and the pre-rename name in the
+  downstream site matrix — without it, every site (still importing
+  `@metanull/viewer-layout`) would silently build against the last
+  published version instead of this PR's code (metanull/viewer-workflows#17).
+
 ## 2.11.2
 
 Docs only, no code change (metanull/inventory-app#1732): `docs/designer-contract.md` (the four ownership roles — components, tokens/CSS, site designer, translator — and the token → overrides.css → slot → own-view decision ladder) and `docs/slot-catalogue.md` (every prop and slot of `PageShell`, `SiteShell` and the nine composed views, plus a one-line purpose for every `/content` component), both linked from the README. Written from and cross-checked against `main`'s actual source and `website-template`'s scaffold — no new prop, slot or mechanism.

@@ -4,7 +4,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { loadEntities, useDataPackage } from '@metanull/viewer-core'
+import { loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import {
   BackLink,
   DynastyList,

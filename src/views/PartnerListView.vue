@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import {
   groupByCountry, partnerHierarchy, renderInline, renderPlain, useDataPackage, useI18n, useListQuery, entityRef,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
 
 // The partner list, composed: islamicart's/sharinghistory's country

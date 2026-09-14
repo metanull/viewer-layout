@@ -1,6 +1,6 @@
 <script setup>
 import { ref, watch } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The sheet: labelled values in order, from the rows viewer-core's
 // `sheetRows()` computes out of the site's own field spec. Two layouts,

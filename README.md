@@ -1,4 +1,4 @@
-# @metanull/viewer-layout
+# @museumwnf/viewer-layout
 
 Page structure for MWNF websites: `<PageShell>` composing seven optional, token-styled sections. No data access, no routing, no theming values — websites own their `theme/tokens.css`.
 
@@ -18,26 +18,24 @@ for every `/content` component).
 
 ## Install
 
-`.npmrc`:
-
-```ini
-@metanull:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-```
+Published to npmjs (`registry.npmjs.org`), publicly — no authentication
+needed to install. (Versions up to 2.11.2, published as
+`@metanull/viewer-layout`, remain available on GitHub Packages, frozen; no
+new version is published there.)
 
 ```bash
-npm install @metanull/viewer-layout
+npm install @museumwnf/viewer-layout
 ```
 
-`@metanull/viewer-core` (1.6.0 or later) is a peer dependency: the layout
+`@museumwnf/viewer-core` (1.14.0 or later) is a peer dependency: the layout
 reads its texts from the application's catalogue through it, and renders the
 one Markdown prop it has (the banner headline) through its pipeline.
 
 ## Use
 
 ```js
-import { PageShell } from '@metanull/viewer-layout'
-import '@metanull/viewer-layout/style.css'
+import { PageShell } from '@museumwnf/viewer-layout'
+import '@museumwnf/viewer-layout/style.css'
 import './theme/tokens.css' // your copy of tokens.reference.css
 ```
 
@@ -54,7 +52,7 @@ import './theme/tokens.css' // your copy of tokens.reference.css
 </PageShell>
 ```
 
-With `@metanull/viewer-core`, a website passes these props from
+With `@museumwnf/viewer-core`, a website passes these props from
 `dataset.config.js` (`navigation`) or from a thin shell of its own that
 computes the ones that depend on the route or the language.
 
@@ -73,7 +71,7 @@ from the catalogue the website passes to `createViewer`:
 | `layout.sponsors.label` | the sponsors `aria-label`, unless a `title` is given |
 
 They are published in the `layout` namespace of
-[`@metanull/viewer-i18n`](https://github.com/metanull/viewer-i18n), which every
+[`@museumwnf/viewer-i18n`](https://github.com/metanull/viewer-i18n), which every
 website receives; a website overloads any of them in its own `locales/` file.
 A language that has not translated one falls back to English.
 
@@ -118,17 +116,17 @@ instead of a shell the site writes by hand — the menu, the header/footer
 link lists, the search submit, the banner caption and section-title map,
 and (an exhibition's) logos bucketed into header logos and sponsor groups.
 It reads `config.navigation`, `config.logos` and `config.banner` through
-`@metanull/viewer-core`'s `useSiteConfig()`, and the active section through
+`@museumwnf/viewer-core`'s `useSiteConfig()`, and the active section through
 its `useSection()`.
 
-It reads `@metanull/viewer-core` itself, the same reason the composed views
-do (see below): it is exported from `@metanull/viewer-layout/components`,
+It reads `@museumwnf/viewer-core` itself, the same reason the composed views
+do (see below): it is exported from `@museumwnf/viewer-layout/components`,
 not from the package root, and a website using it lists
-`@metanull/viewer-layout` next to `@metanull/viewer-core` in its Vitest
+`@museumwnf/viewer-layout` next to `@museumwnf/viewer-core` in its Vitest
 `server.deps.inline`.
 
 ```js
-import { SiteShell } from '@metanull/viewer-layout/components'
+import { SiteShell } from '@museumwnf/viewer-layout/components'
 ```
 
 ```vue
@@ -238,10 +236,10 @@ page, results pages and record page are made of. Behaviour is viewer-core's
 (`useListQuery`, `paginate`, `useFacets`, `useRecordSheet`, `sheetRows`, …);
 what a page holds — which cards, which fields, which filters — is the site's;
 these render it. They are exported from the package and, on their own,
-from `@metanull/viewer-layout/content`, which brings none of the shell.
+from `@museumwnf/viewer-layout/content`, which brings none of the shell.
 
 ```js
-import { RecordList, Pagination } from '@metanull/viewer-layout/content'
+import { RecordList, Pagination } from '@museumwnf/viewer-layout/content'
 ```
 
 Links take an `href` the website's router produced — the same rule as the
@@ -283,7 +281,7 @@ The texts they read — `core.action.apply`, `.reset`, `.close`,
 `core.pagination.*`, `catalogue.pagination.*`, `record.action.*ShortDescription`,
 `record.citation.heading`, `record.glossary.heading`, `.close`,
 `record.media.photograph`, `record.sheet.credits`, `.languages` — are in
-every bundle of `@metanull/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
+every bundle of `@museumwnf/viewer-i18n` from 1.7.0. `GlossaryTool` also reads
 `record.glossary.instructions`, `.definition` (1.7.0) and `record.glossary.tool`
 (2.3.0); `DynastyPopout` reads `record.dynasty.heading` (2.3.0) and
 `sheet.field.alsoKnownAs`, `.area`, `.history`. `SourceCredit` reads
@@ -312,13 +310,13 @@ Building blocks copied from the legacy sites' own `site.css` files, available as
 
 Nine whole pages, made of the content components on viewer-core's
 composables and driven by a declaration the website writes instead of a
-page. They are exported from `@metanull/viewer-layout/views` — and only from
-there: they read the records and the engine from `@metanull/viewer-core`
+page. They are exported from `@museumwnf/viewer-layout/views` — and only from
+there: they read the records and the engine from `@museumwnf/viewer-core`
 itself, whose entry point carries `.vue` files, and a website's test runner
 that loads this package natively would fail on the first one if the package
 root imported them. A website that names the composed views imports the
-`/views` entry point and lists `@metanull/viewer-layout` next to
-`@metanull/viewer-core` in its Vitest `server.deps.inline` (the template
+`/views` entry point and lists `@museumwnf/viewer-layout` next to
+`@museumwnf/viewer-core` in its Vitest `server.deps.inline` (the template
 does both). A website names them in viewer-core's `config.views` — the
 `home`, `list` and `detail` slots of the router — or on its own routes, with
 the spec as route props. A website whose page is not this shape writes its
@@ -333,7 +331,7 @@ inside it.
 ```js
 import {
   CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
-} from '@metanull/viewer-layout/views'
+} from '@museumwnf/viewer-layout/views'
 
 export default {
   views: { home: HomeView },
@@ -415,7 +413,7 @@ except where noted:
 
 ## Theming
 
-Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@metanull/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.
+Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property with a neutral fallback. Full list: [`tokens.reference.css`](src/tokens.reference.css) (also exported as `@museumwnf/viewer-layout/tokens.reference.css`) — copy it into your website as `theme/tokens.css` and set values.
 
 Below `48rem` the navigation folds its links behind a menu button, the
 `split` banner stacks its two columns, and the banner captions are hidden.
@@ -432,4 +430,4 @@ notice text also ships in this package as `LICENSE.md`.
 
 1. PR to `main` (direct pushes are blocked); CI must be green.
 2. Bump `version` in `package.json` + `CHANGELOG.md` entry (strict semver).
-3. Create a GitHub release with tag `vX.Y.Z` — CI publishes to GitHub Packages.
+3. Create a GitHub release with tag `vX.Y.Z` — CI publishes to npmjs.

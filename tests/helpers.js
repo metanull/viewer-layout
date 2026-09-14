@@ -1,8 +1,8 @@
-import { useDataPackage, useSiteConfig } from '@metanull/viewer-core'
-import { createI18n } from '@metanull/viewer-core/i18n'
+import { useDataPackage, useSiteConfig } from '@museumwnf/viewer-core'
+import { createI18n } from '@museumwnf/viewer-core/i18n'
 
 // The layout has no texts of its own any more: every `layout.*` entry comes
-// from the application, which merges @metanull/viewer-i18n with its own file.
+// from the application, which merges @museumwnf/viewer-i18n with its own file.
 // These tests stand in for that application, so what they pass is what a real
 // website's catalogue contains.
 export const layoutTexts = {

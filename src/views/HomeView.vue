@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import {
   I18nText, renderInline, renderPlain, useDataPackage, useFeaturedRecord, useI18n, useSiteConfig,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import SectionCards from '../content/SectionCards.vue'
 import FeaturedRecord from '../content/FeaturedRecord.vue'
 

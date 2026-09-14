@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { mdInline, useI18n } from '@metanull/viewer-core'
+import { mdInline, useI18n } from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
 
 // A page of categorized links: groups of related links, each with a heading,

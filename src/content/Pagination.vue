@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, watch } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // One pagination for every list: first, previous, a window of pages, next,
 // last, and the position — rendered beside the texts, never inside one,
