@@ -412,6 +412,14 @@ Every color, font, spacing, radius comes from a `--mwnf-*` CSS custom property w
 Below `48rem` the navigation folds its links behind a menu button, the
 `split` banner stacks its two columns, and the banner captions are hidden.
 
+## Licence
+
+This package is Content of the MWNF Website under the [MWNF legal
+notice](https://www.museumwnf.org/about/legal-notice), which governs its use
+(non-commercial, personal, educational and scientific use is permitted, with
+attribution and mandatory reporting — see the notice for the full terms). The
+notice text also ships in this package as `LICENSE.md`.
+
 ## Release
 
 1. PR to `main` (direct pushes are blocked); CI must be green.
