@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.11.2
+
+Docs only, no code change (metanull/inventory-app#1732): `docs/designer-contract.md` (the four ownership roles — components, tokens/CSS, site designer, translator — and the token → overrides.css → slot → own-view decision ladder) and `docs/slot-catalogue.md` (every prop and slot of `PageShell`, `SiteShell` and the nine composed views, plus a one-line purpose for every `/content` component), both linked from the README. Written from and cross-checked against `main`'s actual source and `website-template`'s scaffold — no new prop, slot or mechanism.
+
 ## 2.11.1
 
 Fix: `SiteShell`'s header and footer links now render translated labels even when the root spreads raw navigation attributes (the `config.navigation` fields with entry name labels) from viewer-core's `AppRoot`. Disabled automatic attribute fallthrough via `defineOptions({ inheritAttrs: false })` and explicitly bind translated computed props so they reach `PageShell`, not the untranslated entry names.

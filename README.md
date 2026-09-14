@@ -8,6 +8,14 @@ section — the mark in the header, the active view — not for rebuilding the
 section. A website that needs something no prop expresses adds the prop
 here, so the next website has it too.
 
+Two companion docs give a more scannable version of who-owns-what and the
+full slot list: [`docs/designer-contract.md`](docs/designer-contract.md) (the
+four roles — components, tokens/CSS, site designer, translator — and the
+token → overrides → slot → own-view decision ladder) and
+[`docs/slot-catalogue.md`](docs/slot-catalogue.md) (every prop and slot of
+`PageShell`, `SiteShell` and the nine composed views, plus a one-line purpose
+for every `/content` component).
+
 ## Install
 
 `.npmrc`:
