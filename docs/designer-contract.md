@@ -88,7 +88,7 @@ chrome keys:
 
 - The site's own `locales/<lang>.json` files. Local wins — the only merge
   rule: a site overloads any entry the shared dictionary carries.
-- The shared [`@museumwnf/viewer-i18n`](https://github.com/metanull/viewer-i18n)
+- The shared [`@museumwnf/viewer-i18n`](https://github.com/museumwithnofrontiers/viewer-i18n)
   dictionary every site receives (`core`, `layout`, `record`, `catalogue`,
   `partner`, `timeline`, `exhibition`, … namespaces).
 

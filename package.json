@@ -6,7 +6,7 @@
   "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/metanull/viewer-layout.git"
+    "url": "git+https://github.com/museumwithnofrontiers/viewer-layout.git"
   },
   "publishConfig": {
     "access": "public",
