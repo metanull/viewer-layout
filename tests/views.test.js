@@ -2,8 +2,8 @@ import { beforeAll, describe, expect, it, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import { nextTick, ref } from 'vue'
 import { createMemoryHistory, createRouter } from 'vue-router'
-import { createI18n } from '@metanull/viewer-core/i18n'
-import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@metanull/viewer-core'
+import { createI18n } from '@museumwnf/viewer-core/i18n'
+import { centuryPresets, collectionTreeFromThemes, loadEntities, useDataPackage } from '@museumwnf/viewer-core'
 import {
   CatalogueResultsView, EssayView, HomeView, PartnerListView, RecordView, LinkListView, SearchFormView, TextPageView, TimelineResultsView,
 } from '../src/views/index.js'

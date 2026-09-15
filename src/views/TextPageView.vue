@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { md, useDataPackage, useI18n, useLocale, I18nText } from '@metanull/viewer-core'
+import { md, useDataPackage, useI18n, useLocale, I18nText } from '@museumwnf/viewer-core'
 import SmartLink from '../content/SmartLink.vue'
 
 // A simple page with optional heading and body text (rendered as Markdown entry

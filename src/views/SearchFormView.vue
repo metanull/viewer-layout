@@ -3,7 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import {
   centuryPresets, entityRef, useFacets, useI18n, useSearchLanguage, yearBuckets,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import FacetSelect from '../content/FacetSelect.vue'
 import FilterPanel from '../content/FilterPanel.vue'
 import SmartLink from '../content/SmartLink.vue'

@@ -1,7 +1,7 @@
 # Slot catalogue
 
 Every prop and slot of `PageShell`, `SiteShell`, and the nine composed views
-exported from `@metanull/viewer-layout/views`, extracted from `main`'s
+exported from `@museumwnf/viewer-layout/views`, extracted from `main`'s
 source — plus a one-line purpose for every `/content` component. Read
 [`designer-contract.md`](./designer-contract.md) first for who owns what and
 when to reach for a slot at all.
@@ -79,8 +79,8 @@ renders nothing unless its own slot or driving props are set.
 ## SiteShell
 
 `src/components/SiteShell.vue` (exported from
-`@metanull/viewer-layout/components`, not the package root, because it reads
-`@metanull/viewer-core` composables directly) — `PageShell` driven by a
+`@museumwnf/viewer-layout/components`, not the package root, because it reads
+`@museumwnf/viewer-core` composables directly) — `PageShell` driven by a
 site's `dataset.config.js` instead of a hand-written shell.
 
 ### Props
@@ -132,7 +132,7 @@ Every passthrough slot is guarded the same way `PageShell` itself guards it
 computed props-driven content; nothing goes blank because a slot went
 unused.
 
-## Composed views (`@metanull/viewer-layout/views`)
+## Composed views (`@museumwnf/viewer-layout/views`)
 
 Every one of the nine takes a `spec` object (plus, where noted, `id`) as its
 real configuration surface — the table below lists just the outer props;
@@ -280,7 +280,7 @@ instance shows the form alone.
 ## `/content` components
 
 Every component `src/content/index.js` exports from
-`@metanull/viewer-layout/content`, one line each. `SmartLink` lives in the
+`@museumwnf/viewer-layout/content`, one line each. `SmartLink` lives in the
 same directory but is **not** exported from `/content` — it is this
 package's own internal link helper (every content component's link goes
 through it), not a public building block.

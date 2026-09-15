@@ -1,6 +1,6 @@
 <script setup>
 import { onBeforeUnmount, ref, watch } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The definition of a glossary term the visitor clicked, as a popover fixed
 // in a corner rather than a modal over the page (decision D4): the term is

@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { renderInline } from '@metanull/viewer-core'
+import { renderInline } from '@museumwnf/viewer-core'
 
 // A dismissible modal popup with logo or sponsor content. The popup is shown
 // when enabled is true; the user can dismiss it with the close button. The

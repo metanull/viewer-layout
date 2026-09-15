@@ -1,5 +1,5 @@
 <script setup>
-import { mdInline } from '@metanull/viewer-core'
+import { mdInline } from '@museumwnf/viewer-core'
 import SmartLink from './SmartLink.vue'
 
 // A landing page's grid of section cards: each names a section of the

@@ -10,7 +10,7 @@ export default defineConfig({
       // their own, so a page that composes a list and a pagination does not
       // carry the shell with them; the composed views, which a website names
       // in its configuration; and `SiteShell`, which — like the composed
-      // views — reads `@metanull/viewer-core` itself and so cannot be part
+      // views — reads `@museumwnf/viewer-core` itself and so cannot be part
       // of the package root (see `src/components/index.js`). What they
       // share is emitted once.
       entry: {
@@ -31,7 +31,7 @@ export default defineConfig({
       // the application installed. `vue-router` is external for the same
       // reason — `SearchFormView` navigates on the application's own router
       // instance, the one every website already provides.
-      external: ['vue', 'vue-router', '@metanull/viewer-core', '@metanull/viewer-core/i18n'],
+      external: ['vue', 'vue-router', '@museumwnf/viewer-core', '@museumwnf/viewer-core/i18n'],
       output: {
         assetFileNames: 'viewer-layout.[ext]',
       },
@@ -52,7 +52,7 @@ export default defineConfig({
         // viewer-core ships .vue source and reads the alias above through
         // import.meta.glob; Node cannot do either unless Vitest processes
         // the package instead of externalizing it.
-        inline: ['@metanull/viewer-core'],
+        inline: ['@museumwnf/viewer-core'],
       },
     },
   },

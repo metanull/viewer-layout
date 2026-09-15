@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { md, mdInline } from '@metanull/viewer-core'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { md, mdInline } from '@museumwnf/viewer-core'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // One dynasty popout — the fifty lines the item sheets repeat per dynasty
 // (carpets/amulets ItemSheet.vue), islamicart's dynasty cards and its full

@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The block under a sheet that says who made it: the credits, the working
 // number, the citation. Both families print these; one printed them as a

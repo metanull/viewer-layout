@@ -3,7 +3,7 @@ import { computed, ref, useSlots, watch } from 'vue'
 import {
   NotFoundView, byId, entityRef, glossaryEntries, glossaryTermsForText, renderBlock, renderInline,
   renderPlain, useCollectionTree, useDataPackage, useGlossaryPopup, useI18n, useRecordLanguage,
-} from '@metanull/viewer-core'
+} from '@museumwnf/viewer-core'
 import GlossaryPopover from '../content/GlossaryPopover.vue'
 import MediaGallery from '../content/MediaGallery.vue'
 import RecordGrid from '../content/RecordGrid.vue'

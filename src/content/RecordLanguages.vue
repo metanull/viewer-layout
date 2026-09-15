@@ -1,6 +1,6 @@
 <script setup>
 import { computed } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The languages one record carries, as buttons. Picking one changes what
 // the sheet is read in and nothing else — not the site language, not the

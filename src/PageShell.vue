@@ -6,7 +6,7 @@ import AppContent from './sections/AppContent.vue'
 import AppHyperlinks from './sections/AppHyperlinks.vue'
 import AppSponsors from './sections/AppSponsors.vue'
 import AppFooter from './sections/AppFooter.vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The page every website is: seven sections in a fixed order, each filled
 // from props and rendering nothing when it has nothing. A website hands

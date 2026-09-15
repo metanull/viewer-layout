@@ -1,6 +1,6 @@
 <script setup>
 import { computed, ref, useSlots } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The header every website needs, from props: a mark linking home, a title
 // cell with a line above it, a group of logos, a row of links, a search

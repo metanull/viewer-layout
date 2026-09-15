@@ -1,6 +1,6 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // A record's images: the current one large, the others as thumbnails, a
 // caption, and a lightbox — legacy DatabaseItem.vue's gallery, which the

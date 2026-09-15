@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref } from 'vue'
-import { md, searchGlossary } from '@metanull/viewer-core'
-import { useI18n } from '@metanull/viewer-core/i18n'
+import { md, searchGlossary } from '@museumwnf/viewer-core'
+import { useI18n } from '@museumwnf/viewer-core/i18n'
 
 // The glossary search box four item sheets and a theme page each wrote for
 // themselves: an input, the hits viewer-core's searchGlossary finds as the
