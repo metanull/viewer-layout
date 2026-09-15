@@ -71,7 +71,7 @@ from the catalogue the website passes to `createViewer`:
 | `layout.sponsors.label` | the sponsors `aria-label`, unless a `title` is given |
 
 They are published in the `layout` namespace of
-[`@museumwnf/viewer-i18n`](https://github.com/metanull/viewer-i18n), which every
+[`@museumwnf/viewer-i18n`](https://github.com/museumwithnofrontiers/viewer-i18n), which every
 website receives; a website overloads any of them in its own `locales/` file.
 A language that has not translated one falls back to English.
 
